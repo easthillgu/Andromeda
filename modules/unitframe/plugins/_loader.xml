@@ -1,0 +1,7 @@
+<Ui xmlns='http://www.blizzard.com/wow/ui/'>
+    <Script file='fader.lua'/>
+    <Script file='gcd.lua'/>
+    <Script file='partywatcher.lua'/>
+    <Script file='raidauras.lua'/>
+    <Script file='rangecheck.lua'/>
+</Ui>

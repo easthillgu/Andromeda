@@ -1,0 +1,12 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/">
+    <Script file="configs.lua"/>
+    <Script file="options.lua"/>
+    <Script file="gui.lua"/>
+    <Script file="extra.lua"/>
+    <Script file="about.lua"/>
+    <Script file="credits.lua"/>
+    <Script file="help.lua"/>
+    <Script file="profiles.lua"/>
+    <Script file="data.lua"/>
+    <Script file="tutorial.lua"/>
+</Ui>

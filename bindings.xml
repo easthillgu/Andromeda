@@ -1,0 +1,13 @@
+<Bindings>
+
+    <Binding category='BINDING_HEADER_ANDROMEDA' name='Open GUI'>
+        ANDROMEDA[1].ToggleConsole()
+    </Binding>
+    <Binding category='BINDING_HEADER_ANDROMEDA' name='Inspect Target Unit'>
+        InspectUnit('target')
+    </Binding>
+    <Binding category='BINDING_HEADER_ANDROMEDA' name='Inspect MouseOver Unit'>
+        InspectUnit('mouseover')
+    </Binding>
+
+</Bindings>

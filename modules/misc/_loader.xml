@@ -1,0 +1,7 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/">
+    <Script file="afk.lua"/>
+    <Script file="alreadyknown.lua"/>
+    <Script file="cursor.lua"/>
+    <Script file="itemlevel.lua"/>
+    <Script file="screenshot.lua"/>
+</Ui>

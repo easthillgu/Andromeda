@@ -1,0 +1,22 @@
+## Interface: 38001
+## Author: fafaraway (adapted for 3.80.1)
+## Version: 10.2.11-classic
+## IconTexture: Interface\AddOns\andromeda\assets\textures\logo\logo-chat.blp
+## Title: |cff7269e5A|r|cff826fe2n|r|cff9076e0d|r|cff9d7dddr|r|cffaa84dao|r|cffb58bd7m|r|cffc192d4e|r|cffcb99d1d|r|cffd6a0cea|r|cffe0a8cbU|r|cffeaafc8I|r
+## Notes: A user interface replacement for World of Warcraft (adapted for Cataclysm Classic 3.80.1)
+## SavedVariables: ANDROMEDA_ADB, ANDROMEDA_PDB
+## SavedVariablesPerCharacter: ANDROMEDA_CDB
+
+## X-oUF: oUFembed
+## X-cargBags: cargBags
+## X-Website: https://github.com/fafaraway/andromeda
+## X-License: GPL-3.0
+
+libraries\taintless.xml
+compat.lua
+libraries\_loader.xml
+core\init.lua
+locales\_loader.xml
+core\_loader.xml
+modules\_loader.xml
+gui\_loader.xml

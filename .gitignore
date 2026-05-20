@@ -1,0 +1,15 @@
+# WoW cache / saved variables
+WTF/
+Cache/
+*.lua.bak
+*.lua~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
