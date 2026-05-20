@@ -17,7 +17,7 @@ function THEME:LoadSkins(list)
     for addonName, func in pairs(list) do
         local isLoaded, isFinished = IsAddOnLoaded(addonName)
         if isLoaded and isFinished then
-            func()
+            pcall(func)  -- 3.80.1: guard nil frames
             list[addonName] = nil
         end
     end
@@ -25,7 +25,7 @@ end
 
 function THEME:LoadAddOnSkins()
     for _, func in pairs(C.BlizzThemes) do
-        func()
+        pcall(func)  -- 3.80.1: guard nil frames from Retail-only skins
     end
     wipe(C.BlizzThemes)
 
@@ -39,13 +39,13 @@ function THEME:LoadAddOnSkins()
     F:RegisterEvent('ADDON_LOADED', function(_, addonName)
         local blizzFunc = C.Themes[addonName]
         if blizzFunc then
-            blizzFunc()
+            pcall(blizzFunc)  -- 3.80.1: guard nil frames from late-loaded addons
             C.Themes[addonName] = nil
         end
 
         local addonFunc = C.AddonThemes[addonName]
         if addonFunc then
-            addonFunc()
+            pcall(addonFunc)  -- 3.80.1: guard nil frames from late-loaded addons
             C.AddonThemes[addonName] = nil
         end
     end)
@@ -71,7 +71,36 @@ do
         local previous
         for i = 1, 3 do
             local bar = _G['MirrorTimer' .. i]
+            local text = _G['MirrorTimer' .. i .. 'Text']
             reskinTimerBar(bar)
+
+            -- 3.80.1: add custom timer text overlay (credit: ElvUI)
+            if text then
+                bar.label = text
+                text:Hide()
+            end
+            if not bar.TimerText then
+                local tt = bar:CreateFontString(nil, 'OVERLAY')
+                tt:SetFont(C.Assets.Fonts.Regular, 12, 'OUTLINE')
+                tt:SetPoint('CENTER', bar, 'CENTER', 0, 0)
+                bar.TimerText = tt
+                bar.timeSinceUpdate = 0.3
+                bar:HookScript('OnUpdate', function(frame, elapsed)
+                    if frame.paused then return end
+                    if frame.timeSinceUpdate >= 0.3 then
+                        local labelText = frame.label and frame.label:GetText()
+                        if frame.value > 0 then
+                            frame.TimerText:SetFormattedText('%s (%d:%02d)', labelText,
+                                frame.value / 60, frame.value % 60)
+                        else
+                            frame.TimerText:SetFormattedText('%s (0:00)', labelText)
+                        end
+                        frame.timeSinceUpdate = 0
+                    else
+                        frame.timeSinceUpdate = frame.timeSinceUpdate + elapsed
+                    end
+                end)
+            end
 
             if previous then
                 bar:SetPoint('TOP', previous, 'BOTTOM', 0, -5)
@@ -95,7 +124,7 @@ do
             return
         end
 
-        updateTimerTracker()
+        pcall(updateTimerTracker)
 
         F:RegisterEvent('START_TIMER', updateTimerTracker)
     end

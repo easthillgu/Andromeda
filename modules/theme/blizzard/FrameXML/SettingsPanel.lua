@@ -63,8 +63,8 @@ tinsert(C.BlizzThemes, function()
     F.ReskinTrimScroll(frame.Container.SettingsList.ScrollBar)
 
     local function ReskinDropdownArrow(button, direction)
-        button.NormalTexture:SetAlpha(0)
-        button.PushedTexture:SetAlpha(0)
+        if button.NormalTexture then button.NormalTexture:SetAlpha(0) end
+        if button.PushedTexture then button.PushedTexture:SetAlpha(0) end
         button:GetHighlightTexture():SetAlpha(0)
 
         local dis = button:GetDisabledTexture()
@@ -85,8 +85,8 @@ tinsert(C.BlizzThemes, function()
         local button = option.Button
         F.ReskinButton(button)
         button.__bg:SetInside(button, 6, 6)
-        button.NormalTexture:SetAlpha(0)
-        button.HighlightTexture:SetAlpha(0)
+        if button.NormalTexture then button.NormalTexture:SetAlpha(0) end
+        if button.HighlightTexture then button.HighlightTexture:SetAlpha(0) end
 
         ReskinDropdownArrow(option.DecrementButton, 'left')
         ReskinDropdownArrow(option.IncrementButton, 'right')

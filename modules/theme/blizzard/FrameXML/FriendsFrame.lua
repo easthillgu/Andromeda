@@ -26,19 +26,23 @@ local function reskinFriendButton(button)
         travelPass:SetSize(22, 22)
         travelPass:SetPoint('TOPRIGHT', -3, -6)
         F.CreateBDFrame(travelPass, 1)
-        travelPass.NormalTexture:SetAlpha(0)
-        travelPass.PushedTexture:SetAlpha(0)
-        travelPass.DisabledTexture:SetAlpha(0)
-        travelPass.HighlightTexture:SetColorTexture(1, 1, 1, 0.25)
-        travelPass.HighlightTexture:SetAllPoints()
+        if travelPass.NormalTexture then travelPass.NormalTexture:SetAlpha(0) end
+        if travelPass.PushedTexture then travelPass.PushedTexture:SetAlpha(0) end
+        if travelPass.DisabledTexture then travelPass.DisabledTexture:SetAlpha(0) end
+        if travelPass.HighlightTexture then
+            travelPass.HighlightTexture:SetColorTexture(1, 1, 1, 0.25)
+            travelPass.HighlightTexture:SetAllPoints()
+        end
         gameIcon:SetPoint('TOPRIGHT', travelPass, 'TOPLEFT', -4, 0)
 
         local icon = travelPass:CreateTexture(nil, 'ARTWORK')
         icon:SetTexCoord(0.1, 0.9, 0.1, 0.9)
         icon:SetAllPoints()
         button.newIcon = icon
-        travelPass.NormalTexture.ownerIcon = icon
-        hooksecurefunc(travelPass.NormalTexture, 'SetAtlas', replaceInviteTex)
+        if travelPass.NormalTexture then
+            travelPass.NormalTexture.ownerIcon = icon
+            hooksecurefunc(travelPass.NormalTexture, 'SetAtlas', replaceInviteTex)
+        end
 
         button.styled = true
     end
