@@ -54,6 +54,7 @@ function TOOLTIP:HookTooltipMethod()
 end
 
 function TOOLTIP:ReskinRewardIcon()
+    if not self then return end
     self.Icon:SetTexCoord(unpack(C.TEX_COORD))
     self.bg = F.CreateBDFrame(self.Icon, 0)
     F.ReskinIconBorder(self.IconBorder)

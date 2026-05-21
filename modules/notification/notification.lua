@@ -231,7 +231,7 @@ function NOTIFICATION:OnLogin()
     self:NewMailNotify()
     self:BagFullNotify()
     self:VersionCheck()
-    self:RareNotify()
+    if self.RareNotify then self:RareNotify() end
     self:ParagonNotify()
     self:InstanceNotify()
     self:CheckIncompatible()
