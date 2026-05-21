@@ -350,7 +350,13 @@ end
 ---------------------------------------------------------------------------
 if not _G.IsAddOnLoaded then
     _G.IsAddOnLoaded = function(name)
-        return _G.GetAddOnEnableState(UnitName('player'), name) > 0
+        for i = 1, GetNumAddOns() do
+            local addonName, _, _, enabled, _, _, _, _, loadOnDemand = GetAddOnInfo(i)
+            if addonName == name then
+                return enabled and not loadOnDemand
+            end
+        end
+        return false
     end
 end
 
