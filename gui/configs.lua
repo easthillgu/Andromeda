@@ -94,9 +94,9 @@ C.CharacterSettings = {
         Periodic = true,
         Merge = true,
         Incoming = true,
-        Outgoing = false,
+        Outgoing = true,
 
-        CooldownPulse = true,
+        CooldownPulse = false,
         FadeInTime = 0.3,
         FadeOutTime = 0.3,
         MaxAlpha = 1,
@@ -105,7 +105,7 @@ C.CharacterSettings = {
         HoldTime = 0.3,
         Threshold = 3,
 
-        BuffReminder = true,
+        BuffReminder = false,
     },
     Announcement = {
         Enable = true,
@@ -147,7 +147,7 @@ C.CharacterSettings = {
         MinItemLevelToShow = 1,
         NewItemFlash = true,
         BindType = true,
-        CombineFreeSlots = true,
+        CombineFreeSlots = false,
         AutoDeposit = false,
         SpecialBagsColor = true,
         CustomItemsList = {},
@@ -157,7 +157,7 @@ C.CharacterSettings = {
         FilterTradeGoods = true,
         FilterQuestItem = true,
         FilterJunk = true,
-        FilterAzeriteArmor = true,
+        --FilterAzeriteArmor = true,
         FilterEquipment = true,
         FilterConsumable = true,
         FilterLegendary = true,
@@ -189,7 +189,7 @@ C.CharacterSettings = {
         DebuffTypeColor = true,
         StealableBuffs = true,
 
-        Fader = true,
+        Fader = false,
         MinAlpha = 0,
         MaxAlpha = 1,
         Delay = 0,
@@ -268,11 +268,11 @@ C.CharacterSettings = {
         RaidBuffAuto = false,
 
 
-        CornerSpell = true,
+        CornerSpell = false,
         CornerSpellType = 1,
         CornerSpellScale = 1,
 
-        InstanceDebuff = true,
+        InstanceDebuff = false,
         DebuffWatcherDispellType = 1,
         DebuffWatcherScale = 1,
         DebuffWatcherClickThru = true,
@@ -301,7 +301,7 @@ C.CharacterSettings = {
         PartyWatcherSize = 26,
 
 
-        RaidFrame = true,
+        RaidFrame = false,
         RaidHealthColorStyle = 2,
         TeamIndex = false,
         RaidDirec = 2,
@@ -322,14 +322,14 @@ C.CharacterSettings = {
         PositionBySpec = false,
 
 
-        Boss = true,
+        Boss = false,
         BossWidth = 100,
         BossHealthHeight = 18,
         BossPowerHeight = 2,
         BossGap = 60,
         BossAuraPerRow = 4,
 
-        Arena = true,
+        Arena = false,
         ArenaWidth = 100,
         ArenaHealthHeight = 18,
         ArenaPowerHeight = 2,
@@ -337,7 +337,7 @@ C.CharacterSettings = {
         ArenaAuraPerRow = 6,
     },
     Nameplate = {
-        Enable = true,
+        Enable = false,
         Width = 120,
         Height = 12,
         ClickableWidth = 120,
@@ -428,15 +428,15 @@ C.CharacterSettings = {
         HideGuildRank = true,
         HideInCombat = false,
         SpecIlvl = true,
-        Covenant = true,
-        MythicPlusScore = true,
+        --Covenant = true,
+        --MythicPlusScore = true,
         PlayerInfoByAlt = true,
         TargetedBy = true,
         ShowId = true,
         ShowIdByAlt = true,
         ShowItemInfo = true,
         ShowItemInfoByAlt = true,
-        ParagonRewards = true,
+        --ParagonRewards = true,
     },
     Map = {
         Enable = true,
@@ -448,8 +448,8 @@ C.CharacterSettings = {
         Minimap = true,
         MinimapScale = 1,
         HiddenInCombat = false,
-        WhoPings = true,
-        ProgressBar = true,
+        --WhoPings = true,
+        --ProgressBar = true,
         Collector = true,
         Volume = true,
         Menu = true,
@@ -475,7 +475,7 @@ C.CharacterSettings = {
         NewMail = true,
         LowDurability = true,
         RareFound = true,
-        ParagonChest = true,
+        --ParagonChest = true,
     },
     Chat = {
         Enable = true,
@@ -496,7 +496,7 @@ C.CharacterSettings = {
         SmartChatBubble = false,
         ChannelBar = true,
         WhisperInvite = false,
-        InviteKeyword = '111 inv',
+        InviteKeyword = '',
         GuildOnly = true,
         WhisperSticky = true,
         WhisperSound = true,
@@ -591,9 +591,9 @@ C.CharacterSettings = {
         BarPetButtonPerRow = 10,
 
         BarStance = true,
-        BarStanceButtonSize = 30,
+        BarStanceButtonSize = 26,
         BarStanceFontSize = 12,
-        BarStanceButtonPerRow = 10,
+        BarStanceButtonPerRow = 7,
 
         BarVehicle = true,
         BarVehicleButtonSize = 30,
@@ -601,7 +601,7 @@ C.CharacterSettings = {
         BarExtra = true,
         BarExtraButtonSize = 40,
 
-        Fader = true,
+        Fader = False,
         FadeOutAlpha = 0,
         FadeInAlpha = 1,
         FadeOutDuration = 1,
@@ -635,7 +635,7 @@ C.CharacterSettings = {
         QuickQuest = false,
         CompletedSound = true,
         AutoCollapseTracker = true,
-        WowheadLink = true,
+        WowheadLink = false,
         IgnoreQuestNPC = {},
     },
 }
@@ -643,7 +643,7 @@ C.CharacterSettings = {
 C.AccountSettings = {
     DetectVersion = C.ADDON_VERSION,
     VersionCheck = true,
-    UIScale = 1,
+    UIScale = 1.2,
     HelpTips = {},
     GoldStatistic = {},
 
@@ -678,10 +678,10 @@ C.AccountSettings = {
     ReskinPremadeGroupsFilter = true,
     ReskinREHack = true,
     NumberFormat = 1,
-    FontOutline = false,
+    FontOutline = true,
     WorldTextScale = 1,
     FloatingCombatText = true,
-    FloatingCombatTextOldStyle = true,
+    FloatingCombatTextOldStyle = false,
     ChatFilterBlackList = '',
     ChatFilterWhiteList = '',
     RepairType = 1,
@@ -731,9 +731,9 @@ C.AccountSettings = {
     SmoothAmount = 0.25,
     MinimapAddOnCollector = true,
     IgnoredAddOns = '',
-    UnitframeTextureIndex = 1,
+    UnitframeTextureIndex = 2,
     UnitframeCustomTexture = '',
-    NameplateTextureIndex = 1,
+    NameplateTextureIndex = 2,
     NameplateCustomTexture = '',
     IgnoreNotesList = {},
 }

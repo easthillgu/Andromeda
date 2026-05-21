@@ -133,8 +133,8 @@ function ACTIONBAR:UpdateButtonConfig(i)
     local hotkey = self.buttonConfig.text.hotkey
     hotkey.font.font = C.Assets.Fonts.Condensed
     hotkey.font.size = C.DB['Actionbar']['Bar' .. i .. 'FontSize']
-    --hotkey.font.flags = 'OUTLINE,Monochrome'
-    hotkey.font.flags = 'Monochrome'
+    hotkey.font.flags = 'OUTLINE,Monochrome'
+    --hotkey.font.flags = 'Monochrome'
     hotkey.position.anchor = 'TOPLEFT'
     hotkey.position.relAnchor = false
     hotkey.position.offsetX = 2

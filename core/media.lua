@@ -145,7 +145,7 @@ do
         C.Assets.Fonts.Header = path .. 'header.ttf'
     elseif GetLocale() == 'zhCN' then
         C.Assets.Fonts.Regular = 'Fonts\\ARKai_T.ttf'
-        C.Assets.Fonts.Condensed = 'Fonts\\ARKai_T.ttf'
+        C.Assets.Fonts.Condensed = --[['Fonts\\ARKai_T.ttf']]C.ASSET_PATH .. 'fonts\\Pingfangpixel.ttf'
         C.Assets.Fonts.Bold = 'Fonts\\ARHei.ttf'
         C.Assets.Fonts.Heavy = 'Fonts\\ARHei.ttf'
         C.Assets.Fonts.Combat = 'Fonts\\ARHei.ttf'
