@@ -20,6 +20,7 @@ local function ChallengeModeCompleted()
         return
     end
 
+    if not _G.ChallengeModeCompleteBanner then return end
     _G.ChallengeModeCompleteBanner:HookScript('OnShow', function()
         F:Delay(1, function()
             Screenshot()

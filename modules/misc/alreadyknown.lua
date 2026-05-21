@@ -14,6 +14,7 @@ local function isPetCollected(speciesID)
     if not speciesID or speciesID == 0 then
         return
     end
+    if not C_PetJournal or not C_PetJournal.GetNumCollectedInfo then return end
     local numOwned = C_PetJournal.GetNumCollectedInfo(speciesID)
     if numOwned > 0 then
         return true

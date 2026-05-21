@@ -90,6 +90,7 @@ local function GetSlotItemLocation(id)
     if not azeriteSlots[id] then
         return
     end
+    if not _G.ItemLocation then return end
 
     local itemLocation = locationCache[id]
     if not itemLocation then
@@ -286,6 +287,7 @@ function IL:ItemLevel_FlyoutSetup()
             return
         end
 
+        if not _G.EquipmentManager_UnpackLocation or not _G.EquipmentManager_GetItemInfoByLocation then return end
         local _, _, bags, voidStorage, slot, bag = _G.EquipmentManager_UnpackLocation(location)
         if voidStorage then
             return
@@ -297,6 +299,7 @@ function IL:ItemLevel_FlyoutSetup()
             IL.ItemLevel_FlyoutUpdate(self, nil, slot, quality)
         end
     else
+        if not _G.C_Item or not _G.C_Item.GetItemQuality then return end
         local itemLocation = self:GetItemLocation()
         local quality = itemLocation and C_Item.GetItemQuality(itemLocation)
         if itemLocation:IsBagAndSlot() then

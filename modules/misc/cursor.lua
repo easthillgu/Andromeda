@@ -3,15 +3,17 @@ local CT = F:RegisterModule('CursorTrail')
 
 local pollingRate, numLines = 0.05, 15
 local lines = {}
-for i = 1, numLines do
-    local line = _G.UIParent:CreateLine()
-    line:SetThickness(_G.Lerp(5, 1, (i - 1) / numLines))
-    line:SetColorTexture(1, 1, 1)
+if _G.UIParent.CreateLine then
+    for i = 1, numLines do
+        local line = _G.UIParent:CreateLine()
+        line:SetThickness(_G.Lerp(5, 1, (i - 1) / numLines))
+        line:SetColorTexture(1, 1, 1)
 
-    local startA, endA = _G.Lerp(1, 0, (i - 1) / numLines), _G.Lerp(1, 0, i / numLines)
-    line:SetGradient('HORIZONTAL', CreateColor(1, 1, 1, startA), CreateColor(1, 1, 1, endA))
+        local startA, endA = _G.Lerp(1, 0, (i - 1) / numLines), _G.Lerp(1, 0, i / numLines)
+        line:SetGradient('HORIZONTAL', CreateColor(1, 1, 1, startA), CreateColor(1, 1, 1, endA))
 
-    lines[i] = { line = line, x = 0, y = 0 }
+        lines[i] = { line = line, x = 0, y = 0 }
+    end
 end
 
 local function GetLength(startX, startY, endX, endY)
@@ -25,10 +27,12 @@ local function GetLength(startX, startY, endX, endY)
 end
 
 local function UpdateTrail()
+    if not _G.GetScaledCursorPosition then return end
     local startX, startY = _G.GetScaledCursorPosition()
 
     for i = 1, numLines do
         local info = lines[i]
+        if not info or not info.line then break end
 
         local endX, endY = info.x, info.y
         if GetLength(startX, startY, endX, endY) < 0.1 then
@@ -45,6 +49,7 @@ local function UpdateTrail()
 end
 
 local function AddTrail()
+    if not _G.C_Timer or not _G.C_Timer.NewTicker then return end
     C_Timer.NewTicker(pollingRate, UpdateTrail)
 end
 
