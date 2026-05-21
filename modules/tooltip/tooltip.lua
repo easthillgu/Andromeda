@@ -26,11 +26,9 @@ local function CanAccessObject(obj)
 end
 
 function TOOLTIP:GetUnit()
-    if not self.GetTooltipData then return end
-    local data = self:GetTooltipData()
-    local guid = data and data.guid
-    local unit = guid and UnitTokenFromGUID(guid)
-    return unit, guid
+    -- 3.80.1: use native GetUnit() (returns name, unit), not Retail GetTooltipData()
+    local _, unit = self:GetUnit()
+    return unit
 end
 
 function TOOLTIP:HideTooltip()
@@ -115,7 +113,7 @@ function TOOLTIP:OnTooltipSetUnit()
         return
     end
 
-    local unit, guid = TOOLTIP.GetUnit(self)
+    local unit = TOOLTIP.GetUnit(self)
     if not unit or not UnitExists(unit) then
         return
     end
@@ -127,10 +125,6 @@ function TOOLTIP:ResetUnit(btn)
     if (btn == 'LSHIFT' or btn == 'LALT') and UnitExists('mouseover') then
         _G.GameTooltip:RefreshData()
     end
-end
-
-function TOOLTIP:OnTooltipCleared()
-    self.guid = nil
 end
 
 function TOOLTIP:GameTooltip_OnUpdate(elapsed)
@@ -476,9 +470,8 @@ function TOOLTIP:OnLogin()
         return
     end
 
-    if _G.TooltipDataProcessor then
-        _G.TooltipDataProcessor.AddTooltipPostCall(Enum.TooltipDataType.Unit, TOOLTIP.OnTooltipSetUnit)
-    end
+    -- 3.80.1: use HookScript instead of TooltipDataProcessor (TacoTip pattern)
+    _G.GameTooltip:HookScript('OnTooltipSetUnit', TOOLTIP.OnTooltipSetUnit)
     if _G.GameTooltip.StatusBar then
         hooksecurefunc(_G.GameTooltip.StatusBar, 'SetValue', TOOLTIP.RefreshStatusBar)
     end
