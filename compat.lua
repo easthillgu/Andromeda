@@ -350,12 +350,14 @@ end
 ---------------------------------------------------------------------------
 if not _G.IsAddOnLoaded then
     _G.IsAddOnLoaded = function(name)
-        for i = 1, GetNumAddOns() do
-            local addonName, _, _, enabled, _, _, _, _, loadOnDemand = GetAddOnInfo(i)
-            if addonName == name then
-                return enabled and not loadOnDemand
-            end
+        -- C_AddOns version first
+        if _G.C_AddOns and _G.C_AddOns.IsAddOnLoaded then
+            return _G.C_AddOns.IsAddOnLoaded(name)
         end
+        -- Check global table existence as fallback
+        if _G[name] then return true end
+        -- Check uppercase variant
+        if name:upper() and _G[name:upper()] then return true end
         return false
     end
 end
