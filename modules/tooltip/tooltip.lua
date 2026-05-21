@@ -101,8 +101,8 @@ function TOOLTIP:UpdateUnitInfo(unit)
 
     local target = UnitName(unit .. 'target')
     if target then
-        local targetColor = F:UnitColor(unit .. 'target')
-        self:AddDoubleLine(_G.TARGET .. ':', target, 0.8, 0.8, 0.8, targetColor.r, targetColor.g, targetColor.b)
+        local tr, tg, tb = F:UnitColor(unit .. 'target')
+        self:AddDoubleLine(_G.TARGET .. ':', target, 0.8, 0.8, 0.8, tr, tg, tb)
     end
 
     self:Show()
