@@ -484,7 +484,6 @@ function TOOLTIP:OnLogin()
     hooksecurefunc('GameTooltip_ShowProgressBar', TOOLTIP.GameTooltip_ShowProgressBar)
     hooksecurefunc('GameTooltip_SetDefaultAnchor', TOOLTIP.GameTooltip_SetDefaultAnchor)
 
-    _G.GameTooltip:HookScript('OnTooltipCleared', TOOLTIP.OnTooltipCleared)
     _G.GameTooltip:HookScript('OnUpdate', TOOLTIP.GameTooltip_OnUpdate)
     _G.GameTooltip.FadeOut = TOOLTIP.FadeOut
 
