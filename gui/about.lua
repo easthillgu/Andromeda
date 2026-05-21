@@ -2,26 +2,17 @@ local F, C, L = unpack(select(2, ...))
 local GUI = F:GetModule('GUI')
 
 GUI.urlsList = {
-    curse = 'https://www.curseforge.com/wow/addons/andromeda',
-    wago = 'https://addons.wago.io/addons/andromeda',
-    wowi = 'https://www.wowinterface.com/downloads/info23258',
-    github = 'https://github.com/fafaraway/andromeda',
-    tracker = 'https://github.com/fafaraway/andromeda/issues',
-    discord = 'https://discord.io/AndromedaUI',
-    qq = '203621176',
+
 }
 
 GUI.lablesList = {
-    curse = 'CurseForge',
-    wago = 'Wago',
-    wowi = 'WoWI',
-    github = 'Github',
-    discord = 'Discord',
-    qq = 'QQ Group',
+
 }
 
 local function ResetUrlBox(self)
-    self:SetText(self.url)
+    if self.url then
+        self:SetText(self.url)
+    end
 end
 
 local function UrlBox_OnEditFocusGained(self)
