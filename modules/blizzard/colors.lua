@@ -28,102 +28,104 @@ local function smoothColor(cur, max, color)
     return F:RgbToHex(r, g, b)
 end
 
--- Guild
-local currentView
-local function setView(view)
-    currentView = view
+-- Guild (3.80.1: use classic GuildStatus_Update + GuildFrameButton, ref iColor)
+local function classColorRGB(class)
+    local color = C.ClassColors[C.ClassList[class] or class]
+    if not color then color = C.ClassColors['PRIEST'] end
+    return color.r, color.g, color.b
 end
 
-local function updateGuildView()
-    currentView = currentView or GetCVar('guildRosterView')
+hooksecurefunc('GuildStatus_Update', function()
+    local guildOffset = FauxScrollFrame_GetOffset(GuildListScrollFrame)
+    local myZone = GetRealZoneText()
 
-    local playerArea = GetRealZoneText()
-    local buttons = _G.GuildRosterContainer.buttons
+    for i = 1, GUILDMEMBERS_TO_DISPLAY do
+        local name, _, rankIndex, level, _, zone, _, class, online = GetGuildRosterInfo(guildOffset + i)
+        if not name then break end
 
-    for _, button in ipairs(buttons) do
-        if button:IsShown() and button.online and button.guildIndex then
-            if currentView == 'tradeskill' then
-                local _, _, _, headerName, _, _, _, _, _, _, _, zone = GetGuildTradeSkillInfo(button.guildIndex)
-                if not headerName and zone == playerArea then
-                    button.string2:SetText('|cff00ff00' .. zone)
-                end
+        local dimmed = not online
+        local r, g, b = classColorRGB(class)
+
+        local nameText = _G['GuildFrameButton' .. i .. 'Name']
+        local zoneText = _G['GuildFrameButton' .. i .. 'Zone']
+        local levelText = _G['GuildFrameButton' .. i .. 'Level']
+        local classText = _G['GuildFrameButton' .. i .. 'Class']
+
+        local factor = dimmed and 0.5 or 1
+        if nameText then nameText:SetTextColor(r * factor, g * factor, b * factor) end
+        if classText then classText:SetTextColor(r * factor, g * factor, b * factor) end
+        if zoneText then
+            if zone == myZone then
+                zoneText:SetTextColor(0, 1, 0)
             else
-                local _, rank, rankIndex, level, _, zone, _, _, _, _, _, _, _, _, _, repStanding = GetGuildRosterInfo(button.guildIndex)
-                if currentView == 'playerStatus' then
-                    button.string1:SetText(diffColor(level) .. level)
-                    if zone == playerArea then
-                        button.string3:SetText('|cff00ff00' .. zone)
-                    end
-                elseif currentView == 'guildStatus' then
-                    if rankIndex and rank then
-                        button.string2:SetText(smoothColor(rankIndex, 10, rankColor) .. rank)
-                    end
-                elseif currentView == 'achievement' then
-                    button.string1:SetText(diffColor(level) .. level)
-                elseif currentView == 'reputation' then
-                    button.string1:SetText(diffColor(level) .. level)
-                    if repStanding then
-                        button.string3:SetText(smoothColor(repStanding - 4, 5, repColor) .. _G['FACTION_STANDING_LABEL' .. repStanding])
+                zoneText:SetTextColor(1 * factor, 1 * factor, 1 * factor)
+            end
+        end
+        if levelText then
+            local lc = GetQuestDifficultyColor(level)
+            levelText:SetTextColor(lc.r * factor, lc.g * factor, lc.b * factor)
+        end
+    end
+end)
+
+-- Friends (3.80.1: use FriendsFrame_UpdateFriends + buttons array, ref iColor)
+local function updateFriends()
+    local buttons = FriendsFrameFriendsScrollFrame.buttons
+    local myZone = GetRealZoneText()
+
+    for i = 1, #buttons do
+        local button = buttons[i]
+        if button:IsShown() then
+            if button.buttonType == FRIENDS_BUTTON_TYPE_WOW then
+                local info = C_FriendList.GetFriendInfoByIndex(button.id)
+                if info and info.connected then
+                    local classToken = (LOCALIZED_CLASS_NAMES_MALE[info.className] and info.className) or
+                                       C.ClassList[info.className] or info.className
+                    local r, g, b = classColorRGB(classToken)
+                    if button.name then button.name:SetTextColor(r, g, b) end
+                    if info.area and info.area == myZone and button.info then
+                        button.info:SetTextColor(0, 1, 0)
                     end
                 end
             end
         end
     end
 end
+hooksecurefunc(FriendsFrameFriendsScrollFrame, 'update', updateFriends)
+hooksecurefunc('FriendsFrame_UpdateFriends', updateFriends)
 
-local function updateGuildUI(event, addon)
-    if addon ~= 'Blizzard_GuildUI' then
-        return
-    end
-    hooksecurefunc('GuildRoster_SetView', setView)
-    hooksecurefunc('GuildRoster_Update', updateGuildView)
-    hooksecurefunc(_G.GuildRosterContainer, 'update', updateGuildView)
+-- WhoFrame (3.80.1: use WhoList_Update, ref iColor)
+hooksecurefunc('WhoList_Update', function()
+    local whoOffset = FauxScrollFrame_GetOffset(WhoListScrollFrame)
+    local myZone = GetRealZoneText()
+    local myGuild = GetGuildInfo('player')
 
-    F:UnregisterEvent(event, updateGuildUI)
-end
-F:RegisterEvent('ADDON_LOADED', updateGuildUI)
+    for i = 1, WHOS_TO_DISPLAY do
+        local info = C_FriendList.GetWhoInfo(whoOffset + i)
+        if not info then break end
 
--- Whoframe
-if _G.WhoFrame and _G.WhoFrame.ScrollBox then
-    local columnTable = {}
-    hooksecurefunc(_G.WhoFrame.ScrollBox, 'Update', function(self)
-        local playerZone = GetRealZoneText()
-        local playerGuild = GetGuildInfo('player')
-        local playerRace = UnitRace('player')
+        local nameText = _G['WhoFrameButton' .. i .. 'Name']
+        local levelText = _G['WhoFrameButton' .. i .. 'Level']
+        local variableText = _G['WhoFrameButton' .. i .. 'Variable']
 
-        for i = 1, self.ScrollTarget:GetNumChildren() do
-            local button = select(i, self.ScrollTarget:GetChildren())
-
-            local nameText = button.Name
-            local levelText = button.Level
-            local variableText = button.Variable
-
-            local info = C_FriendList.GetWhoInfo(button.index)
-            if info then
-                local guild, level, race, zone, class = info.fullGuildName, info.level, info.raceStr, info.area, info.filename
-                if zone == playerZone then
-                    zone = '|cff00ff00' .. zone
-                end
-                if guild == playerGuild then
-                    guild = '|cff00ff00' .. guild
-                end
-                if race == playerRace then
-                    race = '|cff00ff00' .. race
-                end
-
-                wipe(columnTable)
-
-                tinsert(columnTable, zone)
-                tinsert(columnTable, guild)
-                tinsert(columnTable, race)
-
-                nameText:SetTextColor(classColor(class, true))
-                levelText:SetText(diffColor(level) .. level)
-                variableText:SetText(columnTable[UIDropDownMenu_GetSelectedID(_G.WhoFrameDropDown)])
+        if nameText and info.filename then
+            local r, g, b = classColorRGB(info.filename)
+            nameText:SetTextColor(r, g, b)
+        end
+        if levelText then
+            local lc = GetQuestDifficultyColor(info.level)
+            levelText:SetTextColor(lc.r, lc.g, lc.b)
+        end
+        if variableText then
+            local val = variableText:GetText()
+            if val == info.area and val == myZone then
+                variableText:SetTextColor(0, 1, 0)
+            elseif val == info.fullGuildName and val == myGuild then
+                variableText:SetTextColor(0, 1, 0)
             end
         end
-    end)
-end
+    end
+end)
 
 --
 local blizzHexColors = {}
