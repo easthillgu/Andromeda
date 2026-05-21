@@ -11,7 +11,8 @@ do
     F:RegisterModule('ActionBar')
     F:RegisterModule('Announcement')
     F:RegisterModule('Aura')
-    F:RegisterModule('Automation')
+    -- 3.80.1: not ported
+    -- F:RegisterModule('Automation')
     F:RegisterModule('Blizzard')
     F:RegisterModule('Chat')
     F:RegisterModule('Combat')
@@ -21,9 +22,11 @@ do
     F:RegisterModule('Inventory')
     F:RegisterModule('ItemLevel')
     F:RegisterModule('Layout')
-    F:RegisterModule('Logo')
+    -- 3.80.1: not ported
+    -- F:RegisterModule('Logo')
     F:RegisterModule('Map')
-    F:RegisterModule('Misc')
+    -- 3.80.1: not ported
+    -- F:RegisterModule('Misc')
     F:RegisterModule('Nameplate')
     F:RegisterModule('Notification')
     -- 3.80.1: Quest module not ported (quest announce in Announcement module)

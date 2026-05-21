@@ -81,7 +81,9 @@ function TOOLTIP:ReskinTipIcon()
     if GameTooltip.SetSpell and type(GameTooltip.SetSpell) == 'function' then
         hooksecurefunc(GameTooltip, 'SetSpell', TOOLTIP.HookTooltipSetSpell)
     end
-    hooksecurefunc(ItemRefTooltip, 'SetItem', TOOLTIP.HookTooltipSetItem)
+    if ItemRefTooltip.SetItem and type(ItemRefTooltip.SetItem) == 'function' then
+        hooksecurefunc(ItemRefTooltip, 'SetItem', TOOLTIP.HookTooltipSetItem)
+    end
     if ItemRefTooltip.SetSpell and type(ItemRefTooltip.SetSpell) == 'function' then
         hooksecurefunc(ItemRefTooltip, 'SetSpell', TOOLTIP.HookTooltipSetSpell)
     end
