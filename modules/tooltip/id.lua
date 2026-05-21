@@ -171,18 +171,20 @@ function TOOLTIP:AddIDs()
         end
     end)
 
-    hooksecurefunc(GameTooltip, 'SetQuestLogReward', function(self, questID)
-        if self:IsForbidden() then
-            return
-        end
-        local link = GetQuestLogItemLink('reward', questID)
-        if link then
-            local id = GetItemInfoFromHyperlink(link)
-            if id then
-                TOOLTIP.AddLineForId(self, id, typesList.item)
+    if GameTooltip.SetQuestLogReward then
+        hooksecurefunc(GameTooltip, 'SetQuestLogReward', function(self, questID)
+            if self:IsForbidden() then
+                return
             end
-        end
-    end)
+            local link = GetQuestLogItemLink('reward', questID)
+            if link then
+                local id = GetItemInfoFromHyperlink(link)
+                if id then
+                    TOOLTIP.AddLineForId(self, id, typesList.item)
+                end
+            end
+        end)
+    end
 
     hooksecurefunc(GameTooltip, 'SetAchievement', function(self, id)
         if self:IsForbidden() then
