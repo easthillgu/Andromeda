@@ -103,6 +103,7 @@ local mapAreaPoiIDs = {
 
 local function getInvasionInfo(mapID)
     local areaPoiID = mapAreaPoiIDs[mapID]
+    if not C_AreaPoiInfo or not C_AreaPoiInfo.GetAreaPOISecondsLeft then return end
     local seconds = C_AreaPoiInfo.GetAreaPOISecondsLeft(areaPoiID)
     local mapInfo = C_Map.GetMapInfo(mapID)
     return seconds, mapInfo.name
