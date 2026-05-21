@@ -88,7 +88,7 @@ function ACTIONBAR:CreatePetBar()
 
     local frame = CreateFrame('Frame', C.ADDON_TITLE .. 'ActionBarPet', _G.UIParent, 'SecureHandlerStateTemplate')
     frame.mover = F.Mover(frame, L['PetBar'], 'PetBar',
-        { 'BOTTOMRIGHT', _G[C.ADDON_TITLE .. 'ActionBar3'], 'TOPRIGHT', 0, margin + 6 })
+        { 'BOTTOMRIGHT', _G[C.ADDON_TITLE .. 'ActionBar3'], 'TOPRIGHT', 0, 0 })
     ACTIONBAR.movers[10] = frame.mover
 
     for i = 1, num do

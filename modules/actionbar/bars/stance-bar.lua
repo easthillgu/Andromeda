@@ -99,7 +99,7 @@ function ACTIONBAR:CreateStanceBar()
     local buttonList = {}
     local frame = CreateFrame('Frame', C.ADDON_TITLE .. 'ActionBarStance', _G.UIParent, 'SecureHandlerStateTemplate')
     frame.mover = F.Mover(frame, L['StanceBar'], 'StanceBar',
-        { 'BOTTOMLEFT', _G[C.ADDON_TITLE .. 'ActionBar3'], 'TOPLEFT', 0, margin + 6 })
+        { 'BOTTOMLEFT', _G[C.ADDON_TITLE .. 'ActionBar3'], 'TOPLEFT', 0, 0 })
     ACTIONBAR.movers[11] = frame.mover
 
     -- StanceBar
