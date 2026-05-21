@@ -78,9 +78,13 @@ function TOOLTIP:ReskinTipIcon()
     if GameTooltip.SetItem then
         hooksecurefunc(GameTooltip, 'SetItem', TOOLTIP.HookTooltipSetItem)
     end
-    hooksecurefunc(GameTooltip, 'SetSpell', TOOLTIP.HookTooltipSetSpell)
+    if GameTooltip.SetSpell and type(GameTooltip.SetSpell) == 'function' then
+        hooksecurefunc(GameTooltip, 'SetSpell', TOOLTIP.HookTooltipSetSpell)
+    end
     hooksecurefunc(ItemRefTooltip, 'SetItem', TOOLTIP.HookTooltipSetItem)
-    hooksecurefunc(ItemRefTooltip, 'SetSpell', TOOLTIP.HookTooltipSetSpell)
+    if ItemRefTooltip.SetSpell and type(ItemRefTooltip.SetSpell) == 'function' then
+        hooksecurefunc(ItemRefTooltip, 'SetSpell', TOOLTIP.HookTooltipSetSpell)
+    end
 
     if GameTooltip.SetAzeriteEssence then
         hooksecurefunc(GameTooltip, 'SetAzeriteEssence', function(self)
