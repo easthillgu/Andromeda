@@ -303,16 +303,6 @@ if not _G.CooldownFrame_Set then
 end
 
 ---------------------------------------------------------------------------
--- GetPhysicalScreenSize fallback
----------------------------------------------------------------------------
-if not _G.GetPhysicalScreenSize then
-    _G.GetPhysicalScreenSize = function()
-        local uiScale = _G.UIParent:GetEffectiveScale()
-        return _G.UIParent:GetWidth() * uiScale, _G.UIParent:GetHeight() * uiScale
-    end
-end
-
----------------------------------------------------------------------------
 -- SOUNDKIT stub（正式服音效枚举）
 -- 对应的数字 ID 在正式服才存在，经典版中这些音效路径不同
 -- 如果不播放则直接跳过
@@ -333,25 +323,6 @@ if not _G.SOUNDKIT then
         IG_CREATURE_NEUTRAL_SELECT = 0,
         INTERFACE_SOUND_LOST_TARGET_UNIT = 0,
     }
-end
-
----------------------------------------------------------------------------
--- C_AddOns fallback
----------------------------------------------------------------------------
-if not _G.C_AddOns then
-    _G.C_AddOns = {}
-end
-if not _G.C_AddOns.GetAddOnMetadata then
-    _G.C_AddOns.GetAddOnMetadata = _G.GetAddOnMetadata
-end
-
----------------------------------------------------------------------------
--- IsAddOnLoaded fallback (3.80.1 中可能已被移除)
----------------------------------------------------------------------------
-if not _G.IsAddOnLoaded then
-    _G.IsAddOnLoaded = _G.C_AddOns and _G.C_AddOns.IsAddOnLoaded or function(name)
-        return _G.GetAddOnEnableState(UnitName('player'), name) > 0
-    end
 end
 
 ---------------------------------------------------------------------------
