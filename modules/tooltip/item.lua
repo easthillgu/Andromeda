@@ -55,14 +55,14 @@ end
 function TOOLTIP:ItemInfo()
     _G.ITEM_CREATED_BY = ''
 
-    hooksecurefunc(_G.GameTooltip, 'SetItem', function(self)
+    _G.GameTooltip:HookScript('OnTooltipSetItem', function(self)
         if self:IsForbidden() then
             return
         end
         addLinesForItem(self)
     end)
 
-    hooksecurefunc(_G.ItemRefTooltip, 'SetItem', function(self)
+    _G.ItemRefTooltip:HookScript('OnTooltipSetItem', function(self)
         if self:IsForbidden() then
             return
         end

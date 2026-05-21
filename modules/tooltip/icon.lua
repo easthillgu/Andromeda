@@ -76,20 +76,12 @@ function TOOLTIP:ReskinTipIcon()
         TOOLTIP.SetupTooltipIcon(self)
     end)
 
-    if GameTooltip.SetItem then
-        hooksecurefunc(GameTooltip, 'SetItem', TOOLTIP.HookTooltipSetItem)
-    end
-    if GameTooltip.SetSpell and type(GameTooltip.SetSpell) == 'function' then
-        hooksecurefunc(GameTooltip, 'SetSpell', TOOLTIP.HookTooltipSetSpell)
-    end
-    if ItemRefTooltip.SetItem and type(ItemRefTooltip.SetItem) == 'function' then
-        hooksecurefunc(ItemRefTooltip, 'SetItem', TOOLTIP.HookTooltipSetItem)
-    end
-    if ItemRefTooltip.SetSpell and type(ItemRefTooltip.SetSpell) == 'function' then
-        hooksecurefunc(ItemRefTooltip, 'SetSpell', TOOLTIP.HookTooltipSetSpell)
-    end
+    GameTooltip:HookScript('OnTooltipSetItem', TOOLTIP.HookTooltipSetItem)
+    GameTooltip:HookScript('OnTooltipSetSpell', TOOLTIP.HookTooltipSetSpell)
+    ItemRefTooltip:HookScript('OnTooltipSetItem', TOOLTIP.HookTooltipSetItem)
+    ItemRefTooltip:HookScript('OnTooltipSetSpell', TOOLTIP.HookTooltipSetSpell)
 
-    if GameTooltip.SetAzeriteEssence then
+    --[[if GameTooltip.SetAzeriteEssence then
         hooksecurefunc(GameTooltip, 'SetAzeriteEssence', function(self)
             TOOLTIP.SetupTooltipIcon(self)
         end)
@@ -99,7 +91,7 @@ function TOOLTIP:ReskinTipIcon()
         hooksecurefunc(GameTooltip, 'SetAzeriteEssenceSlot', function(self)
             TOOLTIP.SetupTooltipIcon(self)
         end)
-    end
+    end]]
 
     TOOLTIP.ReskinRewardIcon(GameTooltip.ItemTooltip)
     TOOLTIP.ReskinRewardIcon(EmbeddedItemTooltip.ItemTooltip)
