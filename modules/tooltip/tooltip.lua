@@ -449,7 +449,9 @@ function TOOLTIP:ParagonRewards()
 end
 
 function TOOLTIP:FixStoneSoupError()
+    if not _G.GameTooltip.SetRecipeResultItem then return end
     hooksecurefunc(_G.GameTooltip, 'SetRecipeResultItem', function(self, recipeID)
+        if not C_TradeSkillUI then return end
         local itemID = C_TradeSkillUI.GetTradeSkillLineForRecipe(recipeID)
         if itemID == 2653 then
             for i = 3, self:NumLines() do
