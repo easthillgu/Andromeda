@@ -5,6 +5,6 @@
 感谢审美好、技术牛的各 UI 作者（NDui、ElvUI、FreeUI 等）的原始代码。
 
 ## 项目目标
-- Andromeda 适配 WoW Cataclysm Classic 时光服 (3.80.1)
+- Andromeda 适配 WoW Titan Reforeged Classic (3.80.1)
 - 模块化架构，兼容最新 API
 - 优雅的 UI 设计
