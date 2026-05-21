@@ -125,36 +125,6 @@ _G.Enum.RafLinkType = _G.Enum.RafLinkType or {
 }
 
 ---------------------------------------------------------------------------
--- CreateColor (正式服 color object)
----------------------------------------------------------------------------
-if not _G.CreateColor then
-    _G.CreateColor = function(r, g, b, a)
-        local color = {
-            r = r or 0,
-            g = g or 0,
-            b = b or 0,
-            a = a or 1,
-        }
-        function color:GetRGB()
-            return self.r, self.g, self.b
-        end
-        function color:GetRGBA()
-            return self.r, self.g, self.b, self.a
-        end
-        function color:GetRGBAsBytes()
-            return self.r * 255, self.g * 255, self.b * 255
-        end
-        function color:SetRGB(r, g, b)
-            self.r, self.g, self.b = r, g, b
-        end
-        function color:SetRGBA(r, g, b, a)
-            self.r, self.g, self.b, self.a = r, g, b, a
-        end
-        return color
-    end
-end
-
----------------------------------------------------------------------------
 -- CreateFromHex (正式服 10.1+)
 ---------------------------------------------------------------------------
 if not _G.CreateFromHex then
