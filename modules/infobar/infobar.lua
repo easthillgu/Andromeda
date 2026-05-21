@@ -242,7 +242,8 @@ function INFOBAR:OnLogin()
 
     INFOBAR:CreateGuildBlock()
     INFOBAR:CreateFriendsBlock()
-    INFOBAR:CreateDailyBlock()
+    -- 3.80.1: daily.lua not loaded in _loader.xml
+    -- INFOBAR:CreateDailyBlock()
 
     for _, block in pairs(INFOBAR.Modules) do
         INFOBAR:LoadInfobar(block)
