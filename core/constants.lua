@@ -80,7 +80,8 @@ do
     end
     C.QualityColors[-1] = { r = 0, g = 0, b = 0 }
     C.QualityColors[Enum.ItemQuality.Poor] = { r = _G.COMMON_GRAY_COLOR.r, g = _G.COMMON_GRAY_COLOR.g, b = _G.COMMON_GRAY_COLOR.b }
-    C.QualityColors[Enum.ItemQuality.Common or 1] = { r = 0, g = 0, b = 0 }
+    -- 3.80.1: keep Blizzard default for Common (white), Enum.ItemQuality.Common uses Standard alias
+    C.QualityColors[Enum.ItemQuality.Common or 1] = C.QualityColors[Enum.ItemQuality.Common or 1] or { r = _G.BAG_ITEM_QUALITY_COLORS[1].r, g = _G.BAG_ITEM_QUALITY_COLORS[1].g, b = _G.BAG_ITEM_QUALITY_COLORS[1].b }
     C.QualityColors[99] = { r = 1, g = 0, b = 0 }
 
     _G.GOLD_AMOUNT_SYMBOL = format('|cffffd700%s|r', _G.GOLD_AMOUNT_SYMBOL)
