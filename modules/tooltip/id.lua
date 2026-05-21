@@ -109,7 +109,7 @@ function TOOLTIP:AddIDs()
         end
     end)
 
-    hooksecurefunc(GameTooltip, 'SetItem', function(self)
+    GameTooltip:HookScript('OnTooltipSetItem', function(self)
         if self:IsForbidden() then
             return
         end
@@ -122,7 +122,7 @@ function TOOLTIP:AddIDs()
         end
     end)
 
-    hooksecurefunc(GameTooltip, 'SetSpell', function(self)
+    GameTooltip:HookScript('OnTooltipSetSpell', function(self)
         if self:IsForbidden() then
             return
         end
