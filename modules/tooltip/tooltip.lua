@@ -40,7 +40,7 @@ function TOOLTIP:UpdateUnitInfo(unit)
         return
     end
 
-    local color = F:UnitColor(unit)
+    local r, g, b = F:UnitColor(unit)
     local level = UnitLevel(unit)
     local name = GetUnitName(unit, true)
     local _, class = UnitClass(unit)
@@ -66,7 +66,7 @@ function TOOLTIP:UpdateUnitInfo(unit)
         if classification and classification ~= 'normal' then
             nameText = nameText .. (classification[classification] or '')
         end
-        self:AddLine(nameText, color.r, color.g, color.b)
+        self:AddLine(nameText, r, g, b)
     end
 
     if level then
