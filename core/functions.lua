@@ -1494,6 +1494,7 @@ do
     do
         local x1, x2, y1, y2 = unpack(C.TEX_COORD)
         function F:ReskinIcon(shadow)
+            if not self then return nil end
             self:SetTexCoord(x1, x2, y1, y2)
             local bg = F.CreateBDFrame(self, 0.25) -- exclude from opacity control
             bg:SetBackdropBorderColor(0, 0, 0)
@@ -1585,6 +1586,7 @@ do
         end
 
         function F:ReskinIconBorder(needInit, useAtlas)
+            if not self then return end
             self:SetAlpha(0)
             self.__owner = self:GetParent()
             if not self.__owner.bg then
@@ -1797,6 +1799,7 @@ do
 
     do
         function F:ReskinTab()
+            if not self then return end
             self:DisableDrawLayer('BACKGROUND')
 
             if self.LeftHighlight then
@@ -1984,6 +1987,7 @@ do
 
         -- WowTrimScrollBar
         function F:ReskinTrimScroll()
+            if not self then return end
             local minimal = self:GetWidth() < 10
 
             F.StripTextures(self)
@@ -2051,6 +2055,7 @@ do
         end
 
         function F:ReskinClose(parent, xOffset, yOffset, override)
+            if not self then return end
             parent = parent or self:GetParent()
             xOffset = xOffset or -6
             yOffset = yOffset or -6
@@ -2130,6 +2135,7 @@ do
         end
 
         function F:ReskinFilterReset()
+            if not self then return end
             F.StripTextures(self)
             self:ClearAllPoints()
             self:SetPoint('TOPRIGHT', -5, 10)
@@ -2141,6 +2147,7 @@ do
         end
 
         function F:ReskinFilterButton()
+            if not self then return end
             F.StripTextures(self)
             F.ReskinButton(self)
 
@@ -2159,6 +2166,7 @@ do
         end
 
         function F:ReskinNavBar()
+            if not self then return end
             if self.navBarStyled then
                 return
             end
@@ -2190,6 +2198,7 @@ do
 
     do
         function F:ReskinSlider(vertical)
+            if not self then return end
             F.StripTextures(self)
 
             local bg = F.CreateBDFrame(self, 0.25, true)
@@ -2249,6 +2258,7 @@ do
         end
 
         function F:ReskinStepperSlider(minimal)
+            if not self then return end
             F.StripTextures(self)
             reskinStepper(self.Back, 'left')
             reskinStepper(self.Forward, 'right')
@@ -2303,6 +2313,7 @@ do
         end
 
         function F:ReskinCollapse(isAtlas)
+            if not self then return end
             self:SetNormalTexture(0)
             self:SetHighlightTexture(0)
             self:SetPushedTexture(0)
@@ -2330,6 +2341,7 @@ do
 
         local buttonNames = { 'MaximizeButton', 'MinimizeButton' }
         function F:ReskinMinMax()
+            if not self then return end
             for _, name in next, buttonNames do
                 local button = self[name]
                 if button then
@@ -2359,6 +2371,7 @@ do
 
     do
         function F:ReskinPortraitFrame()
+            if not self then return end
             F.StripTextures(self)
             local bg = F.SetBD(self)
             bg:SetAllPoints(self)
@@ -2392,6 +2405,7 @@ do
         end
 
         function F:ReskinGarrisonPortrait()
+            if not self then return end
             self.squareBG = F.CreateBDFrame(self.Portrait, 1)
 
             local level = self.Level or self.LevelText
@@ -2515,12 +2529,14 @@ do
         end
 
         function F:ReskinSmallRole(role)
+            if not self then return end
             self:SetTexture(F.GetRoleTex(role))
             self:SetTexCoord(0, 1, 0, 1)
             self:SetSize(32, 32)
         end
 
         function F:ReskinRole(role)
+            if not self then return end
             if self.background then
                 self.background:SetTexture('')
             end
@@ -2637,6 +2653,7 @@ do
     -- Handle radio
 
     function F:ReskinRadio()
+        if not self then return end
         self:GetNormalTexture():SetAlpha(0)
         self:GetHighlightTexture():SetAlpha(0)
         self:SetCheckedTexture(C.Assets.Textures.Backdrop)
@@ -2659,6 +2676,7 @@ do
     -- Handle editbox
 
     function F:ReskinEditbox(height, width)
+        if not self then return end
         local frameName = self.GetName and self:GetName()
         for _, region in pairs(blizzRegions) do
             region = frameName and _G[frameName .. region] or self[region]
@@ -2684,6 +2702,7 @@ do
     -- Handle color swatch
 
     function F:ReskinColorSwatch()
+        if not self then return end
         local frameName = self.GetName and self:GetName()
         local swatchBg = frameName and _G[frameName .. 'SwatchBg']
         if swatchBg then
