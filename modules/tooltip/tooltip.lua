@@ -6,10 +6,12 @@ local ignoreString = '|cffff0000' .. _G.IGNORED .. ':|r %s'
 local blanchyFix = '|n%s+|n'
 
 TOOLTIP.MountIDs = {}
-local mountIDs = C_MountJournal.GetMountIDs()
-for _, mountID in ipairs(mountIDs) do
-    local _, spellID = C_MountJournal.GetMountInfoByID(mountID)
-    TOOLTIP.MountIDs[spellID] = mountID
+if C_MountJournal then
+    local mountIDs = C_MountJournal.GetMountIDs()
+    for _, mountID in ipairs(mountIDs) do
+        local _, spellID = C_MountJournal.GetMountInfoByID(mountID)
+        TOOLTIP.MountIDs[spellID] = mountID
+    end
 end
 
 local classification = {
@@ -24,6 +26,7 @@ local function CanAccessObject(obj)
 end
 
 function TOOLTIP:GetUnit()
+    if not self.GetTooltipData then return end
     local data = self:GetTooltipData()
     local guid = data and data.guid
     local unit = guid and UnitTokenFromGUID(guid)
@@ -287,7 +290,7 @@ function TOOLTIP:ItemInfo()
         return
     end
 
-    hooksecurefunc(_G.GameTooltip, 'SetItem', function(self)
+    _G.GameTooltip:HookScript('OnTooltipSetItem', function(self)
         if self:IsForbidden() then
             return
         end
@@ -296,7 +299,7 @@ function TOOLTIP:ItemInfo()
         if link then
             local itemID = GetItemInfoFromHyperlink(link)
             if itemID then
-                local itemLevel = GetDetailedItemLevelInfo(link)
+                local itemLevel = GetDetailedItemLevelInfo and GetDetailedItemLevelInfo(link)
                 if itemLevel then
                     self:AddLine(C.INFO_COLOR .. _G.STAT_AVERAGE_ITEM_LEVEL .. ':|r ' .. itemLevel)
                 end
@@ -314,7 +317,7 @@ function TOOLTIP:ItemInfo()
 end
 
 function TOOLTIP:MountSource()
-    hooksecurefunc(_G.GameTooltip, 'SetSpell', function(self)
+    _G.GameTooltip:HookScript('OnTooltipSetSpell', function(self)
         if self:IsForbidden() then
             return
         end
@@ -322,9 +325,11 @@ function TOOLTIP:MountSource()
         local _, id = self:GetSpell()
         if id and TOOLTIP.MountIDs[id] then
             local mountID = TOOLTIP.MountIDs[id]
-            local _, _, sourceText = C_MountJournal.GetMountInfoExtraByID(mountID)
-            if sourceText then
-                self:AddLine(C.INFO_COLOR .. _G.SOURCES .. ':|r ' .. sourceText)
+            if C_MountJournal then
+                local _, _, sourceText = C_MountJournal.GetMountInfoExtraByID(mountID)
+                if sourceText then
+                    self:AddLine(C.INFO_COLOR .. _G.SOURCES .. ':|r ' .. sourceText)
+                end
             end
         end
     end)
@@ -410,14 +415,14 @@ function TOOLTIP:AzeriteArmor()
         return
     end
 
-    hooksecurefunc(_G.GameTooltip, 'SetItem', function(self)
+    _G.GameTooltip:HookScript('OnTooltipSetItem', function(self)
         if self:IsForbidden() then
             return
         end
 
         local _, link = self:GetItem()
         if link then
-            if C_AzeriteItem.HasActiveAzeriteItem() then
+            if C_AzeriteItem and C_AzeriteItem.HasActiveAzeriteItem() then
                 local azeriteItemLocation = C_AzeriteItem.FindActiveAzeriteItem()
                 if azeriteItemLocation then
                     local azeriteLevel = C_AzeriteItem.GetAzeriteItemLevel(azeriteItemLocation)
@@ -471,12 +476,16 @@ function TOOLTIP:OnLogin()
         return
     end
 
-    _G.TooltipDataProcessor.AddTooltipPostCall(Enum.TooltipDataType.Unit, TOOLTIP.OnTooltipSetUnit)
+    if _G.TooltipDataProcessor then
+        _G.TooltipDataProcessor.AddTooltipPostCall(Enum.TooltipDataType.Unit, TOOLTIP.OnTooltipSetUnit)
+    end
     if _G.GameTooltip.StatusBar then
         hooksecurefunc(_G.GameTooltip.StatusBar, 'SetValue', TOOLTIP.RefreshStatusBar)
     end
-    _G.TooltipDataProcessor.AddLinePreCall(Enum.TooltipDataLineType.None, TOOLTIP.UpdateFactionLine)
-    _G.TooltipDataProcessor.AddTooltipPostCall(Enum.TooltipDataType.Item, TOOLTIP.FixRecipeItemNameWidth)
+    if _G.TooltipDataProcessor then
+        _G.TooltipDataProcessor.AddLinePreCall(Enum.TooltipDataLineType.None, TOOLTIP.UpdateFactionLine)
+        _G.TooltipDataProcessor.AddTooltipPostCall(Enum.TooltipDataType.Item, TOOLTIP.FixRecipeItemNameWidth)
+    end
 
     hooksecurefunc('GameTooltip_ShowStatusBar', TOOLTIP.GameTooltip_ShowStatusBar)
     hooksecurefunc('GameTooltip_ShowProgressBar', TOOLTIP.GameTooltip_ShowProgressBar)
