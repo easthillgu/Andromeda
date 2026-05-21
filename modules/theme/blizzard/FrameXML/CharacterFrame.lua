@@ -1,22 +1,24 @@
 local F, C = unpack(select(2, ...))
 
 function F:ReskinIconSelector()
-    F.StripTextures(self)
     if not self then return end
+    F.StripTextures(self)
     F.SetBD(self):SetInside()
-    F.StripTextures(self.BorderBox)
-    if self.BorderBox.IconSelectorEditBox then
-        F.StripTextures(self.BorderBox.IconSelectorEditBox, 2)
-        F.ReskinEditbox(self.BorderBox.IconSelectorEditBox)
-    end
-    if self.BorderBox.SelectedIconArea and self.BorderBox.SelectedIconArea.SelectedIconButton then
-        F.StripTextures(self.BorderBox.SelectedIconArea.SelectedIconButton)
-        if self.BorderBox.SelectedIconArea.SelectedIconButton.Icon then
-            F.ReskinIcon(self.BorderBox.SelectedIconArea.SelectedIconButton.Icon)
+    if self.BorderBox then
+        F.StripTextures(self.BorderBox)
+        if self.BorderBox.IconSelectorEditBox then
+            F.StripTextures(self.BorderBox.IconSelectorEditBox, 2)
+            F.ReskinEditbox(self.BorderBox.IconSelectorEditBox)
         end
+        if self.BorderBox.SelectedIconArea and self.BorderBox.SelectedIconArea.SelectedIconButton then
+            F.StripTextures(self.BorderBox.SelectedIconArea.SelectedIconButton)
+            if self.BorderBox.SelectedIconArea.SelectedIconButton.Icon then
+                F.ReskinIcon(self.BorderBox.SelectedIconArea.SelectedIconButton.Icon)
+            end
+        end
+        if self.BorderBox.OkayButton then F.ReskinButton(self.BorderBox.OkayButton) end
+        if self.BorderBox.CancelButton then F.ReskinButton(self.BorderBox.CancelButton) end
     end
-    if self.BorderBox.OkayButton then F.ReskinButton(self.BorderBox.OkayButton) end
-    if self.BorderBox.CancelButton then F.ReskinButton(self.BorderBox.CancelButton) end
     if self.IconSelector and self.IconSelector.ScrollBar then
         F.ReskinTrimScroll(self.IconSelector.ScrollBar)
     end

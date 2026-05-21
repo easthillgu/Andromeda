@@ -128,7 +128,8 @@ function M:MissingStats()
     end
 
     _G.MIN_PLAYER_LEVEL_FOR_ITEM_LEVEL_DISPLAY = 1
-    hooksecurefunc('PaperDollFrame_SetItemLevel', function(statFrame, unit)
+    if _G.PaperDollFrame_SetItemLevel and type(_G.PaperDollFrame_SetItemLevel) == 'function' then
+        hooksecurefunc('PaperDollFrame_SetItemLevel', function(statFrame, unit)
         if unit ~= 'player' then
             return
         end
@@ -149,6 +150,7 @@ function M:MissingStats()
         _G.CharacterStatsPane.ItemLevelFrame.Value:SetShadowColor(0, 0, 0, 1)
         _G.CharacterStatsPane.ItemLevelFrame.Value:SetShadowOffset(1, -1)
     end)
+    end
 
     hooksecurefunc('PaperDollFrame_SetLabelAndText', function(statFrame, label, _, isPercentage)
         if isPercentage or label == _G.STAT_HASTE then
@@ -157,6 +159,7 @@ function M:MissingStats()
     end)
 
     hooksecurefunc('PaperDollFrame_UpdateStats', function()
+        if not _G.CharacterStatsPane or not _G.CharacterStatsPane.statsFramePool then return end
         for statFrame in _G.CharacterStatsPane.statsFramePool:EnumerateActive() do
             if not statFrame.styled then
                 statFrame.Label:SetFontObject(_G.Game12Font)
