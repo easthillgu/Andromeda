@@ -8,12 +8,21 @@ end
 function ACTIONBAR:UpdatePetBar()
     local petActionButton, petActionIcon, petAutoCastableTexture, petAutoCastShine
     for i = 1, _G.NUM_PET_ACTION_SLOTS, 1 do
-        petActionButton = self.actionButtons[i]
+        -- 直接用原始的 PetActionButton
+        petActionButton = _G['PetActionButton' .. i]
         petActionIcon = petActionButton.icon
         petAutoCastableTexture = petActionButton.AutoCastable
         petAutoCastShine = petActionButton.AutoCastShine
 
+        if petAutoCastableTexture then
+            petAutoCastableTexture:ClearAllPoints()
+            petAutoCastableTexture:SetPoint('BOTTOMRIGHT', petActionButton, 'BOTTOMRIGHT', 2, -2)
+            petAutoCastableTexture:SetSize(12, 12)
+            petAutoCastableTexture:SetTexCoord(0, 1, 0, 1)
+        end
+
         local name, texture, isToken, isActive, autoCastAllowed, autoCastEnabled, spellID = GetPetActionInfo(i)
+        
         if not isToken then
             petActionIcon:SetTexture(texture)
             petActionButton.tooltipName = name
@@ -47,14 +56,16 @@ function ACTIONBAR:UpdatePetBar()
         elseif petAutoCastableTexture then
             petAutoCastableTexture:Hide()
         end
-        if autoCastEnabled and petAutoCastShine then
-            AutoCastShine_AutoCastStart(petAutoCastShine)
-        elseif petAutoCastShine then
-            AutoCastShine_AutoCastStop(petAutoCastShine)
+        if autoCastEnabled then
+            if petAutoCastShine then petAutoCastShine:Hide() end
+            ACTIONBAR:PixelGlow_Start(petActionButton)
+        else
+            if petAutoCastShine then petAutoCastShine:Hide() end
+            ACTIONBAR:PixelGlow_Stop(petActionButton)
         end
         if texture then
             if GetPetActionSlotUsable(i) then
-                petActionIcon:SetVertexColor(1, 1, 1)
+                petActionIcon:SetVertexColor(1.0, 1.0, 1.0)
             else
                 petActionIcon:SetVertexColor(0.4, 0.4, 0.4)
             end
@@ -83,15 +94,19 @@ function ACTIONBAR:CreatePetBar()
     end
 
     local margin = C.DB['Actionbar']['ButtonMargin']
-    local num = _G.NUM_PET_ACTION_SLOTS
+    local padding = C.DB['Actionbar']['BarPadding']
     local buttonList = {}
-
     local frame = CreateFrame('Frame', C.ADDON_TITLE .. 'ActionBarPet', _G.UIParent, 'SecureHandlerStateTemplate')
+    
+    if C.DB['UIAnchor']['PetBar'] then
+        C.DB['UIAnchor']['PetBar'] = nil
+    end
+    
     frame.mover = F.Mover(frame, L['PetBar'], 'PetBar',
-        { 'BOTTOMRIGHT', _G[C.ADDON_TITLE .. 'ActionBar3'], 'TOPRIGHT', 0, 0 })
+        { 'BOTTOMRIGHT', _G[C.ADDON_TITLE .. 'ActionBar3'], 'TOPRIGHT', 0, padding })
     ACTIONBAR.movers[10] = frame.mover
 
-    for i = 1, num do
+    for i = 1, _G.NUM_PET_ACTION_SLOTS do
         local button = _G['PetActionButton' .. i]
         button:SetParent(frame)
         tinsert(buttonList, button)
@@ -101,6 +116,14 @@ function ACTIONBAR:CreatePetBar()
         if hotkey then
             hotkey:ClearAllPoints()
             hotkey:SetPoint('TOPRIGHT')
+        end
+
+        local autoCastable = button.AutoCastable
+        if autoCastable then
+            autoCastable:ClearAllPoints()
+            autoCastable:SetPoint('BOTTOMRIGHT', button, 'BOTTOMRIGHT', 2, -2)
+            autoCastable:SetSize(12, 12)
+            autoCastable:SetTexCoord(0, 1, 0, 1)
         end
     end
     frame.buttons = buttonList

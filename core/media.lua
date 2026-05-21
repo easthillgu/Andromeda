@@ -118,13 +118,13 @@ C.Assets = {
         SekiroLowHealth  = C.ASSET_PATH .. 'sounds\\sekiro-lowhealth.ogg',
     },
     Fonts = {
-        Regular    = C.ASSET_PATH .. 'fonts\\firasans-regular.ttf',
+        Regular    = C.ASSET_PATH .. 'fonts\\Pingfangpixel.ttf',
         Bold       = C.ASSET_PATH .. 'fonts\\firasans-bold.ttf',
         Heavy      = C.ASSET_PATH .. 'fonts\\firasans-heavy.ttf',
         Condensed  = C.ASSET_PATH .. 'fonts\\firasans-condensed.ttf',
         Combat     = C.ASSET_PATH .. 'fonts\\carter-one.ttf',
         Header     = C.ASSET_PATH .. 'fonts\\suez-one.ttf',
-        Pixel      = C.ASSET_PATH .. 'fonts\\tempesta-seven.ttf',
+        Pixel      = C.ASSET_PATH .. 'fonts\\Pingfangpixel.ttf',
         HalfHeight = C.ASSET_PATH .. 'fonts\\roadway.ttf',
         Small      = C.ASSET_PATH .. 'fonts\\super-effective.ttf',
         PingFang   = C.ASSET_PATH .. 'fonts\\Pingfangpixel.ttf',
@@ -144,7 +144,7 @@ do
         C.Assets.Fonts.Combat = path .. 'combat.ttf'
         C.Assets.Fonts.Header = path .. 'header.ttf'
     elseif GetLocale() == 'zhCN' then
-        C.Assets.Fonts.Regular = 'Fonts\\ARKai_T.ttf'
+        C.Assets.Fonts.Regular = --[['Fonts\\ARKai_T.ttf']]C.ASSET_PATH .. 'fonts\\Pingfangpixel.ttf'
         C.Assets.Fonts.Condensed = --[['Fonts\\ARKai_T.ttf']]C.ASSET_PATH .. 'fonts\\Pingfangpixel.ttf'
         C.Assets.Fonts.Bold = 'Fonts\\ARHei.ttf'
         C.Assets.Fonts.Heavy = 'Fonts\\ARHei.ttf'

@@ -62,7 +62,7 @@ end
 local function reskinFont(obj, font, size)
     local outline = _G.ANDROMEDA_ADB.FontOutline
 
-    obj:SetFont(font, size, outline and 'OUTLINE' or '')
+    obj:SetFont(font, size, outline and 'OUTLINEMONOCHROME' or '')
     obj:SetShadowColor(0, 0, 0, 1)
     obj:SetShadowOffset(1, -1)
 end
@@ -146,10 +146,10 @@ TOOLTIP:RegisterTooltips(C.ADDON_NAME, function()
         _G.QuestScrollFrame.StoryTooltip,
         _G.QuestScrollFrame.CampaignTooltip,
         _G.GeneralDockManagerOverflowButtonList,
-        _G.ReputationParagonTooltip,
+        --_G.ReputationParagonTooltip,
         _G.NamePlateTooltip,
         _G.QueueStatusFrame,
-        _G.FloatingGarrisonFollowerTooltip,
+    --[[    _G.FloatingGarrisonFollowerTooltip,
         _G.FloatingGarrisonFollowerAbilityTooltip,
         _G.FloatingGarrisonMissionTooltip,
         _G.GarrisonFollowerAbilityTooltip,
@@ -160,7 +160,7 @@ TOOLTIP:RegisterTooltips(C.ADDON_NAME, function()
         _G.PetBattlePrimaryAbilityTooltip,
         _G.PetBattlePrimaryUnitTooltip,
         _G.FloatingBattlePetTooltip,
-        _G.FloatingPetBattleAbilityTooltip,
+        _G.FloatingPetBattleAbilityTooltip,]]
         _G.IMECandidatesFrame,
         _G.QuickKeybindTooltip,
         _G.GameSmallHeaderTooltip,

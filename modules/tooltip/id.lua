@@ -186,14 +186,16 @@ function TOOLTIP:AddIDs()
         end)
     end
 
-    hooksecurefunc(GameTooltip, 'SetAchievement', function(self, id)
-        if self:IsForbidden() then
-            return
-        end
-        if id then
-            TOOLTIP.AddLineForId(self, id, typesList.achievement)
-        end
-    end)
+    if GameTooltip.SetAchievement then
+        hooksecurefunc(GameTooltip, 'SetAchievement', function(self, id)
+            if self:IsForbidden() then
+                return
+            end
+            if id then
+                TOOLTIP.AddLineForId(self, id, typesList.achievement)
+            end
+        end)
+    end
 
     hooksecurefunc('QuestMapLogTitleButton_OnEnter', function(self)
         if self.questID then

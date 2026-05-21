@@ -88,7 +88,9 @@ function TOOLTIP:HyperLink_OnEnter(link, ...)
 end
 
 function TOOLTIP:HyperLink_OnLeave(_, ...)
-    _G.BattlePetTooltip:Hide()
+    if _G.BattlePetTooltip then
+        _G.BattlePetTooltip:Hide()
+    end
     _G.GameTooltip:Hide()
     _G.GameTooltip.__isHoverTip = nil
 
