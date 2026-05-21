@@ -25,8 +25,7 @@ do
     -- 3.80.1: not ported
     -- F:RegisterModule('Logo')
     F:RegisterModule('Map')
-    -- 3.80.1: not ported
-    -- F:RegisterModule('Misc')
+    F:RegisterModule('Misc')
     F:RegisterModule('Nameplate')
     F:RegisterModule('Notification')
     -- 3.80.1: Quest module not ported (quest announce in Announcement module)
