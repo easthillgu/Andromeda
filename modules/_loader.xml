@@ -8,7 +8,8 @@
     <Include file="infobar\_loader.xml"/>
     <Include file="inventory\_loader.xml"/>
     <Include file="map\_loader.xml"/>
-    <Include file="misc\_loader.xml"/>
+    <!-- 3.80.1: not ported -->
+    <!-- <Include file="misc\_loader.xml"/> -->
     <Include file="nameplate\_loader.xml"/>
     <Include file="notification\_loader.xml"/>
     <Include file="theme\_loader.xml"/>
