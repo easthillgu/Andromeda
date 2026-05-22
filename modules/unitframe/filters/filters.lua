@@ -14,6 +14,7 @@ local raidDebuffsList = {}
 function UNITFRAME:RegisterInstanceSpell(tierID, instID, _, spellID, level)
     local instName = EJ_GetInstanceInfo(instID)
     if not instName then
+        F:Debug('Invalid instance ID: ' .. tierID .. ' / ' .. instID)
         return
     end
 
@@ -67,8 +68,7 @@ function UNITFRAME:InitCornerSpellsList()
     for spellID in pairs(data) do
         local name = GetSpellInfo(spellID)
         if not name then
-            C.CornerSpellsList[C.MY_CLASS][spellID] = nil
-            _G.ANDROMEDA_ADB['CornerSpellsList'][C.MY_CLASS][spellID] = nil
+            F:Debug('CheckCornerSpells: Invalid Spell ID ' .. spellID)
         end
     end
 
@@ -88,8 +88,7 @@ function UNITFRAME:InitPartySpellsList()
                 _G.ANDROMEDA_ADB['PartySpellsList'][spellID] = nil
             end
         else
-            C.PartySpellsList[spellID] = nil
-            _G.ANDROMEDA_ADB['PartySpellsList'][spellID] = nil
+            F:Debug('CheckPartySpells: Invalid Spell ID ' .. spellID)
         end
     end
 end
@@ -102,8 +101,7 @@ function NAMEPLATE:InitMajorSpellsList()
                 _G.ANDROMEDA_ADB['MajorSpellsList'][spellID] = nil
             end
         else
-            C.MajorSpellsList[spellID] = nil
-            _G.ANDROMEDA_ADB['MajorSpellsList'][spellID] = nil
+            F:Debug('CheckMajorSpells: Invalid Spell ID ' .. spellID)
         end
     end
 

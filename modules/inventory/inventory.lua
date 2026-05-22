@@ -231,19 +231,17 @@ function INVENTORY:CreateReagentButton(f)
     bu.Icon:SetVertexColor(unpack(iconColor))
     bu:RegisterForClicks('AnyUp')
     bu:SetScript('OnClick', function(_, btn)
-        if _G.ReagentBankFrame then
-            if not IsReagentBankUnlocked or not IsReagentBankUnlocked() then
-                _G.StaticPopup_Show('CONFIRM_BUY_REAGENTBANK_TAB')
-            else
-                PlaySound(_G.SOUNDKIT.IG_CHARACTER_INFO_TAB)
-                _G.ReagentBankFrame:Show()
-                _G.BankFrame.selectedTab = 2
-                f.reagent:Show()
-                f.bank:Hide()
+        if not IsReagentBankUnlocked() then
+            _G.StaticPopup_Show('CONFIRM_BUY_REAGENTBANK_TAB')
+        else
+            PlaySound(_G.SOUNDKIT.IG_CHARACTER_INFO_TAB)
+            _G.ReagentBankFrame:Show()
+            _G.BankFrame.selectedTab = 2
+            f.reagent:Show()
+            f.bank:Hide()
 
-                if btn == 'RightButton' then
-                    DepositReagentBank()
-                end
+            if btn == 'RightButton' then
+                DepositReagentBank()
             end
         end
     end)
@@ -259,9 +257,7 @@ function INVENTORY:CreateBankButton(f)
     bu.Icon:SetVertexColor(unpack(iconColor))
     bu:SetScript('OnClick', function()
         PlaySound(_G.SOUNDKIT.IG_CHARACTER_INFO_TAB)
-        if _G.ReagentBankFrame then
-            _G.ReagentBankFrame:Hide()
-        end
+        _G.ReagentBankFrame:Hide()
         _G.BankFrame.selectedTab = 1
         f.reagent:Hide()
         f.bank:Show()
@@ -801,18 +797,21 @@ function INVENTORY:OnLogin()
     end
 
     function Backpack:OnInit()
-        AddNewContainer('Bag', 1, 'Junk', filters.bagsJunk)
         for i = 1, 5 do
-            AddNewContainer('Bag', i + 1, 'BagCustom' .. i, filters['bagCustom' .. i])
+            AddNewContainer('Bag', i, 'BagCustom' .. i, filters['bagCustom' .. i])
         end
-        AddNewContainer('Bag', 7, 'BagReagent', filters.onlyBagReagent)
-        AddNewContainer('Bag', 8, 'Equipment', filters.bagEquipment)
+        AddNewContainer('Bag', 6, 'BagReagent', filters.onlyBagReagent)
+        AddNewContainer('Bag', 17, 'Junk', filters.bagsJunk)
         AddNewContainer('Bag', 9, 'EquipSet', filters.bagEquipSet)
-        AddNewContainer('Bag', 10, 'BagBOE', filters.bagBOE)
-        AddNewContainer('Bag', 11, 'BagCollection', filters.bagCollection)
-        AddNewContainer('Bag', 12, 'Consumable', filters.bagConsumable)
-        AddNewContainer('Bag', 13, 'BagGoods', filters.bagGoods)
-        AddNewContainer('Bag', 14, 'BagQuest', filters.bagQuest)
+        AddNewContainer('Bag', 7, 'AzeriteItem', filters.bagAzeriteItem)
+        AddNewContainer('Bag', 8, 'Equipment', filters.bagEquipment)
+        AddNewContainer('Bag', 10, 'BagCollection', filters.bagCollection)
+        AddNewContainer('Bag', 15, 'Consumable', filters.bagConsumable)
+        AddNewContainer('Bag', 11, 'BagGoods', filters.bagGoods)
+        AddNewContainer('Bag', 16, 'BagQuest', filters.bagQuest)
+        AddNewContainer('Bag', 12, 'BagAnima', filters.bagAnima)
+        AddNewContainer('Bag', 13, 'BagRelic', filters.bagRelic)
+        AddNewContainer('Bag', 14, 'BagStone', filters.bagStone)
 
         f.main = MyContainer:New('Bag', { Bags = 'bags', BagType = 'Bag' })
         f.main.__anchor = { 'BOTTOMRIGHT', -C.UI_GAP, C.UI_GAP }
@@ -822,14 +821,15 @@ function INVENTORY:OnLogin()
         for i = 1, 5 do
             AddNewContainer('Bank', i, 'BankCustom' .. i, filters['bankCustom' .. i])
         end
-        AddNewContainer('Bank', 6, 'BankEquipment', filters.bankEquipment)
-        AddNewContainer('Bank', 7, 'BankEquipSet', filters.bankEquipSet)
-        AddNewContainer('Bank', 8, 'BankBOE', filters.bankBOE)
+        AddNewContainer('Bank', 8, 'BankEquipSet', filters.bankEquipSet)
+        AddNewContainer('Bank', 6, 'BankAzeriteItem', filters.bankAzeriteItem)
         AddNewContainer('Bank', 9, 'BankLegendary', filters.bankLegendary)
+        AddNewContainer('Bank', 7, 'BankEquipment', filters.bankEquipment)
         AddNewContainer('Bank', 10, 'BankCollection', filters.bankCollection)
-        AddNewContainer('Bank', 11, 'BankConsumable', filters.bankConsumable)
-        AddNewContainer('Bank', 12, 'BankGoods', filters.bankGoods)
-        AddNewContainer('Bank', 13, 'BankQuest', filters.bankQuest)
+        AddNewContainer('Bank', 13, 'BankConsumable', filters.bankConsumable)
+        AddNewContainer('Bank', 11, 'BankGoods', filters.bankGoods)
+        AddNewContainer('Bank', 14, 'BankQuest', filters.bankQuest)
+        AddNewContainer('Bank', 12, 'BankAnima', filters.bankAnima)
 
         f.bank = MyContainer:New('Bank', { Bags = 'bank', BagType = 'Bank' })
         f.bank.__anchor = { 'BOTTOMLEFT', C.UI_GAP, C.UI_GAP }
@@ -869,9 +869,7 @@ function INVENTORY:OnLogin()
         _G.BankFrame:Hide()
         self:GetContainer('Bank'):Hide()
         self:GetContainer('Reagent'):Hide()
-        if _G.ReagentBankFrame then
-            _G.ReagentBankFrame:Hide()
-        end
+        _G.ReagentBankFrame:Hide()
     end
 
     local MyButton = Backpack:GetItemButtonClass()
@@ -1231,8 +1229,6 @@ function INVENTORY:OnLogin()
             label = L['Reagent Bag']
         elseif name == 'BagStone' then
             label = GetSpellInfo(404861)
-        elseif strmatch(name, 'BOE') then
-            label = _G.ITEM_BIND_ON_EQUIP
         end
 
         local outline = _G.ANDROMEDA_ADB.FontOutline

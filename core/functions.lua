@@ -1800,7 +1800,6 @@ do
     do
         function F:ReskinTab()
             if not self then return end
-
             self:DisableDrawLayer('BACKGROUND')
 
             if self.LeftHighlight then
@@ -1834,8 +1833,6 @@ do
             else
                 hl:SetVertexColor(newColor.r, newColor.g, newColor.b, 0.25)
             end
-
-            return bg
         end
 
         function F:ResetTabAnchor()
@@ -2109,7 +2106,7 @@ do
             ['right'] = -90,
         }
 
-        function F.SetupArrow(self, direction)
+        function F:SetupArrow(direction)
             self:SetTexture(C.Assets.Textures.Arrow)
             self:SetRotation(rad(arrowDegree[direction]))
         end
@@ -2367,13 +2364,6 @@ do
                     button:SetScript('OnLeave', F.Texture_OnLeave)
                 end
             end
-        end
-
-        function F.ReskinRotationButtons(frame)
-            local left = frame.RotateLeftButton
-            local right = frame.RotateRightButton
-            if left then F.ReskinArrow(left, 'left') end
-            if right then F.ReskinArrow(right, 'right') end
         end
     end
 

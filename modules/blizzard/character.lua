@@ -154,9 +154,7 @@ function M:MissingStats()
 
     hooksecurefunc('PaperDollFrame_SetLabelAndText', function(statFrame, label, _, isPercentage)
         if isPercentage or label == _G.STAT_HASTE then
-            if statFrame.Value then
-                statFrame.Value:SetFormattedText('%.2f%%', statFrame.numericValue)
-            end
+            statFrame.Value:SetFormattedText('%.2f%%', statFrame.numericValue)
         end
     end)
 
@@ -164,12 +162,8 @@ function M:MissingStats()
         if not _G.CharacterStatsPane or not _G.CharacterStatsPane.statsFramePool then return end
         for statFrame in _G.CharacterStatsPane.statsFramePool:EnumerateActive() do
             if not statFrame.styled then
-                if statFrame.Label then
-                    statFrame.Label:SetFontObject(_G.Game12Font)
-                end
-                if statFrame.Value then
-                    statFrame.Value:SetFontObject(_G.Game12Font)
-                end
+                statFrame.Label:SetFontObject(_G.Game12Font)
+                statFrame.Value:SetFontObject(_G.Game12Font)
 
                 statFrame.styled = true
             end

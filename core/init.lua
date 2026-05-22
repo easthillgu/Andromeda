@@ -37,7 +37,7 @@ do
     -- when packager packages a new version for release
     -- '10.2.11' is replaced with the version number
     -- which is the latest tag
-    engine.version = '10.2.11'
+    engine.version = 'patched 10.99.00'
 
     if strfind(engine.version, 'project%-version') then
         engine.version = 'development'

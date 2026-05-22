@@ -236,7 +236,7 @@ function INFOBAR:OnLogin()
 
     INFOBAR:CreateSystemBlock()
     INFOBAR:CreateDurabilityBlock()
-    INFOBAR:CreateCurrencyBlock()
+    --INFOBAR:CreateCurrencyBlock()
     INFOBAR:CreateGoldBlock()
     INFOBAR:CreateSpecBlock()
 

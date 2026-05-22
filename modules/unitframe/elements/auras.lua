@@ -87,8 +87,7 @@ do
         button.HL:SetAllPoints()
 
         local outline = _G.ANDROMEDA_ADB.FontOutline
-        --local font = C.Assets.Fonts.HalfHeight
-        local font = C.Assets.Fonts.Regular
+        local font = C.Assets.Fonts.HalfHeight
         local fontSize = max((element.width or element.size) * 0.4, 12)
         button.Count = F.CreateFS(button, font, fontSize, 'OUTLINEMONOCHROME')
         button.Count:ClearAllPoints()

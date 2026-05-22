@@ -1,7 +1,7 @@
 local F, C = unpack(select(2, ...))
 local GUI = F:GetModule('GUI')
 local TUTORIAL = F:GetModule('Tutorial')
-local LOGO = (pcall(F.GetModule, F, 'Logo')) and F:GetModule('Logo') or nil
+local LOGO = F:GetModule('Logo')
 
 F:RegisterSlashCommand('/and', function(msg)
     local str, _ = strsplit(' ', strlower(msg), 2)
@@ -17,12 +17,10 @@ F:RegisterSlashCommand('/and', function(msg)
     elseif strmatch(str, 'help') or strmatch(str, 'cheatsheet') then
         GUI:ToggleCheatSheet()
     elseif strmatch(str, 'logo') then
-        if LOGO then
-            if not LOGO.logoFrame then
-                LOGO:Logo_Create()
-            end
-            LOGO.logoFrame:Show()
+        if not LOGO.logoFrame then
+            LOGO:Logo_Create()
         end
+        LOGO.logoFrame:Show()
     elseif strmatch(str, 'clickbinding') or strmatch(str, 'cb') then
         if InClickBindingMode() then
             _G.ClickBindingFrame.SaveButton:Click()
