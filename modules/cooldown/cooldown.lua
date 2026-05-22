@@ -56,7 +56,7 @@ function COOLDOWN:OnSizeChanged(width, height)
     if fontScale < minScale then
         self:Hide()
     else
-        self.text:SetFont(font, fontScale * fontSize, outline and 'OUTLINE' or nil)
+        self.text:SetFont(font, fontScale * fontSize, outline and 'OUTLINE' or '')
         self.text:SetShadowColor(0, 0, 0, outline and 0 or 1)
         self.text:SetShadowOffset(2, -2)
 
