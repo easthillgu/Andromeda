@@ -264,9 +264,9 @@ function ACTIONBAR:CreateBars()
         [3] = { page = 5, bindName = 'MULTIACTIONBAR2BUTTON', anchor = { 'BOTTOM', _G[C.ADDON_TITLE .. 'ActionBar2'], 'TOP', 0, 0 } },
         [4] = { page = 3, bindName = 'MULTIACTIONBAR3BUTTON', anchor = { 'BOTTOM', _G[C.ADDON_TITLE .. 'ActionBar3'], 'TOP', 0, 0 } },
         [5] = { page = 4, bindName = 'MULTIACTIONBAR4BUTTON', anchor = { 'BOTTOM', _G[C.ADDON_TITLE .. 'ActionBar4'], 'TOP', 0, 0 } },
-        [6] = { page = 6, bindName = 'MULTIACTIONBAR1BUTTON', anchor = { 'BOTTOM', _G[C.ADDON_TITLE .. 'ActionBar5'], 'TOP', 0, 0 } },
-        [7] = { page = 5, bindName = 'MULTIACTIONBAR2BUTTON', anchor = { 'BOTTOM', _G[C.ADDON_TITLE .. 'ActionBar6'], 'TOP', 0, 0 } },
-        [8] = { page = 3, bindName = 'MULTIACTIONBAR3BUTTON', anchor = { 'BOTTOM', _G[C.ADDON_TITLE .. 'ActionBar7'], 'TOP', 0, 0 } },
+        [6] = { page = 13, bindName = 'MULTIACTIONBAR1BUTTON', anchor = { 'BOTTOM', _G[C.ADDON_TITLE .. 'ActionBar5'], 'TOP', 0, 0 } },
+        [7] = { page = 14, bindName = 'MULTIACTIONBAR2BUTTON', anchor = { 'BOTTOM', _G[C.ADDON_TITLE .. 'ActionBar6'], 'TOP', 0, 0 } },
+        [8] = { page = 15, bindName = 'MULTIACTIONBAR3BUTTON', anchor = { 'BOTTOM', _G[C.ADDON_TITLE .. 'ActionBar7'], 'TOP', 0, 0 } },
 
     }
 
