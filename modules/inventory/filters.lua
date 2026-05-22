@@ -220,6 +220,18 @@ local function isQuestItem(item)
     return item.questID or item.isQuestItem
 end
 
+local function isItemBOE(item)
+    if not C.DB.Inventory.ItemFilter then
+        return
+    end
+
+    if not C.DB.Inventory.FilterBOE then
+        return
+    end
+
+    return item.bindOn and item.bindOn == 'equip' and INVENTORY:IsItemHasLevel(item)
+end
+
 local function isAnimaItem(item)
     if not C.DB.Inventory.ItemFilter then
         return
@@ -355,6 +367,14 @@ function INVENTORY:GetFilters()
 
     filters.bankQuest = function(item)
         return isItemInBank(item) and isQuestItem(item)
+    end
+
+    filters.bagBOE = function(item)
+        return isItemInBag(item) and isItemBOE(item)
+    end
+
+    filters.bankBOE = function(item)
+        return isItemInBank(item) and isItemBOE(item)
     end
 
     filters.bagAnima = function(item)
