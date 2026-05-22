@@ -1,4 +1,5 @@
 local F, C = unpack(select(2, ...))
+
 local ACTIONBAR = F:GetModule('ActionBar')
 
 local keyButton = gsub(_G.KEY_BUTTON4, '%d', '')

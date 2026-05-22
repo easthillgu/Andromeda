@@ -262,11 +262,12 @@ function ACTIONBAR:CreateBars()
         [1] = { page = 1, bindName = 'ACTIONBUTTON', anchor = { 'BOTTOM', _G.UIParent, 'BOTTOM', 0, 24 } },
         [2] = { page = 6, bindName = 'MULTIACTIONBAR1BUTTON', anchor = { 'BOTTOM', _G[C.ADDON_TITLE .. 'ActionBar1'], 'TOP', 0, 0 } },
         [3] = { page = 5, bindName = 'MULTIACTIONBAR2BUTTON', anchor = { 'BOTTOM', _G[C.ADDON_TITLE .. 'ActionBar2'], 'TOP', 0, 0 } },
-        [4] = { page = 3, bindName = 'MULTIACTIONBAR3BUTTON', anchor = { 'RIGHT', _G.UIParent, 'RIGHT', -1, 0 } },
-        [5] = { page = 4, bindName = 'MULTIACTIONBAR4BUTTON', anchor = { 'RIGHT', _G[C.ADDON_TITLE .. 'ActionBar4'], 'LEFT', margin, 0 } },
-        [6] = { page = 13, bindName = 'MULTIACTIONBAR5BUTTON', anchor = { 'CENTER', _G.UIParent, 'CENTER', 0, 0 } },
-        [7] = { page = 14, bindName = 'MULTIACTIONBAR6BUTTON', anchor = { 'CENTER', _G.UIParent, 'CENTER', 0, 40 } },
-        [8] = { page = 15, bindName = 'MULTIACTIONBAR7BUTTON', anchor = { 'CENTER', _G.UIParent, 'CENTER', 0, 80 } },
+        [4] = { page = 3, bindName = 'MULTIACTIONBAR3BUTTON', anchor = { 'BOTTOM', _G[C.ADDON_TITLE .. 'ActionBar3'], 'TOP', 0, 0 } },
+        [5] = { page = 4, bindName = 'MULTIACTIONBAR4BUTTON', anchor = { 'BOTTOM', _G[C.ADDON_TITLE .. 'ActionBar4'], 'TOP', 0, 0 } },
+        [6] = { page = 6, bindName = 'MULTIACTIONBAR1BUTTON', anchor = { 'BOTTOM', _G[C.ADDON_TITLE .. 'ActionBar5'], 'TOP', 0, 0 } },
+        [7] = { page = 5, bindName = 'MULTIACTIONBAR2BUTTON', anchor = { 'BOTTOM', _G[C.ADDON_TITLE .. 'ActionBar6'], 'TOP', 0, 0 } },
+        [8] = { page = 3, bindName = 'MULTIACTIONBAR3BUTTON', anchor = { 'BOTTOM', _G[C.ADDON_TITLE .. 'ActionBar7'], 'TOP', 0, 0 } },
+
     }
 
     local mIndex = 1
