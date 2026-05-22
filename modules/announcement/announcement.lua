@@ -125,7 +125,8 @@ function ANNOUNCEMENT:CheckAnnounceableSpells()
                 _G.ANDROMEDA_ADB['AnnounceableSpellsList'][spellID] = nil
             end
         else
-            F:Debug('CheckAnnounceableSpells: Invalid Spell ID ' .. spellID)
+            C.AnnounceableSpellsList[spellID] = nil
+            _G.ANDROMEDA_ADB['AnnounceableSpellsList'][spellID] = nil
         end
     end
 

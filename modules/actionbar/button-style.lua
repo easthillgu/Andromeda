@@ -5,8 +5,8 @@ local keyButton = gsub(_G.KEY_BUTTON4, '%d', '')
 local keyNumpad = gsub(_G.KEY_NUMPAD1, '%d', '')
 
 local replaces = {
-    { '(' .. keyButton .. ')', 'M' },
-    { '(' .. keyNumpad .. ')', 'N' },
+    { '('..keyButton..')', 'M' },
+    { '('..keyNumpad..')', 'N' },
     { '(a%-)', 'a' },
     { '(c%-)', 'c' },
     { '(s%-)', 's' },
@@ -25,6 +25,20 @@ local replaces = {
     { 'MOUSEWHEELDOWN', 'MD' },
     { 'SPACE', 'Sp' },
 }
+
+function ACTIONBAR:SetupAutoCastShine(btn, size)
+    if not btn then
+        return
+    end
+
+    local btnName = btn:GetName()
+    local shine = _G[btnName..'Shine']
+    if not shine then
+        return
+    end
+
+    shine:Hide()
+end
 
 function ACTIONBAR:UpdateHotkey()
     local text = self:GetText()
@@ -107,11 +121,13 @@ function ACTIONBAR:HandleButton(btn)
         btn.style:SetAlpha(0)
     end
     if petShine then
-        petShine:SetInside()
+        ACTIONBAR:SetupAutoCastShine(btn, C.DB.Actionbar.BarPetButtonSize or 34)
     end
     if autoCastable then
-        autoCastable:SetTexCoord(0.217, 0.765, 0.217, 0.765)
-        autoCastable:SetInside()
+        autoCastable:ClearAllPoints()
+        autoCastable:SetPoint('BOTTOMRIGHT', btn, 'BOTTOMRIGHT', 2, -2)
+        autoCastable:SetSize(12, 12)
+        autoCastable:SetTexCoord(0, 1, 0, 1)
     end
 
     if icon then

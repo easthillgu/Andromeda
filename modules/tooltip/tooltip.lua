@@ -123,7 +123,9 @@ end
 
 function TOOLTIP:ResetUnit(btn)
     if (btn == 'LSHIFT' or btn == 'LALT') and UnitExists('mouseover') then
-        _G.GameTooltip:RefreshData()
+        if _G.GameTooltip.RefreshData then
+            _G.GameTooltip:RefreshData()
+        end
     end
 end
 

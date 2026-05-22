@@ -35,9 +35,9 @@ local F, C = engine[1], engine[2]
 
 do
     -- when packager packages a new version for release
-    -- '10.2.11' is replaced with the version number
+
     -- which is the latest tag
-    engine.version = 'patched 10.99.00'
+    engine.version = 'patched 10.99.00 classic'
 
     if strfind(engine.version, 'project%-version') then
         engine.version = 'development'
@@ -46,7 +46,7 @@ do
     C.ADDON_VERSION = engine.version
     C.IS_DEVELOPER = C.ADDON_VERSION == 'development'
 
-    -- ADDON_NAME is the name of the addon folder, which is 'andromeda'
+
     -- ADDON_TITLE is the title of the addon, which is 'AndromedaUI'
     C.ADDON_NAME = tostring(addonName)
     C.COLORFUL_ADDON_TITLE = getAddOnMetadata(C.ADDON_NAME, 'Title')
@@ -73,7 +73,7 @@ do
 
     F:AddLib('AceAddon', aceAddon, aceAddonMinor)
     F:AddLib('AceLocale', 'AceLocale-3.0')
-    F:AddLib('LibActionButton', 'LibActionButton-1.0-NDui')
+    F:AddLib('LibActionButton', 'LibActionButton-1.0')
     F:AddLib('LibButtonGlow', 'LibButtonGlow-1.0')
     F:AddLib('LibCustomGlow', 'LibCustomGlow-1.0')
     F:AddLib('LibRangeCheck', 'LibRangeCheck-2.0')

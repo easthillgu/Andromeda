@@ -28,7 +28,7 @@ NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 ]]
-local MAJOR_VERSION = "LibActionButton-1.0-NDui"
+local MAJOR_VERSION = "LibActionButton-1.0"
 local MINOR_VERSION = 145
 
 if not LibStub then error(MAJOR_VERSION .. " requires LibStub.") end
@@ -226,7 +226,7 @@ function lib:CreateButton(id, name, header, config)
 	end
 
 	local button = setmetatable(
-	CreateFrame("CheckButton", name, header, "ActionButtonTemplate, SecureActionButtonTemplate"), Generic_MT)
+		CreateFrame("CheckButton", name, header, "ActionButtonTemplate, SecureActionButtonTemplate"), Generic_MT)
 	button:RegisterForDrag("LeftButton", "RightButton")
 	if WoWRetail or WoWBCC or WoWWrath then
 		button:RegisterForClicks("AnyDown", "AnyUp")
@@ -945,12 +945,12 @@ if UseCustomFlyout then
 			if info.isKnown then
 				local numSlots = 0
 				data = data ..
-				("LAB_FlyoutInfo[%d] = newtable();LAB_FlyoutInfo[%d].slots = newtable();\n"):format(flyoutID, flyoutID)
+						("LAB_FlyoutInfo[%d] = newtable();LAB_FlyoutInfo[%d].slots = newtable();\n"):format(flyoutID, flyoutID)
 				for slotID, slotInfo in ipairs(info.slots) do
 					data = data ..
-					("LAB_FlyoutInfo[%d].slots[%d] = newtable();LAB_FlyoutInfo[%d].slots[%d].spellID = %d;LAB_FlyoutInfo[%d].slots[%d].isKnown = %s;\n")
-					:format(flyoutID, slotID, flyoutID, slotID, slotInfo.spellID, flyoutID, slotID,
-						slotInfo.isKnown and "true" or "nil")
+							("LAB_FlyoutInfo[%d].slots[%d] = newtable();LAB_FlyoutInfo[%d].slots[%d].spellID = %d;LAB_FlyoutInfo[%d].slots[%d].isKnown = %s;\n")
+							:format(flyoutID, slotID, flyoutID, slotID, slotInfo.spellID, flyoutID, slotID,
+								slotInfo.isKnown and "true" or "nil")
 					numSlots = numSlots + 1
 				end
 
@@ -1009,8 +1009,12 @@ if UseCustomFlyout then
 						isKnownSlot = false
 					end
 
-					lib.FlyoutInfo[flyoutID].slots[slotID] = { spellID = spellID, overrideSpellID = overrideSpellID, isKnown =
-					isKnownSlot }
+					lib.FlyoutInfo[flyoutID].slots[slotID] = {
+						spellID = spellID,
+						overrideSpellID = overrideSpellID,
+						isKnown =
+								isKnownSlot
+					}
 				end
 			end
 		end
@@ -2131,7 +2135,7 @@ else
 		-- 12.0 helper function
 		if ActionButton_ApplyCooldown then
 			ActionButton_ApplyCooldown(self.cooldown, cooldownInfo, self.chargeCooldown, chargeInfo, self
-			.lossOfControlCooldown, lossOfControlInfo)
+				.lossOfControlCooldown, lossOfControlInfo)
 		else
 			local locStart, locDuration = lossOfControlInfo.startTime, lossOfControlInfo.duration
 			local start, duration, enable, modRate = cooldownInfo.startTime, cooldownInfo.duration, cooldownInfo.isEnabled,
@@ -2566,7 +2570,7 @@ else
 				end
 
 				local isFlyoutShown = (SpellFlyout and SpellFlyout:IsShown() and SpellFlyout:GetParent() == self) or
-				(lib.flyoutHandler and lib.flyoutHandler:IsShown() and lib.flyoutHandler:GetParent() == self)
+						(lib.flyoutHandler and lib.flyoutHandler:IsShown() and lib.flyoutHandler:GetParent() == self)
 				local arrowDistance = isFlyoutShown and 1 or 4
 
 				-- Update arrow
@@ -2738,7 +2742,7 @@ end
 local GetActionCooldownInfo    = C_ActionBar and C_ActionBar.GetActionCooldown or GetActionCooldownInfoFallback
 local GetActionChargeInfo      = C_ActionBar and C_ActionBar.GetActionCharges or GetActionChargeInfoFallback
 local GetActionLoCCooldownInfo = C_ActionBar and C_ActionBar.GetActionLossOfControlCooldownInfo or
-GetActionLoCCooldownInfoFallback
+		GetActionLoCCooldownInfoFallback
 
 Action.HasAction               = function(self) return HasAction(self._state_action) end
 Action.GetActionText           = function(self) return GetActionText(self._state_action) end
@@ -2752,9 +2756,11 @@ Action.IsEquipped              = function(self) return IsEquippedAction(self._st
 Action.IsCurrentlyActive       = function(self) return IsCurrentAction(self._state_action) end
 Action.IsAutoRepeat            = function(self) return IsAutoRepeatAction(self._state_action) end
 Action.IsUsable                = function(self) return IsUsableAction(self._state_action) end
-Action.IsConsumableOrStackable = function(self) return IsConsumableAction(self._state_action) or
-	IsStackableAction(self._state_action) or
-	(not IsItemAction(self._state_action) and GetActionCount(self._state_action) > 0) end
+Action.IsConsumableOrStackable = function(self)
+	return IsConsumableAction(self._state_action) or
+			IsStackableAction(self._state_action) or
+			(not IsItemAction(self._state_action) and GetActionCount(self._state_action) > 0)
+end
 Action.IsUnitInRange           = function(self, unit) return IsActionInRange(self._state_action, unit) end
 Action.SetTooltip              = function(self) return GameTooltip:SetAction(self._state_action) end
 Action.GetSpellId              = function(self)
@@ -2782,8 +2788,10 @@ if C_ActionBar and C_ActionBar.GetActionCooldownDuration then
 	Action.GetCooldownDuration = function(self) return C_ActionBar.GetActionCooldownDuration(self._state_action) end
 end
 if C_ActionBar and C_ActionBar.GetActionLossOfControlCooldownDuration then
-	Action.GetLoCCooldownDuration = function(self) return C_ActionBar.GetActionLossOfControlCooldownDuration(self
-		._state_action) end
+	Action.GetLoCCooldownDuration = function(self)
+		return C_ActionBar.GetActionLossOfControlCooldownDuration(self
+			._state_action)
+	end
 end
 
 -- legacy cooldown functions, avoiding table creation on game versions that still have the old API
@@ -2837,8 +2845,10 @@ if WoWClassic then
 		Action.GetCount = function(self) return LibClassicSpellActionCount:GetActionCount(self._state_action) end
 	else
 		-- if we don't have the library, only show count for items, like the default UI
-		Action.IsConsumableOrStackable = function(self) return IsItemAction(self._state_action) and
-			(IsConsumableAction(self._state_action) or IsStackableAction(self._state_action)) end
+		Action.IsConsumableOrStackable = function(self)
+			return IsItemAction(self._state_action) and
+					(IsConsumableAction(self._state_action) or IsStackableAction(self._state_action))
+		end
 	end
 end
 
@@ -2872,7 +2882,7 @@ else
 	GetSpellLoCCooldownInfoFallback = function() end
 end
 local GetSpellLossOfControlCooldownInfo = C_Spell and C_Spell.GetSpellLossOfControlCooldownInfo or
-GetSpellLoCCooldownInfoFallback
+		GetSpellLoCCooldownInfoFallback
 
 local BOOKTYPE_SPELL                    = Enum.SpellBookSpellBank and Enum.SpellBookSpellBank.Player or "spell"
 -----------------------------------------------------------
