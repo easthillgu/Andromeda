@@ -10,7 +10,7 @@ end
 
 -- Pixel Glow 默认配置（参考 WeakAuras）
 local defaultPixelGlowConfig = {
-    lines = 6,
+    lines = 8,
     frequency = 0.25,
     length = 8,
     thickness = 1,

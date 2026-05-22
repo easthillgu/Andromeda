@@ -47,11 +47,16 @@ function ACTIONBAR:UpdatePetBar()
         elseif petAutoCastableTexture then
             petAutoCastableTexture:Hide()
         end
-        if autoCastEnabled and petAutoCastShine then
-            AutoCastShine_AutoCastStart(petAutoCastShine)
-        elseif petAutoCastShine then
-            AutoCastShine_AutoCastStop(petAutoCastShine)
+
+        if petAutoCastShine then
+            petAutoCastShine:Hide()
         end
+        if autoCastEnabled then
+            ACTIONBAR:PixelGlow_Start(petActionButton)
+        else
+            ACTIONBAR:PixelGlow_Stop(petActionButton)
+        end
+        
         if texture then
             if GetPetActionSlotUsable(i) then
                 petActionIcon:SetVertexColor(1, 1, 1)
