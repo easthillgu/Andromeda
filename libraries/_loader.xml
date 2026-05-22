@@ -10,7 +10,7 @@
     <Script file='LibCustomGlow-1.0\LibCustomGlow-1.0.lua'/>
     <Script file='LibActionButton-1.0\LibActionButton-1.0.lua'/>
     <Script file='LibBase64-1.0\LibBase64-1.0.lua'/>
-    <Script file='LibRangeCheck-2.0\LibRangeCheck-2.0.lua'/>
+    <Script file='LibRangeCheck-3.0\LibRangeCheck-3.0.lua'/>
     <Script file='LibSharedMedia-3.0\LibSharedMedia-3.0.lua'/>
     <!-- oUF from ElvUI_Libraries (Mists version = closest to 3.80.1) -->
     <Script file='LibDispel\LibDispel.lua'/>

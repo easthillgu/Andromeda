@@ -76,7 +76,7 @@ do
     F:AddLib('LibActionButton', 'LibActionButton-1.0')
     F:AddLib('LibButtonGlow', 'LibButtonGlow-1.0')
     F:AddLib('LibCustomGlow', 'LibCustomGlow-1.0')
-    F:AddLib('LibRangeCheck', 'LibRangeCheck-2.0')
+    F:AddLib('LibRangeCheck', 'LibRangeCheck-3.0')
     F:AddLib('LibSharedMedia', 'LibSharedMedia-3.0')
     F:AddLib('LibBase64', 'LibBase64-1.0')
 
