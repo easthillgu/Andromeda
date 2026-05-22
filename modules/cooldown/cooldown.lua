@@ -12,14 +12,16 @@ local day, hour, minute = 86400, 3600, 60
 function COOLDOWN.FormattedTimer(s, modRate)
     local onlyNumbers = C.DB.Cooldown.OnlyNumbers
     if s >= day then
-        return format(onlyNumbers and '|cffbebfb3%d|r' or '|cffbebfb3%d|r|cffa28d7bd|r', s / day + 0.5), s % day -- grey
+        return format(onlyNumbers and '|cffbebfb3%d|r' or '|cffbebfb3%d|r|cffa28d7bd|r', s / day + 0.5), s % day   -- grey
     elseif s > hour then
-        return format(onlyNumbers and '|cff4fcd35%d|r' or '|cff4fcd35%d|r|cffa28d7bh|r', s / hour + 0.5), s % hour -- white
+        return format(onlyNumbers and '|cff4fcd35%d|r' or '|cff4fcd35%d|r|cffa28d7bh|r', s / hour + 0.5),
+            s % hour                                                                                               -- white
     elseif s >= minute then
         if s < C.DB.Cooldown.MmssTH then
-            return format('|cff21c8de%d:%.2d|r', s / minute, s % minute), s - floor(s) -- blue
+            return format('|cff21c8de%d:%.2d|r', s / minute, s % minute), s - floor(s)                                     -- blue
         else
-            return format(onlyNumbers and '|cff21c8de%d|r' or '|cff21c8de%d|r|cffa28d7bm|r', s / minute + 0.5), s % minute -- blue
+            return format(onlyNumbers and '|cff21c8de%d|r' or '|cff21c8de%d|r|cffa28d7bm|r', s / minute + 0.5),
+                s % minute                                                                                                 -- blue
         end
     else
         local colorStr = (s < 3 and '|cfffd3612') or (s < 10 and '|cfffd3612') or '|cffffe700' -- red / yellow
@@ -54,7 +56,7 @@ function COOLDOWN:OnSizeChanged(width, height)
     if fontScale < minScale then
         self:Hide()
     else
-        self.text:SetFont(font, fontScale * fontSize, outline and 'OUTLINEMONOCHROME' or nil)
+        self.text:SetFont(font, fontScale * fontSize, outline and 'OUTLINE' or nil)
         self.text:SetShadowColor(0, 0, 0, outline and 0 or 1)
         self.text:SetShadowOffset(2, -2)
 
