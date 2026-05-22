@@ -76,11 +76,28 @@ tinsert(C.BlizzThemes, function()
         end
     end
 
+    -- Model Frame
+    if _G.CharacterModelFrame then
+        F.ReskinRotationButtons(_G.CharacterModelFrame)
+    end
+
     -- 3.80.1: CharacterModelScene may not exist (Retail 3D model)
     if _G.CharacterModelScene then
         _G.CharacterModelScene:DisableDrawLayer('BACKGROUND')
         _G.CharacterModelScene:DisableDrawLayer('BORDER')
         _G.CharacterModelScene:DisableDrawLayer('OVERLAY')
+    end
+
+    -- Dropdowns
+    if _G.PlayerStatFrameLeftDropdown then F.ReskinDropdown(_G.PlayerStatFrameLeftDropdown) end
+    if _G.PlayerStatFrameRightDropdown then F.ReskinDropdown(_G.PlayerStatFrameRightDropdown) end
+    if _G.PlayerTitleDropdown then F.ReskinDropdown(_G.PlayerTitleDropdown) end
+
+    -- Attributes Frame
+    if _G.CharacterAttributesFrame then
+        F.StripTextures(_G.CharacterAttributesFrame)
+        local bg = F.CreateBDFrame(_G.CharacterAttributesFrame, 0.25)
+        bg:SetPoint('BOTTOMRIGHT', 0, -8)
     end
 
     -- [[ Item buttons ]]
@@ -124,63 +141,62 @@ tinsert(C.BlizzThemes, function()
     for i = 1, #slots do
         local slot = _G['Character' .. slots[i] .. 'Slot']
         if slot then  -- 3.80.1: skip nil slots, don't break
-
-        -- NDui-style slot stripping (3.80.1: SetNormalTexture(nil) ignored, use Hide)
-        local nt = slot:GetNormalTexture()
-        if nt then nt:Hide() end
-        local pt = slot:GetPushedTexture()
-        if pt then pt:Hide() end
-        local hl = slot:GetHighlightTexture()
-        if hl then
-            hl:SetColorTexture(1, 1, 1, 0.25)
-        end
-        -- Prevent Blizzard from restoring highlight texture
-        slot.SetHighlightTexture = function() end
-
-        if slot.icon then
-            slot.icon:SetTexCoord(0.08, 0.92, 0.08, 0.92)
-            slot.icon:SetInside()
-        end
-
-        -- bg surrounds the slot button (not just icon)
-        slot.bg = F.CreateBDFrame(slot, 0.25)
-
-        local cooldown = _G['Character' .. slots[i] .. 'SlotCooldown']
-        if cooldown then
-            cooldown:SetInside()
-        end
-
-        if slot.ignoreTexture then
-            slot.ignoreTexture:SetTexture('Interface\\PaperDollInfoFrame\\UI-GearManager-LeaveItem-Transparent')
-        end
-
-        if slot.IconOverlay then
-            slot.IconOverlay:SetInside()
-        end
-
-        if slot.IconBorder then
-            F.ReskinIconBorder(slot.IconBorder)
-        end
-
-        local popout = slot.popoutButton
-        if popout then
-            popout:SetNormalTexture(0)
-            popout:SetHighlightTexture(0)
-
-            local arrow = popout:CreateTexture(nil, 'OVERLAY')
-            arrow:SetSize(14, 14)
-            if slot.verticalFlyout then
-                F.SetupArrow(arrow, 'down')
-                arrow:SetPoint('TOP', slot, 'BOTTOM', 0, 1)
-            else
-                F.SetupArrow(arrow, 'right')
-                arrow:SetPoint('LEFT', slot, 'RIGHT', -1, 0)
+            -- NDui-style slot stripping (3.80.1: SetNormalTexture(nil) ignored, use Hide)
+            local nt = slot:GetNormalTexture()
+            if nt then nt:Hide() end
+            local pt = slot:GetPushedTexture()
+            if pt then pt:Hide() end
+            local hl = slot:GetHighlightTexture()
+            if hl then
+                hl:SetColorTexture(1, 1, 1, 0.25)
             end
-            popout.arrow = arrow
+            -- Prevent Blizzard from restoring highlight texture
+            slot.SetHighlightTexture = function() end
 
-            popout:HookScript('OnEnter', clearPopout)
-            popout:HookScript('OnLeave', colourPopout)
-        end
+            if slot.icon then
+                slot.icon:SetTexCoord(0.08, 0.92, 0.08, 0.92)
+                slot.icon:SetInside()
+            end
+
+            -- bg surrounds the slot button (not just icon)
+            slot.bg = F.CreateBDFrame(slot, 0.25)
+
+            local cooldown = _G['Character' .. slots[i] .. 'SlotCooldown']
+            if cooldown then
+                cooldown:SetInside()
+            end
+
+            if slot.ignoreTexture then
+                slot.ignoreTexture:SetTexture('Interface\\PaperDollInfoFrame\\UI-GearManager-LeaveItem-Transparent')
+            end
+
+            if slot.IconOverlay then
+                slot.IconOverlay:SetInside()
+            end
+
+            if slot.IconBorder then
+                F.ReskinIconBorder(slot.IconBorder)
+            end
+
+            local popout = slot.popoutButton
+            if popout then
+                popout:SetNormalTexture(0)
+                popout:SetHighlightTexture(0)
+
+                local arrow = popout:CreateTexture(nil, 'OVERLAY')
+                arrow:SetSize(14, 14)
+                if slot.verticalFlyout then
+                    F.SetupArrow(arrow, 'down')
+                    arrow:SetPoint('TOP', slot, 'BOTTOM', 0, 1)
+                else
+                    F.SetupArrow(arrow, 'right')
+                    arrow:SetPoint('LEFT', slot, 'RIGHT', -1, 0)
+                end
+                popout.arrow = arrow
+
+                popout:HookScript('OnEnter', clearPopout)
+                popout:HookScript('OnLeave', colourPopout)
+            end
         end  -- if slot then
     end
 
@@ -479,6 +495,74 @@ tinsert(C.BlizzThemes, function()
     if _G.TokenFramePopup then
         F.StripTextures(_G.TokenFramePopup)
         F.SetBD(_G.TokenFramePopup)
+    end
+
+    -- Skill Frame
+    if _G.SkillFrame then
+        F.StripTextures(_G.SkillFrame)
+        if _G.SkillListScrollFrameScrollBar then F.ReskinScroll(_G.SkillListScrollFrameScrollBar) end
+        if _G.SkillFrameCancelButton then F.ReskinButton(_G.SkillFrameCancelButton) end
+        if _G.SkillFrameCollapseAllButton then F.ReskinCollapse(_G.SkillFrameCollapseAllButton) end
+        if _G.SkillFrameExpandButtonFrame then F.StripTextures(_G.SkillFrameExpandButtonFrame) end
+
+        if _G.SkillDetailScrollFrame and _G.SkillDetailScrollFrame.ScrollBar then
+            F.ReskinScroll(_G.SkillDetailScrollFrame.ScrollBar)
+            F.CreateBDFrame(_G.SkillDetailScrollFrame, 0.25)
+        end
+
+        if _G.SkillDetailStatusBar then
+            _G.SkillDetailStatusBarBorder:SetAlpha(0)
+            _G.SkillDetailStatusBar:SetStatusBarTexture(C.Assets.Textures.Backdrop)
+            F.CreateBDFrame(_G.SkillDetailStatusBar, 0.25)
+        end
+
+        if _G.SkillDetailStatusBarUnlearnButton then
+            F.ReskinButton(_G.SkillDetailStatusBarUnlearnButton)
+            local bu = _G.SkillDetailStatusBarUnlearnButton
+            bu.__bg:SetInside(nil, 7, 7)
+            bu:SetPoint('LEFT', _G.SkillDetailStatusBar, 'RIGHT', 2, 0)
+            local tex = bu:CreateTexture()
+            tex:SetTexture(C.Assets.Textures.Close)
+            tex:SetVertexColor(1, 0, 0)
+            tex:SetAllPoints(bu.__bg)
+        end
+
+        for i = 1, 12 do
+            local name = 'SkillRankFrame'..i
+            local bar = _G[name]
+            local border = _G[name..'Border']
+            if bar then
+                bar:SetStatusBarTexture(C.Assets.Textures.Backdrop)
+                F.CreateBDFrame(bar, 0.25)
+            end
+            if border then border:SetAlpha(0) end
+        end
+    end
+
+    -- Pet Frame
+    if _G.PetPaperDollFrame then
+        F.StripTextures(_G.PetPaperDollFrame)
+        if _G.PetPaperDollCloseButton then _G.PetPaperDollCloseButton:Hide() end
+
+        if _G.PetPaperDollFrameExpBar then
+            F.StripTextures(_G.PetPaperDollFrameExpBar)
+            _G.PetPaperDollFrameExpBar:SetStatusBarTexture(C.Assets.Textures.Backdrop)
+            F.CreateBDFrame(_G.PetPaperDollFrameExpBar, 0.25)
+        end
+
+        if _G.PetModelFrame then
+            F.ReskinRotationButtons(_G.PetModelFrame)
+        end
+
+        if _G.PetAttributesFrame then
+            F.StripTextures(_G.PetAttributesFrame)
+            F.CreateBDFrame(_G.PetAttributesFrame, 0.25)
+        end
+
+        for i = 1, 3 do
+            local tab = _G['PetPaperDollFrameTab'..i]
+            if tab then F.ReskinTab(tab) end
+        end
     end
 
     -- Quick Join (3.80.1: may not exist)

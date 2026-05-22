@@ -2,9 +2,9 @@
     <Script file="notification.lua"/>
     <Script file="bag.lua"/>
     <Script file="incompatible.lua"/>
-    <!--Script file="instance.lua"/-->
+    <Script file="instance.lua"/>
     <Script file="mail.lua"/>
-    <!--Script file="paragon.lua"/-->
-    <!--Script file="rare.lua"/-->
+    <Script file="paragon.lua"/>
+    <Script file="rare.lua"/>
     <Script file="version.lua"/>
 </Ui>

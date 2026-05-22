@@ -232,7 +232,7 @@ function NOTIFICATION:OnLogin()
     self:BagFullNotify()
     self:VersionCheck()
     if self.RareNotify then self:RareNotify() end
-    --self:ParagonNotify()
-    --self:InstanceNotify()
+    self:ParagonNotify()
+    self:InstanceNotify()
     self:CheckIncompatible()
 end

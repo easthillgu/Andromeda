@@ -62,7 +62,7 @@ end
 local function reskinFont(obj, font, size)
     local outline = _G.ANDROMEDA_ADB.FontOutline
 
-    obj:SetFont(font, size, outline and 'OUTLINE' or '')
+    obj:SetFont(font, size, outline and 'OUTLINEMONOCHROME' or '')
     obj:SetShadowColor(0, 0, 0, 1)
     obj:SetShadowOffset(1, -1)
 end
@@ -146,10 +146,10 @@ TOOLTIP:RegisterTooltips(C.ADDON_NAME, function()
         _G.QuestScrollFrame.StoryTooltip,
         _G.QuestScrollFrame.CampaignTooltip,
         _G.GeneralDockManagerOverflowButtonList,
-        _G.ReputationParagonTooltip,
+        --_G.ReputationParagonTooltip,
         _G.NamePlateTooltip,
         _G.QueueStatusFrame,
---[[        _G.FloatingGarrisonFollowerTooltip,
+    --[[    _G.FloatingGarrisonFollowerTooltip,
         _G.FloatingGarrisonFollowerAbilityTooltip,
         _G.FloatingGarrisonMissionTooltip,
         _G.GarrisonFollowerAbilityTooltip,
@@ -190,7 +190,7 @@ TOOLTIP:RegisterTooltips(C.ADDON_NAME, function()
     -- local r, g, b = C.r, C.g, C.b
     -- _G.IMECandidatesFrame.selection:SetVertexColor(r, g, b, 1)
 
-    --[[ Pet Tooltip (3.80.1: may not exist)
+    -- Pet Tooltip (3.80.1: may not exist)
     if _G.PetBattlePrimaryUnitTooltip then
         _G.PetBattlePrimaryUnitTooltip:HookScript('OnShow', function(self)
             self.Border:SetAlpha(0)
@@ -223,7 +223,7 @@ TOOLTIP:RegisterTooltips(C.ADDON_NAME, function()
                 end
             end
         end)
-    end]]
+    end
 
     -- Others
     F:Delay(5, function()
@@ -242,10 +242,10 @@ TOOLTIP:RegisterTooltips(C.ADDON_NAME, function()
         if _G.TomTomTooltip then
             TOOLTIP.ReskinTooltip(_G.TomTomTooltip)
         end
-        --[[ RareScanner
+        -- RareScanner
         if _G.RSMapItemToolTip then
             TOOLTIP.ReskinTooltip(_G.RSMapItemToolTip)
-        end]]
+        end
         if _G.LootBarToolTip then
             TOOLTIP.ReskinTooltip(_G.LootBarToolTip)
         end
@@ -253,13 +253,13 @@ TOOLTIP:RegisterTooltips(C.ADDON_NAME, function()
         if _G.NarciGameTooltip then
             TOOLTIP.ReskinTooltip(_G.NarciGameTooltip)
         end
-        --[[ Altoholic
+        -- Altoholic
         if _G.AltoTooltip then
             TOOLTIP.ReskinTooltip(_G.AltoTooltip)
-        end]]
+        end
     end)
 
-    --[[if IsAddOnLoaded('BattlePetBreedID') then
+    if IsAddOnLoaded('BattlePetBreedID') then
         hooksecurefunc('BPBID_SetBreedTooltip', function(parent)
             if parent == _G.FloatingBattlePetTooltip then
                 TOOLTIP.ReskinTooltip(_G.BPBID_BreedTooltip2)
@@ -267,7 +267,7 @@ TOOLTIP:RegisterTooltips(C.ADDON_NAME, function()
                 TOOLTIP.ReskinTooltip(_G.BPBID_BreedTooltip)
             end
         end)
-    end]]
+    end
 
     -- MDT and DT
     if _G.MDT and _G.MDT.ShowInterface then

@@ -47,6 +47,7 @@ function ACTIONBAR:UpdateSize(name)
     local fontSize = C.DB['Actionbar'][name .. 'FontSize']
     local margin = C.DB['Actionbar']['ButtonMargin']
     local padding = C.DB['Actionbar']['BarPadding']
+    local isSpecialBar = name == 'BarPet'
 
     if num == 0 then
         local column = 3
@@ -84,9 +85,17 @@ function ACTIONBAR:UpdateSize(name)
             button:ClearAllPoints()
 
             if i == 1 then
-                button:SetPoint('TOPLEFT', frame, padding, -padding)
+                if isSpecialBar then
+                    button:SetPoint('BOTTOMLEFT', frame, padding, padding)
+                else
+                    button:SetPoint('TOPLEFT', frame, padding, -padding)
+                end
             elseif mod(i - 1, perRow) == 0 then
-                button:SetPoint('TOP', frame.buttons[i - perRow], 'BOTTOM', 0, -margin)
+                if isSpecialBar then
+                    button:SetPoint('BOTTOM', frame.buttons[i - perRow], 'TOP', 0, margin)
+                else
+                    button:SetPoint('TOP', frame.buttons[i - perRow], 'BOTTOM', 0, -margin)
+                end
             else
                 button:SetPoint('LEFT', frame.buttons[i - 1], 'RIGHT', margin, 0)
             end
