@@ -117,7 +117,7 @@ function ACTIONBAR:CreateStanceBar()
 
     frame.mover = F.Mover(frame, L['StanceBar'], 'StanceBar',
         { 'BOTTOMLEFT', _G[C.ADDON_TITLE .. 'ActionBar3'], 'TOPLEFT', 0, padding })
-        { 'BOTTOMLEFT', _G[C.ADDON_TITLE .. 'ActionBar3'], 'TOPLEFT', 0, padding })
+
     ACTIONBAR.movers[11] = frame.mover
 
     -- StanceBar
