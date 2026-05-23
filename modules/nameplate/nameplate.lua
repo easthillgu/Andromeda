@@ -217,7 +217,8 @@ function NAMEPLATE:CheckThreatStatus(unit)
     end
 
     local unitTarget = unit .. 'target'
-    local unitRole = isInGroup and UnitExists(unitTarget) and not UnitIsUnit(unitTarget, 'player') and groupRoles[UnitName(unitTarget)] or 'NONE'
+    local unitRole = isInGroup and UnitExists(unitTarget) and not UnitIsUnit(unitTarget, 'player') and
+    groupRoles[UnitName(unitTarget)] or 'NONE'
 
     if C.MyRole == 'Tank' and unitRole == 'TANK' then
         return true, UnitThreatSituation(unitTarget, unit)
@@ -508,6 +509,9 @@ function NAMEPLATE:CreateNameplateStyle()
     NAMEPLATE:CreateCastBar(self)
     NAMEPLATE:CreateRaidTargetIndicator(self)
     NAMEPLATE:CreateAuras(self)
+    self.Auras:SetAlpha(0)
+    self.Auras:Hide()
+    hooksecurefunc(self.Auras, 'Show', function(f) f:SetAlpha(0); f:Hide() end)
     NAMEPLATE:CreateSpitefulIndicator(self)
 
     self:RegisterEvent('PLAYER_FOCUS_CHANGED', NAMEPLATE.UpdateFocusColor, true)
@@ -533,9 +537,15 @@ function NAMEPLATE:ToggleNameplateAuras()
         if not self:IsElementEnabled('Auras') then
             self:EnableElement('Auras')
         end
+        if self.Auras then
+            self.Auras:Show()
+        end
     else
         if self:IsElementEnabled('Auras') then
             self:DisableElement('Auras')
+        end
+        if self.Auras then
+            self.Auras:Hide()
         end
     end
 end
@@ -640,7 +650,10 @@ function NAMEPLATE:UpdatePlateByType()
         questIcon:SetShown(not self.plateType == 'NameOnly')
     end
 
-    if self.plateType == 'NameOnly' then
+    if self.plateType == 'Hidden' then
+        self:Hide()
+        return
+    elseif self.plateType == 'NameOnly' then
         for _, element in pairs(disabledElements) do
             if self:IsElementEnabled(element) then
                 self:DisableElement(element)
@@ -677,10 +690,10 @@ function NAMEPLATE:RefreshPlateType(unit)
     self.isFriendly = self.reaction and self.reaction >= 4 and not UnitCanAttack('player', unit)
     self.isSoftTarget = GetCVarBool('SoftTargetIconGameObject') and UnitIsUnit(unit, 'softinteract')
 
-    if C.DB.Nameplate.NameOnlyMode and self.isFriendly or self.widgetsOnly or self.isSoftTarget then
+    if self.widgetsOnly or self.isSoftTarget then
         self.plateType = 'NameOnly'
-    elseif C.DB.Nameplate.FriendlyPlate and self.isFriendly then
-        self.plateType = 'FriendlyPlate'
+    elseif self.isFriendly then
+        self.plateType = 'Hidden'
     else
         self.plateType = 'None'
     end
@@ -740,33 +753,35 @@ function NAMEPLATE:PostUpdatePlates(event, unit)
             self.widgetContainer = blizzPlate.WidgetContainer
             if self.widgetContainer then
                 self.widgetContainer:SetParent(self)
-                -- self.widgetContainer:SetScale(1/_G.ANDROMEDA_ADB.UIScale)
             end
 
             self.softTargetFrame = blizzPlate.SoftTargetFrame
             if self.softTargetFrame then
                 self.softTargetFrame:SetParent(self)
-                -- self.softTargetFrame:SetScale(1/_G.ANDROMEDA_ADB.UIScale)
             end
 
-            -- 3.80.1: Blizzard nameplate children are unnamed
-            -- Hook the StatusBar to keep it hidden persistently
-            for _, child in pairs({blizzPlate:GetChildren()}) do
-                if child:GetObjectType() == 'StatusBar' and child:GetName() == nil then
-                    child:SetAlpha(0)
-                    child:SetStatusBarTexture(nil)
-                    if not child._andmHooked then
-                        child._andmHooked = true
-                        hooksecurefunc(child, 'Show', function(c)
-                            local g = c._andmGuard; if g then return end
-                            c._andmGuard = true; c:Hide(); c._andmGuard = nil
-                        end)
-                        hooksecurefunc(child, 'SetAlpha', function(c)
-                            local g = c._andmGuard; if g then return end
-                            c._andmGuard = true; c:SetAlpha(0); c._andmGuard = nil
-                        end)
-                    end
+            -- NDui-style: disable Blizzard elements on first visit
+            if not blizzPlate._andmCleaned then
+                blizzPlate._andmCleaned = true
+
+                local health = blizzPlate.healthBar or blizzPlate.healthbar
+                if health then
+                    health:UnregisterAllEvents()
+                    health:Hide()
                 end
+
+                local spell = blizzPlate.castBar or blizzPlate.spellbar
+                if spell then
+                    spell:UnregisterAllEvents()
+                    spell:Hide()
+                end
+
+                if blizzPlate.BuffFrame then
+                    blizzPlate.BuffFrame:UnregisterAllEvents()
+                    blizzPlate.BuffFrame:Hide()
+                end
+
+                blizzPlate:HookScript('OnShow', function(f) f:Hide() end)
             end
         end
 
@@ -778,6 +793,22 @@ function NAMEPLATE:PostUpdatePlates(event, unit)
     if event ~= 'NAME_PLATE_UNIT_REMOVED' then
         NAMEPLATE.UpdateSelectedChange(self)
         NAMEPLATE.UpdateQuestUnit(self, event, unit)
+
+        -- Friendly quest NPCs: flip from 'Hidden' to 'NameOnly'
+        if self.plateType == 'Hidden' and self.isFriendly then
+            local isQuestNPC = UnitIsQuestBoss(unit)
+            if not isQuestNPC and C_TaskQuest and C_TaskQuest.DoesUnitHaveQuestByUnit then
+                isQuestNPC = C_TaskQuest.DoesUnitHaveQuestByUnit(unit)
+            end
+            if isQuestNPC then
+                self.plateType = 'NameOnly'
+                self.previousType = nil
+                self:Show()
+                NAMEPLATE.UpdatePlateByType(self)
+                self.previousType = 'NameOnly'
+            end
+        end
+
         NAMEPLATE.UpdateSpitefulIndicator(self)
     end
 

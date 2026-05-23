@@ -100,11 +100,15 @@ function ACTIONBAR:HandleButton(btn)
 
     -- Hide Blizzard proc highlight (replaced by pixel glow)
     if spellHighlight then
+        spellHighlight:SetAlpha(0)
         spellHighlight:Hide()
+        hooksecurefunc(spellHighlight, 'Show', function(f) f:SetAlpha(0); f:Hide() end)
     end
     -- Hide Blizzard auto-cast shine (replaced by pixel glow)
     if autoCastShine then
+        autoCastShine:SetAlpha(0)
         autoCastShine:Hide()
+        hooksecurefunc(autoCastShine, 'Show', function(f) f:SetAlpha(0); f:Hide() end)
     end
 
     if normal then

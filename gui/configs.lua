@@ -390,13 +390,13 @@ C.CharacterSettings = {
         DotSpellsList = {},
         DotColor = { r = 0.8, g = 0.6, b = 0.4 },
 
-        ShowAura = true,
-        AuraFilterMode = 3,
+        ShowAura = false,
+        AuraFilterMode = 2,
         AuraPerRow = 5,
         AuraNumTotal = 32,
         DesaturateIcon = true,
         DebuffTypeColor = true,
-        DispellMode = 2,
+        DispellMode = 0,
 
 
         TotemIcon = true,
