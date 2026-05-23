@@ -107,7 +107,6 @@ function ACTIONBAR:CreateStanceBar()
 
     local margin = C.DB['Actionbar']['ButtonMargin']
     local padding = C.DB['Actionbar']['BarPadding']
-    local padding = C.DB['Actionbar']['BarPadding']
     local buttonList = {}
     local frame = CreateFrame('Frame', C.ADDON_TITLE .. 'ActionBarStance', _G.UIParent, 'SecureHandlerStateTemplate')
     
