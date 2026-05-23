@@ -48,7 +48,7 @@ function AURA:BuildBuffFrame()
     AURA.BuffFrame:SetPoint('TOPRIGHT', AURA.BuffFrame.mover)
 
     AURA.DebuffFrame = AURA:CreateAuraHeader('HARMFUL')
-    AURA.DebuffFrame.mover = F.Mover(AURA.DebuffFrame, L['DebuffFrame'], 'DebuffAnchor', { 'TOPLEFT', AURA.BuffFrame.mover, 'BOTTOMLEFT', 0, 30 })
+    AURA.DebuffFrame.mover = F.Mover(AURA.DebuffFrame, L['DebuffFrame'], 'DebuffAnchor', { 'TOPLEFT', AURA.BuffFrame, 'BOTTOMLEFT', 0, -5 })
     AURA.DebuffFrame:ClearAllPoints()
     AURA.DebuffFrame:SetPoint('TOPRIGHT', AURA.DebuffFrame.mover)
 
