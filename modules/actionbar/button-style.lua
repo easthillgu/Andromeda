@@ -93,9 +93,19 @@ function ACTIONBAR:HandleButton(btn)
     local highlight = btn.HighlightTexture
     local newActionTexture = btn.NewActionTexture
     local spellHighlight = btn.SpellHighlightTexture
+    local autoCastShine = btn.AutoCastShine
     local iconMask = btn.IconMask
     local petShine = _G[btnName .. 'Shine']
     local autoCastable = btn.AutoCastable
+
+    -- Hide Blizzard proc highlight (replaced by pixel glow)
+    if spellHighlight then
+        spellHighlight:Hide()
+    end
+    -- Hide Blizzard auto-cast shine (replaced by pixel glow)
+    if autoCastShine then
+        autoCastShine:Hide()
+    end
 
     if normal then
         normal:SetAlpha(0)
@@ -161,10 +171,6 @@ function ACTIONBAR:HandleButton(btn)
     if highlight then
         highlight:SetInside()
         highlight:SetColorTexture(1, 1, 1, 0.25)
-    end
-
-    if spellHighlight then
-        spellHighlight:SetOutside()
     end
 
     if hotkey then
