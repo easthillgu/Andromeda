@@ -21,7 +21,9 @@ tinsert(C.BlizzThemes, function()
     end
     F.ReskinArrow(_G.ItemTextPrevPageButton, 'left')
     F.ReskinArrow(_G.ItemTextNextPageButton, 'right')
-    _G.ItemTextFramePageBg:SetAlpha(0)
+    if _G.ItemTextFramePageBg then
+        _G.ItemTextFramePageBg:SetAlpha(0)
+    end
 
     _G.ItemTextPageText:SetTextColor('P', 1, 1, 1)
     _G.ItemTextPageText.SetTextColor = nop

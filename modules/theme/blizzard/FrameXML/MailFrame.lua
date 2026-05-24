@@ -49,7 +49,9 @@ tinsert(C.BlizzThemes, function()
 
     F.CreateBDFrame(_G.OpenMailScrollFrame, 0.25)
     local bg = F.CreateBDFrame(_G.SendMailScrollFrame, 0.25)
-    bg:SetPoint('TOPLEFT', 6, 0)
+    if bg then
+        bg:SetPoint('TOPLEFT', 6, 0)
+    end
 
     _G.SendMailMailButton:SetPoint('RIGHT', _G.SendMailCancelButton, 'LEFT', -1, 0)
     _G.OpenMailDeleteButton:SetPoint('RIGHT', _G.OpenMailCancelButton, 'LEFT', -1, 0)

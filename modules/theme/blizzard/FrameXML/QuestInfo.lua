@@ -27,8 +27,12 @@ local function restyleSpellButton(bu)
     local name = bu:GetName()
     local icon = bu.Icon
 
-    _G[name .. 'NameFrame']:Hide()
-    _G[name .. 'SpellBorder']:Hide()
+    if _G[name .. 'NameFrame'] then
+        _G[name .. 'NameFrame']:Hide()
+    end
+    if _G[name .. 'SpellBorder'] then
+        _G[name .. 'SpellBorder']:Hide()
+    end
 
     icon:SetPoint('TOPLEFT', 3, -2)
     F.ReskinIcon(icon)
@@ -39,7 +43,10 @@ local function restyleSpellButton(bu)
 end
 
 local function reskinRewardButton(bu)
-    bu.NameFrame:Hide()
+    if not bu then return end
+    if bu.NameFrame then
+        bu.NameFrame:Hide()
+    end
     bu.bg = F.ReskinIcon(bu.Icon)
 
     local bg = F.CreateBDFrame(bu, 0.25)
@@ -49,6 +56,7 @@ local function reskinRewardButton(bu)
 end
 
 local function reskinRewardButtonWithSize(bu, isMapQuestInfo)
+    if not bu then return end  -- 3.80.1
     reskinRewardButton(bu)
 
     if isMapQuestInfo then
@@ -160,7 +168,14 @@ tinsert(C.BlizzThemes, function()
             local spellRewards = C_QuestInfoSystem.GetQuestRewardSpells(questID) or {}
             numSpellRewards = #spellRewards
         else
-            numSpellRewards = isQuestLog and GetNumQuestLogRewardSpells() or GetNumRewardSpells()
+            -- 3.80.1: these globals may not exist
+            if isQuestLog and GetNumQuestLogRewardSpells then
+                numSpellRewards = GetNumQuestLogRewardSpells()
+            elseif GetNumRewardSpells then
+                numSpellRewards = GetNumRewardSpells()
+            else
+                numSpellRewards = 0
+            end
         end
 
         if numSpellRewards > 0 then

@@ -3,10 +3,14 @@ local F, C = unpack(select(2, ...))
 tinsert(C.BlizzThemes, function()
     local ColorPickerFrame = _G.ColorPickerFrame
 
-    F.StripTextures(ColorPickerFrame.Header)
-    ColorPickerFrame.Header:ClearAllPoints()
-    ColorPickerFrame.Header:SetPoint('TOP', ColorPickerFrame, 0, 10)
-    ColorPickerFrame.Border:Hide()
+    if ColorPickerFrame.Header then
+        F.StripTextures(ColorPickerFrame.Header)
+        ColorPickerFrame.Header:ClearAllPoints()
+        ColorPickerFrame.Header:SetPoint('TOP', ColorPickerFrame, 0, 10)
+    end
+    if ColorPickerFrame.Border then
+        ColorPickerFrame.Border:Hide()
+    end
 
     F.SetBD(ColorPickerFrame)
     F.ReskinButton(_G.ColorPickerOkayButton)

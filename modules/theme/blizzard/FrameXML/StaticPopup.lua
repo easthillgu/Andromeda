@@ -29,8 +29,12 @@ tinsert(C.BlizzThemes, function()
         local silver = _G['StaticPopup' .. i .. 'MoneyInputFrameSilver']
         local copper = _G['StaticPopup' .. i .. 'MoneyInputFrameCopper']
 
-        _G['StaticPopup' .. i .. 'ItemFrameNameFrame']:Hide()
+        local nameFrame = _G['StaticPopup' .. i .. 'ItemFrameNameFrame']
+        if nameFrame then
+            nameFrame:Hide()
+        end
 
+    if bu and bu.SetNormalTexture then
         bu:SetNormalTexture(0)
         bu:SetHighlightTexture(0)
         bu:SetPushedTexture(0)
@@ -64,6 +68,7 @@ tinsert(C.BlizzThemes, function()
         F.ReskinEditbox(gold)
         F.ReskinEditbox(silver)
         F.ReskinEditbox(copper)
+    end
     end
 
     hooksecurefunc('StaticPopup_Show', function(which, _, _, data)
@@ -123,7 +128,9 @@ tinsert(C.BlizzThemes, function()
 
     F.SetBD(_G.PetBattleQueueReadyFrame)
     F.CreateBDFrame(_G.PetBattleQueueReadyFrame.Art)
+    if _G.PetBattleQueueReadyFrame.Border then
     _G.PetBattleQueueReadyFrame.Border:Hide()
+    end
     F.ReskinButton(_G.PetBattleQueueReadyFrame.AcceptButton)
     F.ReskinButton(_G.PetBattleQueueReadyFrame.DeclineButton)
 

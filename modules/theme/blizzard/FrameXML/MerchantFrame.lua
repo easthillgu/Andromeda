@@ -19,8 +19,8 @@ local function reskinMerchantItem(item)
     icon:SetInside()
     button.bg = F.ReskinIcon(icon)
     F.ReskinIconBorder(button.IconBorder)
-    button.IconOverlay:SetInside()
-    button.IconOverlay2:SetInside()
+    if button.IconOverlay then button.IconOverlay:SetInside() end
+    if button.IconOverlay2 then button.IconOverlay2:SetInside() end
 
     name:SetFontObject(_G.Number12Font)
     name:SetPoint('LEFT', button, 'RIGHT', 2, 9)
@@ -42,8 +42,12 @@ tinsert(C.BlizzThemes, function()
     F.ReskinArrow(_G.MerchantNextPageButton, 'right')
     _G.MerchantMoneyInset:Hide()
     _G.MerchantMoneyBg:Hide()
-    _G.MerchantExtraCurrencyBg:SetAlpha(0)
-    _G.MerchantExtraCurrencyInset:SetAlpha(0)
+    if _G.MerchantExtraCurrencyBg then
+        _G.MerchantExtraCurrencyBg:SetAlpha(0)
+    end
+    if _G.MerchantExtraCurrencyInset then
+        _G.MerchantExtraCurrencyInset:SetAlpha(0)
+    end
     _G.BuybackBG:SetAlpha(0)
 
     _G.MerchantFrameTab1:ClearAllPoints()

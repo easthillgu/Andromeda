@@ -14,8 +14,12 @@ tinsert(C.BlizzThemes, function()
     F.ReskinDropdown(_G.AddonCharacterDropDown)
     F.ReskinTrimScroll(_G.AddonList.ScrollBar)
 
-    _G.AddonListForceLoad:SetSize(18, 18)
-    _G.AddonCharacterDropDown:SetWidth(170)
+    if _G.AddonListForceLoad then
+        _G.AddonListForceLoad:SetSize(18, 18)
+    end
+    if _G.AddonCharacterDropDown then
+        _G.AddonCharacterDropDown:SetWidth(170)
+    end
 
     local function forceSaturation(self, _, force)
         if force then
@@ -25,6 +29,7 @@ tinsert(C.BlizzThemes, function()
         self:SetDesaturated(true, true)
     end
 
+    if AddonList_InitButton then
     hooksecurefunc('AddonList_InitButton', function(entry)
         if not entry.styled then
             entry.Enabled:SetSize(18, 18)
@@ -41,6 +46,7 @@ tinsert(C.BlizzThemes, function()
             entry.styled = true
         end
     end)
+    end
 
     hooksecurefunc('AddonList_Update', function()
         for i = 1, _G.MAX_ADDONS_DISPLAYED do

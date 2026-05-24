@@ -6,8 +6,10 @@ tinsert(C.BlizzThemes, function()
     end
 
     _G.GuildRegistrarFrameEditBox:SetHeight(20)
-    _G.AvailableServicesText:SetTextColor(1, 1, 1)
-    _G.AvailableServicesText:SetShadowColor(0, 0, 0)
+    if _G.AvailableServicesText then
+        _G.AvailableServicesText:SetTextColor(1, 1, 1)
+        _G.AvailableServicesText:SetShadowColor(0, 0, 0)
+    end
 
     F.ReskinPortraitFrame(_G.GuildRegistrarFrame)
     _G.GuildRegistrarFrameEditBox:DisableDrawLayer('BACKGROUND')

@@ -85,16 +85,19 @@ tinsert(C.BlizzThemes, function()
         end
     end)
 
-    hooksecurefunc('FriendsFrame_UpdateFriendInviteButton', function(button)
-        if not button.styled then
-            F.ReskinButton(button.AcceptButton)
-            F.ReskinButton(button.DeclineButton)
+    if _G.FriendsFrame_UpdateFriendInviteButton then
+        hooksecurefunc('FriendsFrame_UpdateFriendInviteButton', function(button)
+            if not button.styled then
+                F.ReskinButton(button.AcceptButton)
+                F.ReskinButton(button.DeclineButton)
 
-            button.styled = true
-        end
-    end)
+                button.styled = true
+            end
+        end)
+    end
 
-    hooksecurefunc('FriendsFrame_UpdateFriendInviteHeaderButton', function(button)
+    if _G.FriendsFrame_UpdateFriendInviteHeaderButton then
+        hooksecurefunc('FriendsFrame_UpdateFriendInviteHeaderButton', function(button)
         if not button.styled then
             button:DisableDrawLayer('BACKGROUND')
             local bg = F.CreateBDFrame(button, 0.25)
@@ -106,9 +109,12 @@ tinsert(C.BlizzThemes, function()
             button.styled = true
         end
     end)
+    end
 
+    if _G.FriendsFrameStatusDropDown then
     _G.FriendsFrameStatusDropDown:ClearAllPoints()
     _G.FriendsFrameStatusDropDown:SetPoint('TOPLEFT', _G.FriendsFrame, 'TOPLEFT', 10, -28)
+    end
 
     -- FriendsFrameBattlenetFrame
 
@@ -130,11 +136,15 @@ tinsert(C.BlizzThemes, function()
     local broadcastFrame = _G.FriendsFrameBattlenetFrame.BroadcastFrame
     F.StripTextures(broadcastFrame)
     F.SetBD(broadcastFrame, nil, 10, -10, -10, 10)
-    broadcastFrame.EditBox:DisableDrawLayer('BACKGROUND')
+    if broadcastFrame.EditBox then
+        broadcastFrame.EditBox:DisableDrawLayer('BACKGROUND')
+    end
 
-    local ebbg = F.CreateBDFrame(broadcastFrame.EditBox, 0, true)
-    ebbg:SetPoint('TOPLEFT', -2, -2)
-    ebbg:SetPoint('BOTTOMRIGHT', 2, 2)
+    if broadcastFrame.EditBox then
+        local ebbg = F.CreateBDFrame(broadcastFrame.EditBox, 0, true)
+        ebbg:SetPoint('TOPLEFT', -2, -2)
+        ebbg:SetPoint('BOTTOMRIGHT', 2, 2)
+    end
 
     F.ReskinButton(broadcastFrame.UpdateButton)
     F.ReskinButton(broadcastFrame.CancelButton)
@@ -178,7 +188,9 @@ tinsert(C.BlizzThemes, function()
     end
 
     F.StripTextures(_G.WhoFrameListInset)
-    _G.WhoFrameEditBoxInset:Hide()
+    if _G.WhoFrameEditBoxInset then
+        _G.WhoFrameEditBoxInset:Hide()
+    end
     local whoBg = F.CreateBDFrame(_G.WhoFrameEditBox, 0, true)
     whoBg:SetPoint('TOPLEFT', _G.WhoFrameEditBoxInset)
     whoBg:SetPoint('BOTTOMRIGHT', _G.WhoFrameEditBoxInset, -1, 1)
@@ -194,44 +206,50 @@ tinsert(C.BlizzThemes, function()
     -- Recruite frame
 
     local RecruitAFriendFrame = _G.RecruitAFriendFrame
-    RecruitAFriendFrame.SplashFrame.Description:SetTextColor(1, 1, 1)
-    F.ReskinButton(RecruitAFriendFrame.SplashFrame.OKButton)
-    F.StripTextures(RecruitAFriendFrame.RewardClaiming)
-    F.ReskinButton(RecruitAFriendFrame.RewardClaiming.ClaimOrViewRewardButton)
-    F.ReskinButton(RecruitAFriendFrame.RecruitmentButton)
+    if RecruitAFriendFrame then  -- 3.80.1
+        RecruitAFriendFrame.SplashFrame.Description:SetTextColor(1, 1, 1)
+        F.ReskinButton(RecruitAFriendFrame.SplashFrame.OKButton)
+        F.StripTextures(RecruitAFriendFrame.RewardClaiming)
+        F.ReskinButton(RecruitAFriendFrame.RewardClaiming.ClaimOrViewRewardButton)
+        F.ReskinButton(RecruitAFriendFrame.RecruitmentButton)
 
-    local recruitList = RecruitAFriendFrame.RecruitList
-    F.StripTextures(recruitList.Header)
-    F.CreateBDFrame(recruitList.Header, 0.25)
-    recruitList.ScrollFrameInset:Hide()
-    F.ReskinTrimScroll(recruitList.ScrollBar)
+        local recruitList = RecruitAFriendFrame.RecruitList
+        F.StripTextures(recruitList.Header)
+        F.CreateBDFrame(recruitList.Header, 0.25)
+        recruitList.ScrollFrameInset:Hide()
+        F.ReskinTrimScroll(recruitList.ScrollBar)
+    end
 
     local recruitmentFrame = _G.RecruitAFriendRecruitmentFrame
-    F.StripTextures(recruitmentFrame)
-    F.ReskinClose(recruitmentFrame.CloseButton)
-    F.SetBD(recruitmentFrame)
-    F.StripTextures(recruitmentFrame.EditBox)
-    local ebBg = F.CreateBDFrame(recruitmentFrame.EditBox, 0.25)
-    ebBg:SetPoint('TOPLEFT', -3, -3)
-    ebBg:SetPoint('BOTTOMRIGHT', 0, 3)
-    F.ReskinButton(recruitmentFrame.GenerateOrCopyLinkButton)
+    if recruitmentFrame then  -- 3.80.1
+        F.StripTextures(recruitmentFrame)
+        F.ReskinClose(recruitmentFrame.CloseButton)
+        F.SetBD(recruitmentFrame)
+        F.StripTextures(recruitmentFrame.EditBox)
+        local ebBg = F.CreateBDFrame(recruitmentFrame.EditBox, 0.25)
+        ebBg:SetPoint('TOPLEFT', -3, -3)
+        ebBg:SetPoint('BOTTOMRIGHT', 0, 3)
+        F.ReskinButton(recruitmentFrame.GenerateOrCopyLinkButton)
+    end
 
     local rewardsFrame = _G.RecruitAFriendRewardsFrame
-    F.StripTextures(rewardsFrame)
-    F.ReskinClose(rewardsFrame.CloseButton)
-    F.SetBD(rewardsFrame)
+    if rewardsFrame then  -- 3.80.1
+        F.StripTextures(rewardsFrame)
+        F.ReskinClose(rewardsFrame.CloseButton)
+        F.SetBD(rewardsFrame)
 
-    rewardsFrame:HookScript('OnShow', function(self)
-        for i = 1, self:GetNumChildren() do
-            local child = select(i, self:GetChildren())
-            local button = child and child.Button
-            if button and not button.styled then
-                F.ReskinIcon(button.Icon)
-                button.IconBorder:Hide()
-                button:GetHighlightTexture():SetColorTexture(1, 1, 1, 0.25)
+        rewardsFrame:HookScript('OnShow', function(self)
+            for i = 1, self:GetNumChildren() do
+                local child = select(i, self:GetChildren())
+                local button = child and child.Button
+                if button and not button.styled then
+                    F.ReskinIcon(button.Icon)
+                    button.IconBorder:Hide()
+                    button:GetHighlightTexture():SetColorTexture(1, 1, 1, 0.25)
 
-                button.styled = true
+                    button.styled = true
+                end
             end
-        end
-    end)
+        end)
+    end
 end)

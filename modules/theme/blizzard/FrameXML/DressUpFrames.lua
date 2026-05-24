@@ -1,6 +1,7 @@
 local F, C = unpack(select(2, ...))
 
 local function ResetToggleTexture(button, texture)
+    if not button then return end  -- 3.80.1
     button:GetNormalTexture():SetTexCoord(unpack(C.TEX_COORD))
     button:GetNormalTexture():SetInside()
     button:SetNormalTexture(texture)
@@ -15,7 +16,9 @@ tinsert(C.BlizzThemes, function()
     local DressUpFrame = _G.DressUpFrame
 
     F.ReskinPortraitFrame(DressUpFrame)
-    F.ReskinButton(_G.DressUpFrameOutfitDropDown.SaveButton)
+    if _G.DressUpFrameOutfitDropDown then
+        F.ReskinButton(_G.DressUpFrameOutfitDropDown.SaveButton)
+    end
     F.ReskinButton(_G.DressUpFrameCancelButton)
     F.ReskinButton(_G.DressUpFrameResetButton)
     F.StripTextures(_G.DressUpFrameOutfitDropDown)
@@ -28,9 +31,12 @@ tinsert(C.BlizzThemes, function()
 
     F.StripTextures(DressUpFrame.OutfitDetailsPanel)
     local bg = F.SetBD(DressUpFrame.OutfitDetailsPanel)
+    if bg then
     bg:SetInside(nil, 11, 11)
+    end
 
-    hooksecurefunc(DressUpFrame.OutfitDetailsPanel, 'Refresh', function(self)
+    if DressUpFrame.OutfitDetailsPanel then
+        hooksecurefunc(DressUpFrame.OutfitDetailsPanel, 'Refresh', function(self)
         if self.slotPool then
             for slot in self.slotPool:EnumerateActive() do
                 if not slot.bg then
@@ -89,4 +95,5 @@ tinsert(C.BlizzThemes, function()
     F.ReskinButton(_G.WardrobeOutfitEditFrame.AcceptButton)
     F.ReskinButton(_G.WardrobeOutfitEditFrame.CancelButton)
     F.ReskinButton(_G.WardrobeOutfitEditFrame.DeleteButton)
+    end
 end)

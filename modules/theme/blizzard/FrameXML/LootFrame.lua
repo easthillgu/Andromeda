@@ -34,7 +34,8 @@ tinsert(C.BlizzThemes, function()
         self.__owner.bg:SetBackdropBorderColor(0, 0, 0)
     end
 
-    hooksecurefunc(LootFrame.ScrollBox, 'Update', function(self)
+    if LootFrame.ScrollBox then
+        hooksecurefunc(LootFrame.ScrollBox, 'Update', function(self)
         for i = 1, self.ScrollTarget:GetNumChildren() do
             local button = select(i, self.ScrollTarget:GetChildren())
             local item = button.Item
@@ -69,6 +70,7 @@ tinsert(C.BlizzThemes, function()
             end
         end
     end)
+    end
 
     -- Bonus roll
     local BonusRollFrame = _G.BonusRollFrame
@@ -128,7 +130,8 @@ tinsert(C.BlizzThemes, function()
     end)
 
     -- Bossbanner
-    hooksecurefunc('BossBanner_ConfigureLootFrame', function(lootFrame)
+    if _G.BossBanner_ConfigureLootFrame then
+        hooksecurefunc('BossBanner_ConfigureLootFrame', function(lootFrame)
         local iconHitBox = lootFrame.IconHitBox
         if not iconHitBox.bg then
             iconHitBox.bg = F.CreateBDFrame(iconHitBox)
@@ -139,4 +142,5 @@ tinsert(C.BlizzThemes, function()
 
         iconHitBox.IconBorder:SetTexture(nil)
     end)
+    end
 end)

@@ -125,6 +125,7 @@ tinsert(C.BlizzThemes, function()
 
         -- [[ Dropdown ]]
 
+    if _G.LootHistoryDropDown then
         _G.LootHistoryDropDown.initialize = function(self)
             local info = UIDropDownMenu_CreateInfo()
             info.isTitle = 1
@@ -142,5 +143,6 @@ tinsert(C.BlizzThemes, function()
             info.func = LootHistoryDropDown_OnClick
             UIDropDownMenu_AddButton(info)
         end
+    end
     end
 end)

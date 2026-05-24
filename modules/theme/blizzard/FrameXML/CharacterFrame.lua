@@ -78,7 +78,9 @@ tinsert(C.BlizzThemes, function()
 
     -- Model Frame
     if _G.CharacterModelFrame then
-        F.ReskinRotationButtons(_G.CharacterModelFrame)
+        if F.ReskinRotationButtons then
+            F.ReskinRotationButtons(_G.CharacterModelFrame)
+        end
     end
 
     -- 3.80.1: CharacterModelScene may not exist (Retail 3D model)
@@ -551,7 +553,9 @@ tinsert(C.BlizzThemes, function()
         end
 
         if _G.PetModelFrame then
-            F.ReskinRotationButtons(_G.PetModelFrame)
+            if F.ReskinRotationButtons then
+                F.ReskinRotationButtons(_G.PetModelFrame)
+            end
         end
 
         if _G.PetAttributesFrame then

@@ -22,6 +22,7 @@ local function reskinPickerOptions(self)
 end
 
 local function ReskinVoicePicker(voicePicker)
+    if not voicePicker then return end  -- 3.80.1
     local customFrame = voicePicker:GetChildren()
     F.StripTextures(customFrame)
     F.SetBD(customFrame, 0.7)

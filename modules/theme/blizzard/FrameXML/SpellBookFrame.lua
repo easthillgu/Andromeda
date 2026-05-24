@@ -32,7 +32,10 @@ local function handleSpellButton(self)
             subSpellString:SetTextColor(0.7, 0.7, 0.7)
         end
     end
-    self.RequiredLevelString:SetTextColor(0.7, 0.7, 0.7)
+    -- 3.80.1: RequiredLevelString may not exist on spell buttons
+    if self.RequiredLevelString then
+        self.RequiredLevelString:SetTextColor(0.7, 0.7, 0.7)
+    end
 
     local ic = _G[name .. 'IconTexture']
     if ic.bg then
@@ -77,25 +80,30 @@ tinsert(C.BlizzThemes, function()
         end
     end
 
-    hooksecurefunc('SpellBookFrame_Update', function()
-        for i = 2, 5 do
-            local tab = _G['SpellBookFrameTabButton' .. i]
-            if tab then
-                tab:ClearAllPoints()
-                tab:SetPoint('TOPLEFT', _G['SpellBookFrameTabButton' .. (i - 1)], 'TOPRIGHT', -10, 0)
+    -- 3.80.1: SpellBookFrame_Update may not exist
+    if _G.SpellBookFrame_Update then
+        hooksecurefunc('SpellBookFrame_Update', function()
+            for i = 2, 5 do
+                local tab = _G['SpellBookFrameTabButton' .. i]
+                if tab then
+                    tab:ClearAllPoints()
+                    tab:SetPoint('TOPLEFT', _G['SpellBookFrameTabButton' .. (i - 1)], 'TOPRIGHT', -10, 0)
+                end
             end
-        end
-    end)
+        end)
+    end
 
     for i = 1, _G.SPELLS_PER_PAGE do
         local bu = _G['SpellButton' .. i]
         local ic = _G['SpellButton' .. i .. 'IconTexture']
 
-        _G['SpellButton' .. i .. 'SlotFrame']:SetAlpha(0)
+        -- 3.80.1: sub-frames may not exist
+        local slotFrame = _G['SpellButton' .. i .. 'SlotFrame']
+        if slotFrame then slotFrame:SetAlpha(0) end
         bu.EmptySlot:SetAlpha(0)
-        bu.TextBackground:Hide()
-        bu.TextBackground2:Hide()
-        bu.UnlearnedFrame:SetAlpha(0)
+        if bu.TextBackground then bu.TextBackground:Hide() end
+        if bu.TextBackground2 then bu.TextBackground2:Hide() end
+        if bu.UnlearnedFrame then bu.UnlearnedFrame:SetAlpha(0) end
         bu:SetCheckedTexture(0)
         bu:SetPushedTexture(0)
 
@@ -106,27 +114,33 @@ tinsert(C.BlizzThemes, function()
 
     _G.SpellBookSkillLineTab1:SetPoint('TOPLEFT', _G.SpellBookSideTabsFrame, 'TOPRIGHT', 2, -36)
 
-    hooksecurefunc('SpellBookFrame_UpdateSkillLineTabs', function()
-        for i = 1, GetNumSpellTabs() do
-            local tab = _G['SpellBookSkillLineTab' .. i]
-            local nt = tab:GetNormalTexture()
-            if nt then
-                nt:SetTexCoord(unpack(C.TEX_COORD))
+    -- 3.80.1: SpellBookFrame_UpdateSkillLineTabs may not exist
+    if _G.SpellBookFrame_UpdateSkillLineTabs then
+        hooksecurefunc('SpellBookFrame_UpdateSkillLineTabs', function()
+            for i = 1, GetNumSpellTabs() do
+                local tab = _G['SpellBookSkillLineTab' .. i]
+                local nt = tab:GetNormalTexture()
+                if nt then
+                    nt:SetTexCoord(unpack(C.TEX_COORD))
+                end
+
+                if not tab.styled then
+                    tab:GetRegions():Hide()
+                    tab:SetCheckedTexture(C.Assets.Textures.ButtonChecked)
+                    tab:GetHighlightTexture():SetColorTexture(1, 1, 1, 0.25)
+                    F.CreateBDFrame(tab, 0.25)
+
+                    tab.styled = true
+                end
             end
+        end)
+    end
 
-            if not tab.styled then
-                tab:GetRegions():Hide()
-                tab:SetCheckedTexture(C.Assets.Textures.ButtonChecked)
-                tab:GetHighlightTexture():SetColorTexture(1, 1, 1, 0.25)
-                F.CreateBDFrame(tab, 0.25)
-
-                tab.styled = true
-            end
-        end
-    end)
-
-    _G.SpellBookFrameTutorialButton.Ring:Hide()
-    _G.SpellBookFrameTutorialButton:SetPoint('TOPLEFT', _G.SpellBookFrame, 'TOPLEFT', -12, 12)
+    -- 3.80.1: SpellBookFrameTutorialButton may not exist
+    if _G.SpellBookFrameTutorialButton then
+        _G.SpellBookFrameTutorialButton.Ring:Hide()
+        _G.SpellBookFrameTutorialButton:SetPoint('TOPLEFT', _G.SpellBookFrame, 'TOPLEFT', -12, 12)
+    end
 
     -- Professions
 
@@ -140,50 +154,60 @@ tinsert(C.BlizzThemes, function()
 
     for i, button in pairs(professions) do
         local bu = _G[button]
-        bu.professionName:SetTextColor(1, 1, 1)
-        bu.missingHeader:SetTextColor(1, 1, 1)
-        bu.missingText:SetTextColor(1, 1, 1)
+        -- 3.80.1: profession frame may not exist
+        if bu then
+            bu.professionName:SetTextColor(1, 1, 1)
+            bu.missingHeader:SetTextColor(1, 1, 1)
+            bu.missingText:SetTextColor(1, 1, 1)
 
-        F.StripTextures(bu.statusBar)
-        bu.statusBar:SetHeight(10)
-        bu.statusBar:SetStatusBarTexture(C.Assets.Textures.Backdrop)
-        bu.statusBar:GetStatusBarTexture():SetGradient('VERTICAL', CreateColor(0, 0.6, 0, 1), CreateColor(0, 0.8, 0, 1))
+            F.StripTextures(bu.statusBar)
+            bu.statusBar:SetHeight(10)
+            bu.statusBar:SetStatusBarTexture(C.Assets.Textures.Backdrop)
+            bu.statusBar:GetStatusBarTexture():SetGradient('VERTICAL', CreateColor(0, 0.6, 0, 1), CreateColor(0, 0.8, 0, 1))
 
-        bu.statusBar.rankText:SetPoint('CENTER')
-        F.CreateBDFrame(bu.statusBar, 0.25)
-        if i > 2 then
-            bu.statusBar:ClearAllPoints()
-            bu.statusBar:SetPoint('BOTTOMLEFT', 16, 3)
+            bu.statusBar.rankText:SetPoint('CENTER')
+            F.CreateBDFrame(bu.statusBar, 0.25)
+            if i > 2 then
+                bu.statusBar:ClearAllPoints()
+                bu.statusBar:SetPoint('BOTTOMLEFT', 16, 3)
+            end
+
+            handleSkillButton(bu.SpellButton1)
+            handleSkillButton(bu.SpellButton2)
         end
-
-        handleSkillButton(bu.SpellButton1)
-        handleSkillButton(bu.SpellButton2)
     end
 
     for i = 1, 2 do
         local bu = _G['PrimaryProfession' .. i]
-        _G['PrimaryProfession' .. i .. 'IconBorder']:Hide()
+        -- 3.80.1: PrimaryProfession may not exist
+        if bu then
+            local iconBorder = _G['PrimaryProfession' .. i .. 'IconBorder']
+            if iconBorder then iconBorder:Hide() end
 
-        bu.professionName:ClearAllPoints()
-        bu.professionName:SetPoint('TOPLEFT', 100, -4)
-        bu.icon:SetAlpha(1)
-        bu.icon:SetDesaturated(false)
-        F.ReskinIcon(bu.icon)
+            bu.professionName:ClearAllPoints()
+            bu.professionName:SetPoint('TOPLEFT', 100, -4)
+            bu.icon:SetAlpha(1)
+            bu.icon:SetDesaturated(false)
+            F.ReskinIcon(bu.icon)
 
-        local bg = F.CreateBDFrame(bu, 0.25)
-        bg:SetPoint('TOPLEFT')
-        bg:SetPoint('BOTTOMRIGHT', 0, -5)
+            local bg = F.CreateBDFrame(bu, 0.25)
+            bg:SetPoint('TOPLEFT')
+            bg:SetPoint('BOTTOMRIGHT', 0, -5)
+        end
     end
 
-    hooksecurefunc('FormatProfession', function(frame, index)
-        if index then
-            local _, texture = GetProfessionInfo(index)
+    -- 3.80.1: FormatProfession may not exist
+    if _G.FormatProfession then
+        hooksecurefunc('FormatProfession', function(frame, index)
+            if index then
+                local _, texture = GetProfessionInfo(index)
 
-            if frame.icon and texture then
-                frame.icon:SetTexture(texture)
+                if frame.icon and texture then
+                    frame.icon:SetTexture(texture)
+                end
             end
-        end
-    end)
+        end)
+    end
 
     F.CreateBDFrame(_G.SecondaryProfession1, 0.25)
     F.CreateBDFrame(_G.SecondaryProfession2, 0.25)
@@ -192,7 +216,8 @@ tinsert(C.BlizzThemes, function()
     F.ReskinArrow(_G.SpellBookNextPageButton, 'right')
     _G.SpellBookPageText:SetTextColor(0.8, 0.8, 0.8)
 
-    hooksecurefunc('UpdateProfessionButton', function(self)
+    if _G.UpdateProfessionButton then  -- 3.80.1
+        hooksecurefunc('UpdateProfessionButton', function(self)
         local spellIndex = self:GetID() + self:GetParent().spellOffset
         local isPassive = IsPassiveSpell(spellIndex, _G.SpellBookFrame.bookType)
         if isPassive then
@@ -207,4 +232,5 @@ tinsert(C.BlizzThemes, function()
             self.subSpellString:SetTextColor(1, 1, 1)
         end
     end)
+    end
 end)

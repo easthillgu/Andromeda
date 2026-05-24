@@ -11,9 +11,13 @@ tinsert(C.BlizzThemes, function()
     _G.TimeManagerStopwatchCheck:SetCheckedTexture(C.Assets.Textures.ButtonChecked)
     F.CreateBDFrame(_G.TimeManagerStopwatchCheck)
 
-    _G.TimeManagerAlarmHourDropDown:SetWidth(80)
-    _G.TimeManagerAlarmMinuteDropDown:SetWidth(80)
-    _G.TimeManagerAlarmAMPMDropDown:SetWidth(90)
+    if _G.TimeManagerAlarmHourDropDown then
+        _G.TimeManagerAlarmHourDropDown:SetWidth(80)
+        _G.TimeManagerAlarmMinuteDropDown:SetWidth(80)
+    end
+    if _G.TimeManagerAlarmAMPMDropDown then
+        _G.TimeManagerAlarmAMPMDropDown:SetWidth(90)
+    end
 
     F.ReskinPortraitFrame(_G.TimeManagerFrame)
     F.ReskinDropdown(_G.TimeManagerAlarmHourDropDown)

@@ -17,7 +17,9 @@ function THEME:LoadSkins(list)
     for addonName, func in pairs(list) do
         local isLoaded, isFinished = IsAddOnLoaded(addonName)
         if isLoaded and isFinished then
-            pcall(func)  -- 3.80.1: guard nil frames
+            xpcall(func, function(err)
+                F:Debug(('|cffff0000[Theme:%s]|r %s'):format(addonName, tostring(err)))
+            end)
             list[addonName] = nil
         end
     end
@@ -25,7 +27,9 @@ end
 
 function THEME:LoadAddOnSkins()
     for _, func in pairs(C.BlizzThemes) do
-        pcall(func)  -- 3.80.1: guard nil frames from Retail-only skins
+        xpcall(func, function(err)
+            F:Debug(('|cffff0000[Theme:BlizzThemes]|r %s'):format(tostring(err)))
+        end)
     end
     wipe(C.BlizzThemes)
 
@@ -39,13 +43,17 @@ function THEME:LoadAddOnSkins()
     F:RegisterEvent('ADDON_LOADED', function(_, addonName)
         local blizzFunc = C.Themes[addonName]
         if blizzFunc then
-            pcall(blizzFunc)  -- 3.80.1: guard nil frames from late-loaded addons
+            xpcall(blizzFunc, function(err)
+                F:Debug(('|cffff0000[Theme:%s]|r %s'):format(addonName, tostring(err)))
+            end)
             C.Themes[addonName] = nil
         end
 
         local addonFunc = C.AddonThemes[addonName]
         if addonFunc then
-            pcall(addonFunc)  -- 3.80.1: guard nil frames from late-loaded addons
+            xpcall(addonFunc, function(err)
+                F:Debug(('|cffff0000[Theme:Addon:%s]|r %s'):format(addonName, tostring(err)))
+            end)
             C.AddonThemes[addonName] = nil
         end
     end)

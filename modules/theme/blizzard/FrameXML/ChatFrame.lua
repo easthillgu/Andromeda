@@ -20,17 +20,21 @@ local function reskinChatScroll(self)
         flash:SetVertexColor(1, 0.8, 0)
     else
         local bu = _G[self:GetName() .. 'ThumbTexture']
-        bu:SetAlpha(0)
-        bu:SetWidth(16)
+        if bu then  -- 3.80.1
+            bu:SetAlpha(0)
+            bu:SetWidth(16)
+        end
 
-        local bg = F.CreateBDFrame(bu, 0, true)
+        local bg = bu and F.CreateBDFrame(bu, 0, true)
         local down = self.ScrollToBottomButton
         F.ReskinArrow(down, 'down')
         down:SetPoint('BOTTOMRIGHT', _G[self:GetName() .. 'ResizeButton'], 'TOPRIGHT', -4, -2)
 
-        self.ScrollBar.thumbBG = bg
-        self.ScrollBar:HookScript('OnEnter', scrollOnEnter)
-        self.ScrollBar:HookScript('OnLeave', scrollOnLeave)
+        if self.ScrollBar then  -- 3.80.1
+            self.ScrollBar.thumbBG = bg
+            self.ScrollBar:HookScript('OnEnter', scrollOnEnter)
+            self.ScrollBar:HookScript('OnLeave', scrollOnLeave)
+        end
     end
 end
 
@@ -60,45 +64,53 @@ tinsert(C.BlizzThemes, function()
     local queueTex = 'Interface\\HELPFRAME\\HelpIcon-ItemRestoration'
     local homeTex = 'Interface\\Buttons\\UI-HomeButton'
 
-    _G.QuickJoinToastButton.FriendsButton:SetTexture(friendTex)
-    _G.QuickJoinToastButton.QueueButton:SetTexture(queueTex)
-    _G.QuickJoinToastButton:SetHighlightTexture(0)
-    hooksecurefunc(_G.QuickJoinToastButton, 'ToastToFriendFinished', function(self)
-        self.FriendsButton:SetShown(not self.displayedToast)
-    end)
-    hooksecurefunc(_G.QuickJoinToastButton, 'UpdateQueueIcon', function(self)
-        if not self.displayedToast then
-            return
-        end
-        self.QueueButton:SetTexture(queueTex)
-        self.FlashingLayer:SetTexture(queueTex)
-        self.FriendsButton:SetShown(false)
-    end)
-    _G.QuickJoinToastButton:HookScript('OnMouseDown', function(self)
-        self.FriendsButton:SetTexture(friendTex)
-    end)
-    _G.QuickJoinToastButton:HookScript('OnMouseUp', function(self)
-        self.FriendsButton:SetTexture(friendTex)
-    end)
-    _G.QuickJoinToastButton.Toast.Background:SetTexture('')
-    local bg = F.SetBD(_G.QuickJoinToastButton.Toast)
-    bg:SetPoint('TOPLEFT', 10, -1)
-    bg:SetPoint('BOTTOMRIGHT', 0, 3)
-    bg:Hide()
-    hooksecurefunc(_G.QuickJoinToastButton, 'ShowToast', function()
-        bg:Show()
-    end)
-    hooksecurefunc(_G.QuickJoinToastButton, 'HideToast', function()
+    -- 3.80.1: QuickJoinToastButton may not exist
+    if _G.QuickJoinToastButton then
+        _G.QuickJoinToastButton.FriendsButton:SetTexture(friendTex)
+        _G.QuickJoinToastButton.QueueButton:SetTexture(queueTex)
+        _G.QuickJoinToastButton:SetHighlightTexture(0)
+        hooksecurefunc(_G.QuickJoinToastButton, 'ToastToFriendFinished', function(self)
+            self.FriendsButton:SetShown(not self.displayedToast)
+        end)
+        hooksecurefunc(_G.QuickJoinToastButton, 'UpdateQueueIcon', function(self)
+            if not self.displayedToast then
+                return
+            end
+            self.QueueButton:SetTexture(queueTex)
+            self.FlashingLayer:SetTexture(queueTex)
+            self.FriendsButton:SetShown(false)
+        end)
+        _G.QuickJoinToastButton:HookScript('OnMouseDown', function(self)
+            self.FriendsButton:SetTexture(friendTex)
+        end)
+        _G.QuickJoinToastButton:HookScript('OnMouseUp', function(self)
+            self.FriendsButton:SetTexture(friendTex)
+        end)
+        _G.QuickJoinToastButton.Toast.Background:SetTexture('')
+        local bg = F.SetBD(_G.QuickJoinToastButton.Toast)
+        bg:SetPoint('TOPLEFT', 10, -1)
+        bg:SetPoint('BOTTOMRIGHT', 0, 3)
         bg:Hide()
-    end)
+        hooksecurefunc(_G.QuickJoinToastButton, 'ShowToast', function()
+            bg:Show()
+        end)
+        hooksecurefunc(_G.QuickJoinToastButton, 'HideToast', function()
+            bg:Hide()
+        end)
+    end
 
     -- ChatFrame
     F.ReskinButton(_G.ChatFrameChannelButton)
     _G.ChatFrameChannelButton:SetSize(20, 20)
-    F.ReskinButton(_G.ChatFrameToggleVoiceDeafenButton)
-    _G.ChatFrameToggleVoiceDeafenButton:SetSize(20, 20)
-    F.ReskinButton(_G.ChatFrameToggleVoiceMuteButton)
-    _G.ChatFrameToggleVoiceMuteButton:SetSize(20, 20)
+    -- 3.80.1: voice buttons may not exist
+    if _G.ChatFrameToggleVoiceDeafenButton then
+        F.ReskinButton(_G.ChatFrameToggleVoiceDeafenButton)
+        _G.ChatFrameToggleVoiceDeafenButton:SetSize(20, 20)
+    end
+    if _G.ChatFrameToggleVoiceMuteButton then
+        F.ReskinButton(_G.ChatFrameToggleVoiceMuteButton)
+        _G.ChatFrameToggleVoiceMuteButton:SetSize(20, 20)
+    end
     F.ReskinButton(_G.ChatFrameMenuButton)
     _G.ChatFrameMenuButton:SetSize(20, 20)
     _G.ChatFrameMenuButton:SetNormalTexture(homeTex)
@@ -145,8 +157,12 @@ tinsert(C.BlizzThemes, function()
     _G.VoiceChatChannelActivatedNotification:SetBackdrop(nil)
     F.SetBD(_G.VoiceChatChannelActivatedNotification)
 
-    F.ReskinSlider(_G.UnitPopupVoiceMicrophoneVolume.Slider)
-    F.ReskinSlider(_G.UnitPopupVoiceSpeakerVolume.Slider)
+    if _G.UnitPopupVoiceMicrophoneVolume then
+        F.ReskinSlider(_G.UnitPopupVoiceMicrophoneVolume.Slider)
+    end
+    if _G.UnitPopupVoiceSpeakerVolume then
+        F.ReskinSlider(_G.UnitPopupVoiceSpeakerVolume.Slider)
+    end
 
     -- VoiceActivityManager
     hooksecurefunc(_G.VoiceActivityManager, 'LinkFrameNotificationAndGuid', function(_, _, notification, guid)

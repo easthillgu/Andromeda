@@ -19,7 +19,9 @@ tinsert(C.BlizzThemes, function()
     select(4, _G.TradeRecipientItem7:GetRegions()):Hide()
 
     F.ReskinPortraitFrame(_G.TradeFrame)
-    _G.TradeFrame.RecipientOverlay:Hide()
+    if _G.TradeFrame.RecipientOverlay then
+        _G.TradeFrame.RecipientOverlay:Hide()
+    end
     F.ReskinButton(_G.TradeFrameTradeButton)
     F.ReskinButton(_G.TradeFrameCancelButton)
     F.ReskinEditbox(_G.TradePlayerInputMoneyFrameGold)

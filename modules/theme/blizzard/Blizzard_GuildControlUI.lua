@@ -3,6 +3,7 @@ local F, C = unpack(select(2, ...))
 local function updateGuildRanks()
     for i = 1, GuildControlGetNumRanks() do
         local rank = _G['GuildControlUIRankOrderFrameRank' .. i]
+        if not rank then break end  -- 3.80.1
         if not rank.styled then
             rank.upButton.icon:Hide()
             rank.downButton.icon:Hide()
@@ -37,8 +38,10 @@ C.Themes['Blizzard_GuildControlUI'] = function()
     _G.GuildControlUITopBg:Hide()
     _G.GuildControlUIHbar:Hide()
     if not C.IS_NEW_PATCH_10_1 then
+    if _G.GuildControlUIRankBankFrameInsetScrollFrameTop then
         _G.GuildControlUIRankBankFrameInsetScrollFrameTop:SetAlpha(0)
         _G.GuildControlUIRankBankFrameInsetScrollFrameBottom:SetAlpha(0)
+    end
     end
 
     -- Guild ranks

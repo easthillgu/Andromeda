@@ -7,13 +7,15 @@ tinsert(C.BlizzThemes, function()
 
     local r, g, b = C.r, C.g, C.b
 
-    for i = 1, 6 do
-        select(i, _G.GhostFrame:GetRegions()):Hide()
-    end
-    F.ReskinIcon(_G.GhostFrameContentsFrameIcon)
+    if _G.GhostFrame then
+        for i = 1, 6 do
+            select(i, _G.GhostFrame:GetRegions()):Hide()
+        end
+        F.ReskinIcon(_G.GhostFrameContentsFrameIcon)
 
-    local bg = F.SetBD(_G.GhostFrame, 0)
-    F.CreateGradient(bg)
-    _G.GhostFrame:SetHighlightTexture(C.Assets.Textures.Backdrop)
-    _G.GhostFrame:GetHighlightTexture():SetVertexColor(r, g, b, 0.25)
+        local bg = F.SetBD(_G.GhostFrame, 0)
+        F.CreateGradient(bg)
+        _G.GhostFrame:SetHighlightTexture(C.Assets.Textures.Backdrop)
+        _G.GhostFrame:GetHighlightTexture():SetVertexColor(r, g, b, 0.25)
+    end
 end)
