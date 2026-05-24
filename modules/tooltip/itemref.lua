@@ -52,7 +52,9 @@ local function CreateTip(link)
         self:StopMovingOrSizing()
     end)
 
-    tip:SetBackdrop(nil)
+    if tip.SetBackdrop then
+        tip:SetBackdrop(nil)
+    end
     tip.SetBackdrop = nop
     if tip.BackdropFrame then
         tip.BackdropFrame:SetBackdrop(nil)

@@ -198,10 +198,10 @@ function NAMEPLATE.ConfigureHealthTag(frame)
 end
 
 function NAMEPLATE:CreateHealthTag(self)
-    local font = C.Assets.Fonts.Condensed
+    local font = C.Assets.Fonts.Small
     local outline = _G.ANDROMEDA_ADB.FontOutline
 
-    local text = F.CreateFS(self.Health, font, 11, outline or nil, nil, nil, outline and 'NONE' or 'THICK')
+    local text = F.CreateFS(self.Health, font, 11, outline or nil, nil, nil, outline and 'OUTLINEMONOCHROME' or 'THICK')
 
     self.HealthTag = text
 
