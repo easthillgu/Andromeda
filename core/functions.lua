@@ -802,6 +802,7 @@ do
 
     do
         function F:CreateTex()
+            if not self then return end  -- 3.80.1
             if self.__bgTex then
                 return
             end
@@ -822,6 +823,7 @@ do
         end
 
         function F:CreateSD(a, m, s, override)
+            if not self then return end  -- 3.80.1
             if not override and not _G.ANDROMEDA_ADB.ShadowOutline then
                 return
             end
@@ -852,6 +854,7 @@ do
         end
 
         function F:CreateGradient()
+            if not self then return end
             local gradStyle = _G.ANDROMEDA_ADB.GradientStyle
             local normTex = C.Assets.Textures.Backdrop
 
@@ -909,10 +912,12 @@ do
         function F.CreateBDFrame(parent, a, gradient)
             if not parent then return end
             local frame = parent
-            if parent:IsObjectType('Texture') then
+            local ok, isTexture = pcall(parent.IsObjectType, parent, 'Texture')
+            if ok and isTexture then
                 frame = parent:GetParent()
             end
-            local lvl = frame:GetFrameLevel()
+            local ok, lvl = pcall(frame.GetFrameLevel, frame)
+            lvl = ok and lvl or 0
 
             parent.__bg = CreateFrame('Frame', nil, frame, 'BackdropTemplate')
             parent.__bg:SetOutside(parent)
@@ -1952,8 +1957,10 @@ do
                 hooksecurefunc(frame.Texture, 'SetAtlas', updateTrimScrollArrow)
                 updateTrimScrollArrow(frame.Texture, frame.Texture:GetAtlas())
             else
-                hooksecurefunc(frame, 'Enable', updateScrollArrow)
-                hooksecurefunc(frame, 'Disable', updateScrollArrow)
+                if frame.Enable then  -- 3.80.1
+                    hooksecurefunc(frame, 'Enable', updateScrollArrow)
+                    hooksecurefunc(frame, 'Disable', updateScrollArrow)
+                end
             end
         end
 
@@ -1965,7 +1972,7 @@ do
 
             local color = _G.ANDROMEDA_ADB.ButtonBackdropColor
             local alpha = _G.ANDROMEDA_ADB.ButtonBackdropAlpha
-            local thumb = self:GetThumbTexture()
+            local thumb = self.GetThumbTexture and self:GetThumbTexture()
             if thumb then
                 thumb:SetAlpha(0)
                 thumb.bg = F.CreateBDFrame(thumb)
@@ -1988,7 +1995,7 @@ do
         -- WowTrimScrollBar
         function F:ReskinTrimScroll()
             if not self then return end
-            local minimal = self:GetWidth() < 10
+            local minimal = self.GetWidth and self:GetWidth() < 10
 
             F.StripTextures(self)
             reskinScrollArrow(self.Back, 'up', minimal)
@@ -1999,7 +2006,7 @@ do
 
             local color = _G.ANDROMEDA_ADB.ButtonBackdropColor
             local alpha = _G.ANDROMEDA_ADB.ButtonBackdropAlpha
-            local thumb = self:GetThumb()
+            local thumb = self.GetThumb and self:GetThumb()
             if thumb then
                 thumb:DisableDrawLayer('ARTWORK')
                 thumb:DisableDrawLayer('BACKGROUND')
@@ -2208,7 +2215,7 @@ do
             F.CreateSD(bg, 0.25)
             F.CreateTex(bg)
 
-            local thumb = self:GetThumbTexture()
+            local thumb = self.GetThumbTexture and self:GetThumbTexture()
             thumb:SetTexture(C.Assets.Textures.Spark)
             thumb:SetSize(20, 20)
             thumb:SetBlendMode('ADD')
@@ -2677,7 +2684,8 @@ do
 
     function F:ReskinEditbox(height, width)
         if not self then return end
-        local frameName = self.GetName and self:GetName()
+        local ok, frameName = pcall(self.GetName, self)
+        frameName = ok and frameName or nil
         for _, region in pairs(blizzRegions) do
             region = frameName and _G[frameName .. region] or self[region]
             if region then
