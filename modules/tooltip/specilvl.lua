@@ -8,14 +8,93 @@ local levelPrefix = C.INFO_COLOR .. _G.STAT_AVERAGE_ITEM_LEVEL .. ':|r '
 local resetTime, frequency = 900, 0.5
 local cache, weapon, currentUNIT, currentGUID = {}, {}
 
-TOOLTIP.tierSets = {}
+TOOLTIP.tierSets = { -- t30
+    -- HUNTER
+    [200390] = true,
+    [200392] = true,
+    [200387] = true,
+    [200389] = true,
+    [200391] = true,
+    -- WARRIOR
+    [200426] = true,
+    [200428] = true,
+    [200423] = true,
+    [200425] = true,
+    [200427] = true,
+    -- PALADIN
+    [200417] = true,
+    [200419] = true,
+    [200414] = true,
+    [200416] = true,
+    [200418] = true,
+    -- ROGUE
+    [200372] = true,
+    [200374] = true,
+    [200369] = true,
+    [200371] = true,
+    [200373] = true,
+    -- PRIEST
+    [200327] = true,
+    [200329] = true,
+    [200324] = true,
+    [200326] = true,
+    [200328] = true,
+    -- DK
+    [200408] = true,
+    [200410] = true,
+    [200405] = true,
+    [200407] = true,
+    [200409] = true,
+    -- SHAMAN
+    [200399] = true,
+    [200401] = true,
+    [200396] = true,
+    [200398] = true,
+    [200400] = true,
+    -- MAGE
+    [200318] = true,
+    [200320] = true,
+    [200315] = true,
+    [200317] = true,
+    [200319] = true,
+    -- WARLOCK
+    [200336] = true,
+    [200338] = true,
+    [200333] = true,
+    [200335] = true,
+    [200337] = true,
+    -- MONK
+    [200363] = true,
+    [200365] = true,
+    [200360] = true,
+    [200362] = true,
+    [200364] = true,
+    -- DRUID
+    [200354] = true,
+    [200356] = true,
+    [200351] = true,
+    [200353] = true,
+    [200355] = true,
+    -- DH
+    [200345] = true,
+    [200347] = true,
+    [200342] = true,
+    [200344] = true,
+    [200346] = true,
+    -- EVOKER
+    [200381] = true,
+    [200383] = true,
+    [200378] = true,
+    [200380] = true,
+    [200382] = true,
+}
 
 local formatSets = {
-    [1] = ' |cff14b200(1/4)',
-    [2] = ' |cff0091f2(2/4)',
-    [3] = ' |cff0091f2(3/4)',
-    [4] = ' |cffc745f9(4/4)',
-    [5] = ' |cffc745f9(5/5)',
+    [1] = ' |cff14b200(1/4)', -- green
+    [2] = ' |cff0091f2(2/4)', -- blue
+    [3] = ' |cff0091f2(3/4)', -- blue
+    [4] = ' |cffc745f9(4/4)', -- purple
+    [5] = ' |cffc745f9(5/5)', -- purple
 }
 
 function TOOLTIP:InspectOnUpdate(elapsed)
@@ -63,8 +142,8 @@ function TOOLTIP:GetInspectInfo(...)
                 TOOLTIP:InspectUnit(currentUNIT, true)
             end
         end
+        F:UnregisterEvent(self, TOOLTIP.GetInspectInfo)
     end
-    F:UnregisterEvent(self, TOOLTIP.GetInspectInfo)
 end
 F:RegisterEvent('UNIT_INVENTORY_CHANGED', TOOLTIP.GetInspectInfo)
 
@@ -111,7 +190,7 @@ function TOOLTIP:GetUnitItemLevel(unit)
     local class = select(2, UnitClass(unit))
     local ilvl
     local boa, total, haveWeapon, twohand, sets = 0, 0, 0, 0, 0
-    local delay, mainhand, offhand = false, false, false
+    local delay, mainhand, offhand, hasArtifact
     weapon[1], weapon[2] = 0, 0
 
     for i = 1, 17 do
@@ -128,6 +207,10 @@ function TOOLTIP:GetUnitItemLevel(unit)
                     if not quality or not level then
                         delay = true
                     else
+                        if quality == Enum.ItemQuality.Heirloom then
+                            boa = boa + 1
+                        end
+
                         local itemID = GetItemInfoFromHyperlink(itemLink)
                         if TOOLTIP.tierSets[itemID] then
                             sets = sets + 1
@@ -137,7 +220,23 @@ function TOOLTIP:GetUnitItemLevel(unit)
                             level = F.GetItemLevel(itemLink) or level
                             if i < 16 then
                                 total = total + level
-                            elseif i == 16 then
+                            elseif i > 15 and quality == Enum.ItemQuality.Artifact then
+                                local relics = { select(4, strsplit(':', itemLink)) }
+                                for i = 1, 3 do
+                                    local relicID = relics[i] ~= '' and relics[i]
+                                    local relicLink = select(2, GetItemGem(itemLink, i))
+                                    if relicID and not relicLink then
+                                        delay = true
+                                        break
+                                    end
+                                end
+                            end
+
+                            if i == 16 then
+                                if quality == Enum.ItemQuality.Artifact then
+                                    hasArtifact = true
+                                end
+
                                 weapon[1] = level
                                 haveWeapon = haveWeapon + 1
                                 if slot == 'INVTYPE_2HWEAPON' or slot == 'INVTYPE_RANGED' or (slot == 'INVTYPE_RANGEDRIGHT' and class == 'HUNTER') then
@@ -163,7 +262,7 @@ function TOOLTIP:GetUnitItemLevel(unit)
         if unit == 'player' then
             ilvl = select(2, GetAverageItemLevel())
         else
-            if twohand == 2 then
+            if hasArtifact or twohand == 2 then
                 local higher = max(weapon[1], weapon[2])
                 total = total + higher * 2
             elseif twohand == 1 and haveWeapon == 1 then

@@ -33,10 +33,8 @@ function TOOLTIP:AddLineForId(id, linkType, noadd)
         end
     end
 
-    if linkType == typesList.spell and IsPlayerSpell(id) then
-        if C_MountJournal and C_MountJournal.GetMountFromSpell and C_MountJournal.GetMountFromSpell(id) then
-            self:AddLine(LEARNT_STRING)
-        end
+    if self.__isHoverTip and linkType == typesList.spell and IsPlayerSpell(id) and C_MountJournal and C_MountJournal.GetMountFromSpell and C_MountJournal.GetMountFromSpell(id) then
+        self:AddLine(LEARNT_STRING)
     end
 
     if not noadd then
@@ -79,10 +77,13 @@ function TOOLTIP:AddIDs()
 
     local GameTooltip = _G.GameTooltip
     local ItemRefTooltip = _G.ItemRefTooltip
+    local TooltipDataProcessor = _G.TooltipDataProcessor
 
+    -- Update all
     hooksecurefunc(GameTooltip, 'SetHyperlink', TOOLTIP.SetHyperLinkID)
     hooksecurefunc(ItemRefTooltip, 'SetHyperlink', TOOLTIP.SetHyperLinkID)
 
+    -- Spells
     hooksecurefunc(GameTooltip, 'SetUnitAura', function(self, ...)
         if self:IsForbidden() then
             return
@@ -102,6 +103,30 @@ function TOOLTIP:AddIDs()
         end
     end)
 
+    local function UpdateAuraTip(self, unit, auraInstanceID)
+        local data = C_UnitAuras.GetAuraDataByAuraInstanceID(unit, auraInstanceID)
+
+        if not data then
+            return
+        end
+
+        local id, caster = data.spellId, data.sourceUnit
+        if id then
+            TOOLTIP.AddLineForId(self, id, typesList.spell)
+        end
+
+        if caster then
+            self:AddLine(' ')
+            local name = GetUnitName(caster, true)
+            local hexColor = F:RgbToHex(F:UnitColor(caster))
+            self:AddDoubleLine(L['From'] .. ':', hexColor .. name)
+            self:Show()
+        end
+    end
+
+    hooksecurefunc(GameTooltip, 'SetUnitBuffByAuraInstanceID', UpdateAuraTip)
+    hooksecurefunc(GameTooltip, 'SetUnitDebuffByAuraInstanceID', UpdateAuraTip)
+
     hooksecurefunc('SetItemRef', function(link)
         local id = tonumber(strmatch(link, 'spell:(%d+)'))
         if id then
@@ -109,94 +134,68 @@ function TOOLTIP:AddIDs()
         end
     end)
 
-    GameTooltip:HookScript('OnTooltipSetItem', function(self)
+    TooltipDataProcessor.AddTooltipPostCall(Enum.TooltipDataType.Spell, function(self, data)
         if self:IsForbidden() then
             return
         end
-        local _, link = self:GetItem()
-        if link then
-            local id = GetItemInfoFromHyperlink(link)
+        if data.id then
+            TOOLTIP.AddLineForId(self, data.id, typesList.spell)
+        end
+    end)
+
+    local function UpdateActionTooltip(self, data)
+        if self:IsForbidden() then
+            return
+        end
+
+        local lineData = data.lines and data.lines[1]
+        local tooltipType = lineData and lineData.tooltipType
+
+        if not tooltipType then
+            return
+        end
+
+        if tooltipType == 0 then -- item
+            TOOLTIP.AddLineForId(self, lineData.tooltipID, typesList.item)
+        elseif tooltipType == 1 then -- spell
+            TOOLTIP.AddLineForId(self, lineData.tooltipID, typesList.spell)
+        end
+    end
+    TooltipDataProcessor.AddTooltipPostCall(Enum.TooltipDataType.Macro, UpdateActionTooltip)
+    TooltipDataProcessor.AddTooltipPostCall(Enum.TooltipDataType.PetAction, UpdateActionTooltip)
+
+    -- Items
+    local function addItemID(self, data)
+        if self:IsForbidden() then
+            return
+        end
+        if data.id then
+            TOOLTIP.AddLineForId(self, data.id, typesList.item)
+        end
+    end
+    TooltipDataProcessor.AddTooltipPostCall(Enum.TooltipDataType.Item, addItemID)
+    TooltipDataProcessor.AddTooltipPostCall(Enum.TooltipDataType.Toy, addItemID)
+
+    -- Currencies
+    TooltipDataProcessor.AddTooltipPostCall(Enum.TooltipDataType.Currency, function(self, data)
+        if self:IsForbidden() then
+            return
+        end
+        if data.id then
+            TOOLTIP.AddLineForId(self, data.id, typesList.currency)
+        end
+    end)
+
+    -- 3.80.1: SetAzeritePower is Retail BFA API; nil guard
+    if GameTooltip.SetAzeritePower then
+        hooksecurefunc(GameTooltip, 'SetAzeritePower', function(self, _, _, id)
             if id then
-                TOOLTIP.AddLineForId(self, id, typesList.item)
-            end
-        end
-    end)
-
-    GameTooltip:HookScript('OnTooltipSetSpell', function(self)
-        if self:IsForbidden() then
-            return
-        end
-        local _, id = self:GetSpell()
-        if id then
-            TOOLTIP.AddLineForId(self, id, typesList.spell)
-        end
-    end)
-
-    hooksecurefunc(GameTooltip, 'SetQuestLogItem', function(self, type, index)
-        if self:IsForbidden() then
-            return
-        end
-        local link = GetQuestLogItemLink(type, index)
-        if link then
-            local id = GetItemInfoFromHyperlink(link)
-            if id then
-                TOOLTIP.AddLineForId(self, id, typesList.item)
-            end
-        end
-    end)
-
-    hooksecurefunc(GameTooltip, 'SetLootItem', function(self, slot)
-        if self:IsForbidden() then
-            return
-        end
-        local link = GetLootSlotLink(slot)
-        if link then
-            local id = GetItemInfoFromHyperlink(link)
-            if id then
-                TOOLTIP.AddLineForId(self, id, typesList.item)
-            end
-        end
-    end)
-
-    hooksecurefunc(GameTooltip, 'SetMerchantItem', function(self, index)
-        if self:IsForbidden() then
-            return
-        end
-        local link = GetMerchantItemLink(index)
-        if link then
-            local id = GetItemInfoFromHyperlink(link)
-            if id then
-                TOOLTIP.AddLineForId(self, id, typesList.item)
-            end
-        end
-    end)
-
-    if GameTooltip.SetQuestLogReward then
-        hooksecurefunc(GameTooltip, 'SetQuestLogReward', function(self, questID)
-            if self:IsForbidden() then
-                return
-            end
-            local link = GetQuestLogItemLink('reward', questID)
-            if link then
-                local id = GetItemInfoFromHyperlink(link)
-                if id then
-                    TOOLTIP.AddLineForId(self, id, typesList.item)
-                end
+                TOOLTIP.AddLineForId(self, id, typesList.azerite, true)
             end
         end)
     end
 
-    if GameTooltip.SetAchievement then
-        hooksecurefunc(GameTooltip, 'SetAchievement', function(self, id)
-            if self:IsForbidden() then
-                return
-            end
-            if id then
-                TOOLTIP.AddLineForId(self, id, typesList.achievement)
-            end
-        end)
-    end
-
+    -- Quests
     hooksecurefunc('QuestMapLogTitleButton_OnEnter', function(self)
         if self.questID then
             TOOLTIP.AddLineForId(GameTooltip, self.questID, typesList.quest)

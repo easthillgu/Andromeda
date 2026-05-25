@@ -45,7 +45,8 @@ function TOOLTIP:ReskinTooltip()
 
     local data = self.GetTooltipData and self:GetTooltipData()
     if data then
-        local link = data.guid and C_Item.GetItemLinkByGUID(data.guid) or data.hyperlink
+        -- 3.80.1: C_Item.GetItemLinkByGUID may not exist; nil guard
+        local link = data.guid and C_Item and C_Item.GetItemLinkByGUID and C_Item.GetItemLinkByGUID(data.guid) or data.hyperlink
         if link then
             local quality = select(3, GetItemInfo(link))
             local color = C.QualityColors[quality or 1]
@@ -62,7 +63,7 @@ end
 local function reskinFont(obj, font, size)
     local outline = _G.ANDROMEDA_ADB.FontOutline
 
-    obj:SetFont(font, size, outline and 'OUTLINEMONOCHROME' or '')
+    obj:SetFont(font, size, outline and 'OUTLINE' or '')
     obj:SetShadowColor(0, 0, 0, 1)
     obj:SetShadowOffset(1, -1)
 end
@@ -146,10 +147,10 @@ TOOLTIP:RegisterTooltips(C.ADDON_NAME, function()
         _G.QuestScrollFrame.StoryTooltip,
         _G.QuestScrollFrame.CampaignTooltip,
         _G.GeneralDockManagerOverflowButtonList,
-        --_G.ReputationParagonTooltip,
+        _G.ReputationParagonTooltip,
         _G.NamePlateTooltip,
         _G.QueueStatusFrame,
-    --[[    _G.FloatingGarrisonFollowerTooltip,
+        _G.FloatingGarrisonFollowerTooltip,
         _G.FloatingGarrisonFollowerAbilityTooltip,
         _G.FloatingGarrisonMissionTooltip,
         _G.GarrisonFollowerAbilityTooltip,
@@ -160,7 +161,7 @@ TOOLTIP:RegisterTooltips(C.ADDON_NAME, function()
         _G.PetBattlePrimaryAbilityTooltip,
         _G.PetBattlePrimaryUnitTooltip,
         _G.FloatingBattlePetTooltip,
-        _G.FloatingPetBattleAbilityTooltip,]]
+        _G.FloatingPetBattleAbilityTooltip,
         _G.IMECandidatesFrame,
         _G.QuickKeybindTooltip,
         _G.GameSmallHeaderTooltip,
@@ -168,6 +169,7 @@ TOOLTIP:RegisterTooltips(C.ADDON_NAME, function()
     }
 
     for _, f in pairs(tooltips) do
+        -- 3.80.1: Retail-only frames (ReputationParagon, Garrison, PetBattle) are nil
         if f then f:HookScript('OnShow', TOOLTIP.ReskinTooltip) end
     end
 
@@ -190,40 +192,40 @@ TOOLTIP:RegisterTooltips(C.ADDON_NAME, function()
     -- local r, g, b = C.r, C.g, C.b
     -- _G.IMECandidatesFrame.selection:SetVertexColor(r, g, b, 1)
 
-    -- Pet Tooltip (3.80.1: may not exist)
-    if _G.PetBattlePrimaryUnitTooltip then
-        _G.PetBattlePrimaryUnitTooltip:HookScript('OnShow', function(self)
-            self.Border:SetAlpha(0)
-            if not self.iconStyled then
-                if self.glow then
-                    self.glow:Hide()
-                end
-                self.Icon:SetTexCoord(unpack(C.TEX_COORD))
-                self.iconStyled = true
+    -- Pet Tooltip
+    _G.PetBattlePrimaryUnitTooltip:HookScript('OnShow', function(self)
+        self.Border:SetAlpha(0)
+        if not self.iconStyled then
+            if self.glow then
+                self.glow:Hide()
             end
-        end)
+            self.Icon:SetTexCoord(unpack(C.TEX_COORD))
+            self.iconStyled = true
+        end
+    end)
 
-        hooksecurefunc('PetBattleUnitTooltip_UpdateForUnit', function(self)
-            local nextBuff, nextDebuff = 1, 1
-            for i = 1, C_PetBattles.GetNumAuras(self.petOwner, self.petIndex) do
-                local _, _, _, isBuff = C_PetBattles.GetAuraInfo(self.petOwner, self.petIndex, i)
-                if isBuff and self.Buffs then
-                    local frame = self.Buffs.frames[nextBuff]
-                    if frame and frame.Icon then
-                        frame.Icon:SetTexCoord(unpack(C.TEX_COORD))
-                    end
-                    nextBuff = nextBuff + 1
-                elseif (not isBuff) and self.Debuffs then
-                    local frame = self.Debuffs.frames[nextDebuff]
-                    if frame and frame.Icon then
-                        frame.DebuffBorder:Hide()
-                        frame.Icon:SetTexCoord(unpack(C.TEX_COORD))
-                    end
-                    nextDebuff = nextDebuff + 1
+    hooksecurefunc('PetBattleUnitTooltip_UpdateForUnit', function(self)
+        -- 3.80.1: PetBattle not available; guard entire callback
+        if not C_PetBattles then return end
+        local nextBuff, nextDebuff = 1, 1
+        for i = 1, C_PetBattles.GetNumAuras(self.petOwner, self.petIndex) do
+            local _, _, _, isBuff = C_PetBattles.GetAuraInfo(self.petOwner, self.petIndex, i)
+            if isBuff and self.Buffs then
+                local frame = self.Buffs.frames[nextBuff]
+                if frame and frame.Icon then
+                    frame.Icon:SetTexCoord(unpack(C.TEX_COORD))
                 end
+                nextBuff = nextBuff + 1
+            elseif (not isBuff) and self.Debuffs then
+                local frame = self.Debuffs.frames[nextDebuff]
+                if frame and frame.Icon then
+                    frame.DebuffBorder:Hide()
+                    frame.Icon:SetTexCoord(unpack(C.TEX_COORD))
+                end
+                nextDebuff = nextDebuff + 1
             end
-        end)
-    end
+        end
+    end)
 
     -- Others
     F:Delay(5, function()
@@ -292,14 +294,12 @@ TOOLTIP:RegisterTooltips('Blizzard_EventTrace', function()
 end)
 
 TOOLTIP:RegisterTooltips('Blizzard_Collections', function()
-    if _G.PetJournalPrimaryAbilityTooltip then
-        _G.PetJournalPrimaryAbilityTooltip:HookScript('OnShow', TOOLTIP.ReskinTooltip)
-        _G.PetJournalSecondaryAbilityTooltip:HookScript('OnShow', TOOLTIP.ReskinTooltip)
-        _G.PetJournalPrimaryAbilityTooltip.Delimiter1:SetHeight(1)
-        _G.PetJournalPrimaryAbilityTooltip.Delimiter1:SetColorTexture(0, 0, 0)
-        _G.PetJournalPrimaryAbilityTooltip.Delimiter2:SetHeight(1)
-        _G.PetJournalPrimaryAbilityTooltip.Delimiter2:SetColorTexture(0, 0, 0)
-    end
+    _G.PetJournalPrimaryAbilityTooltip:HookScript('OnShow', TOOLTIP.ReskinTooltip)
+    _G.PetJournalSecondaryAbilityTooltip:HookScript('OnShow', TOOLTIP.ReskinTooltip)
+    _G.PetJournalPrimaryAbilityTooltip.Delimiter1:SetHeight(1)
+    _G.PetJournalPrimaryAbilityTooltip.Delimiter1:SetColorTexture(0, 0, 0)
+    _G.PetJournalPrimaryAbilityTooltip.Delimiter2:SetHeight(1)
+    _G.PetJournalPrimaryAbilityTooltip.Delimiter2:SetColorTexture(0, 0, 0)
 end)
 
 TOOLTIP:RegisterTooltips('Blizzard_GarrisonUI', function()
@@ -336,12 +336,8 @@ TOOLTIP:RegisterTooltips('Blizzard_EncounterJournal', function()
 end)
 
 TOOLTIP:RegisterTooltips('Blizzard_Calendar', function()
-    if _G.CalendarContextMenu then
-        _G.CalendarContextMenu:HookScript('OnShow', TOOLTIP.ReskinTooltip)
-    end
-    if _G.CalendarInviteStatusContextMenu then
-        _G.CalendarInviteStatusContextMenu:HookScript('OnShow', TOOLTIP.ReskinTooltip)
-    end
+    _G.CalendarContextMenu:HookScript('OnShow', TOOLTIP.ReskinTooltip)
+    _G.CalendarInviteStatusContextMenu:HookScript('OnShow', TOOLTIP.ReskinTooltip)
 end)
 
 TOOLTIP:RegisterTooltips('Blizzard_PerksProgram', function()

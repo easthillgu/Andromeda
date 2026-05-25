@@ -30,7 +30,8 @@ end
 function TOOLTIP:HyperLink_GetSectionInfo(id)
     local info = sectionInfo[id]
     if not info then
-        info = C_EncounterJournal.GetSectionInfo(id)
+        -- 3.80.1: C_EncounterJournal may not exist; use classic EJ_GetSectionInfo
+        info = (C_EncounterJournal and C_EncounterJournal.GetSectionInfo or EJ_GetSectionInfo)(id)
         sectionInfo[id] = info
     end
     return info
@@ -88,9 +89,7 @@ function TOOLTIP:HyperLink_OnEnter(link, ...)
 end
 
 function TOOLTIP:HyperLink_OnLeave(_, ...)
-    if _G.BattlePetTooltip then
-        _G.BattlePetTooltip:Hide()
-    end
+    _G.BattlePetTooltip:Hide()
     _G.GameTooltip:Hide()
     _G.GameTooltip.__isHoverTip = nil
 

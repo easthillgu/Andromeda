@@ -1,11 +1,14 @@
 <Ui xmlns="http://www.blizzard.com/wow/ui/">
     <Script file="tooltip.lua"/>
+    <!-- 3.80.1: azerite.lua removed (Retail BFA) -->
     <Script file="achievement.lua"/>
+    <!-- 3.80.1: covenant.lua removed (Retail Shadowlands) -->
     <Script file="hyperlink.lua"/>
     <Script file="icon.lua"/>
     <Script file="id.lua"/>
     <Script file="item.lua"/>
     <Script file="itemref.lua"/>
+    <!-- 3.80.1: paragon.lua removed (Retail Dragonflight) -->
     <Script file="specilvl.lua"/>
     <Script file="style.lua"/>
 </Ui>
