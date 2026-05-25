@@ -11,6 +11,7 @@ local function ConfigureTargetTargetStyle(self)
     UNITFRAME:CreateHealthBar(self)
     UNITFRAME:CreatePowerBar(self)
     UNITFRAME:CreateNameTag(self)
+    UNITFRAME:CreateAuras(self)
     UNITFRAME:CreateRangeCheck(self)
 end
 

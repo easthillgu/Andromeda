@@ -79,7 +79,6 @@ end
 UNITFRAME.RaidDebuffsList = {}
 
 function UNITFRAME:UpdateRaidDebuffsList()
-    C.RaidDebuffsList = C.RaidDebuffsList or {}
     wipe(UNITFRAME.RaidDebuffsList)
 
     for instName, value in pairs(C.RaidDebuffsList) do

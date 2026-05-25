@@ -65,7 +65,8 @@ function CHAT:HyperlinkShowHook(link, _, button)
             if not bnID then
                 return
             end
-            local accountInfo = C_BattleNet.GetAccountInfoByID(bnID)
+            -- 3.80.1: C_BattleNet may not exist; nil guard
+            local accountInfo = C_BattleNet and C_BattleNet.GetAccountInfoByID and C_BattleNet.GetAccountInfoByID(bnID)
             if not accountInfo then
                 return
             end

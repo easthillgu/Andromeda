@@ -2,12 +2,17 @@ local F, C = unpack(select(2, ...))
 local UNITFRAME = F:GetModule('UnitFrame')
 local oUF = F.Libs.oUF
 
--- 3.80.1: Portrait material is provided by __bg (F.SetBD → CreateTex → BackdropStripes)
--- This dummy texture satisfies oUF's Portrait element requirement
+local function PostUpdate(element)
+    element:SetDesaturation(1)
+end
+
 function UNITFRAME:CreatePortrait(self)
-    local portrait = self:CreateTexture(nil, 'BACKGROUND', nil, -1)
-    portrait:Hide()
-    portrait.customTexture = true
+    local portrait = CreateFrame('PlayerModel', nil, self)
+    portrait:SetInside()
+    portrait:SetFrameLevel(self.Health:GetFrameLevel() + 2)
+    portrait:SetAlpha(0.1)
+
+    portrait.PostUpdate = PostUpdate
     self.Portrait = portrait
 end
 
@@ -16,6 +21,9 @@ function UNITFRAME:UpdatePortrait()
         if C.DB.Unitframe.Portrait then
             if not frame:IsElementEnabled('Portrait') then
                 frame:EnableElement('Portrait')
+                if frame.Portrait then
+                    frame.Portrait:ForceUpdate()
+                end
             end
         else
             if frame:IsElementEnabled('Portrait') then

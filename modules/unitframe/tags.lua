@@ -210,8 +210,8 @@ for tag, func in next, _tags do
 end
 
 function UNITFRAME:CreateGroupLeaderTag(self)
-    local font = C.Assets.Fonts.PingFang
-    local text = F.CreateFS(self.Health, font, 8, 'OUTLINEMONOCHROME')
+    local font = C.Assets.Fonts.Pixel
+    local text = F.CreateFS(self.Health, font, 8, 'OUTLINE, MONOCHROME')
     text:SetPoint('TOPLEFT', 2, -2)
 
     self:Tag(text, '[andromeda:groupleader]')
@@ -219,8 +219,8 @@ function UNITFRAME:CreateGroupLeaderTag(self)
 end
 
 function UNITFRAME:CreateGroupRoleTag(self)
-    local font = C.Assets.Fonts.PingFang
-    local text = F.CreateFS(self.Health, font, 8, 'OUTLINEMONOCHROME')
+    local font = C.Assets.Fonts.Pixel
+    local text = F.CreateFS(self.Health, font, 8, 'OUTLINE, MONOCHROME')
     text:SetPoint('BOTTOM', 1, 1)
 
     self:Tag(text, '[andromeda:grouprole]')
@@ -228,9 +228,9 @@ function UNITFRAME:CreateGroupRoleTag(self)
 end
 
 function UNITFRAME:CreateGroupNameTag(self)
-    local font = C.Assets.Fonts.PingFang
+    local font = C.Assets.Fonts.Condensed
     local outline = _G.ANDROMEDA_ADB.FontOutline
-    local text = F.CreateFS(self.Health, font, 11, 'OUTLINEMONOCHROME')
+    local text = F.CreateFS(self.Health, font, 11, outline or nil, nil, nil, outline and 'NONE' or 'THICK')
 
     self:Tag(text, '[andromeda:color][andromeda:groupname] [andromeda:ddg]')
 
@@ -238,11 +238,11 @@ function UNITFRAME:CreateGroupNameTag(self)
 end
 
 function UNITFRAME:CreateNameTag(self)
-    local font = C.Assets.Fonts.PingFang
+    local font = C.Assets.Fonts.Condensed
     local style = self.unitStyle
     local outline = _G.ANDROMEDA_ADB.FontOutline
 
-    local text = F.CreateFS(self.Health, font, 11, 'OUTLINEMONOCHROME')
+    local text = F.CreateFS(self.Health, font, 11, outline or nil, nil, nil, outline and 'NONE' or 'THICK')
 
     if style == 'target' then
         text:SetJustifyH('RIGHT')
@@ -267,11 +267,11 @@ end
 
 
 function UNITFRAME:CreateHealthTag(self)
-    local font = C.Assets.Fonts.PingFang
+    local font = C.Assets.Fonts.Condensed
     local style = self.unitStyle
     local outline = _G.ANDROMEDA_ADB.FontOutline
 
-    local text = F.CreateFS(self.Health, font, 11, 'OUTLINEMONOCHROME')
+    local text = F.CreateFS(self.Health, font, 11, outline or nil, nil, nil, outline and 'NONE' or 'THICK')
     text:SetPoint('BOTTOMLEFT', self, 'TOPLEFT', 0, 3)
 
     if style == 'target' then
@@ -292,11 +292,11 @@ function UNITFRAME:CreateHealthTag(self)
 end
 
 function UNITFRAME:CreateAltPowerTag(self)
-    local font = C.Assets.Fonts.PingFang
+    local font = C.Assets.Fonts.Condensed
     local style = self.unitStyle
     local outline = _G.ANDROMEDA_ADB.FontOutline
 
-    local text = F.CreateFS(self.Health, font, 11, 'OUTLINEMONOCHROME')
+    local text = F.CreateFS(self.Health, font, 11, outline or nil, nil, nil, outline and 'NONE' or 'THICK')
 
     if style == 'boss' then
         text:SetPoint('LEFT', self, 'RIGHT', 2, 0)
@@ -340,15 +340,15 @@ local function UpdatePlayerTags(self)
 end
 
 function UNITFRAME:CreatePlayerTags(self)
-    local font = C.Assets.Fonts.PingFang
+    local font = C.Assets.Fonts.Condensed
     local outline = _G.ANDROMEDA_ADB.FontOutline
 
-    local leftTag = F.CreateFS(self, font, 11, 'OUTLINEMONOCHROME')
+    local leftTag = F.CreateFS(self, font, 11, outline or nil, nil, nil, outline and 'NONE' or 'THICK')
     leftTag:SetPoint('BOTTOMLEFT', self, 'TOPLEFT', 0, 3)
 
     self:Tag(leftTag, '[andromeda:healthvalue] [andromeda:healthperc] [andromeda:dead] [andromeda:pvp] [andromeda:resting]')
 
-    local rightTag = F.CreateFS(self, font, 11, 'OUTLINEMONOCHROME')
+    local rightTag = F.CreateFS(self, font, 11, outline or nil, nil, nil, outline and 'NONE' or 'THICK')
     rightTag:SetPoint('BOTTOMRIGHT', self, 'TOPRIGHT', 0, 3)
 
     self:Tag(rightTag, '[powercolor][andromeda:powervalue]')

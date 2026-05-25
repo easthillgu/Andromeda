@@ -423,7 +423,7 @@ local function CreateTeamIndex(header)
     local parent = _G[header:GetName() .. 'UnitButton1']
     local outline = _G.ANDROMEDA_ADB.FontOutline
     if parent and not parent.teamIndex then
-        local teamIndex = F.CreateFS(parent, C.Assets.Fonts.PingFang, 11, 'OUTLINEMONOCHROME', header.index)
+        local teamIndex = F.CreateFS(parent, C.Assets.Fonts.Bold, 11, outline or nil, header.index, nil, outline and 'NONE' or 'THICK')
         teamIndex:SetTextColor(0.6, 0.8, 1)
         teamIndex.__owner = parent
         UpdateTeamIndex(teamIndex, showIndex, direc)
