@@ -192,17 +192,19 @@ TOOLTIP:RegisterTooltips(C.ADDON_NAME, function()
     -- local r, g, b = C.r, C.g, C.b
     -- _G.IMECandidatesFrame.selection:SetVertexColor(r, g, b, 1)
 
-    -- Pet Tooltip
-    _G.PetBattlePrimaryUnitTooltip:HookScript('OnShow', function(self)
-        self.Border:SetAlpha(0)
-        if not self.iconStyled then
-            if self.glow then
-                self.glow:Hide()
+    -- Pet Tooltip (3.80.1: PetBattle frames don't exist; nil guard)
+    if _G.PetBattlePrimaryUnitTooltip then
+        _G.PetBattlePrimaryUnitTooltip:HookScript('OnShow', function(self)
+            self.Border:SetAlpha(0)
+            if not self.iconStyled then
+                if self.glow then
+                    self.glow:Hide()
+                end
+                self.Icon:SetTexCoord(unpack(C.TEX_COORD))
+                self.iconStyled = true
             end
-            self.Icon:SetTexCoord(unpack(C.TEX_COORD))
-            self.iconStyled = true
-        end
-    end)
+        end)
+    end
 
     hooksecurefunc('PetBattleUnitTooltip_UpdateForUnit', function(self)
         -- 3.80.1: PetBattle not available; guard entire callback
@@ -294,12 +296,17 @@ TOOLTIP:RegisterTooltips('Blizzard_EventTrace', function()
 end)
 
 TOOLTIP:RegisterTooltips('Blizzard_Collections', function()
-    _G.PetJournalPrimaryAbilityTooltip:HookScript('OnShow', TOOLTIP.ReskinTooltip)
-    _G.PetJournalSecondaryAbilityTooltip:HookScript('OnShow', TOOLTIP.ReskinTooltip)
-    _G.PetJournalPrimaryAbilityTooltip.Delimiter1:SetHeight(1)
-    _G.PetJournalPrimaryAbilityTooltip.Delimiter1:SetColorTexture(0, 0, 0)
-    _G.PetJournalPrimaryAbilityTooltip.Delimiter2:SetHeight(1)
-    _G.PetJournalPrimaryAbilityTooltip.Delimiter2:SetColorTexture(0, 0, 0)
+    -- 3.80.1: PetJournal frames may not exist; nil guard
+    if _G.PetJournalPrimaryAbilityTooltip then
+        _G.PetJournalPrimaryAbilityTooltip:HookScript('OnShow', TOOLTIP.ReskinTooltip)
+        _G.PetJournalPrimaryAbilityTooltip.Delimiter1:SetHeight(1)
+        _G.PetJournalPrimaryAbilityTooltip.Delimiter1:SetColorTexture(0, 0, 0)
+        _G.PetJournalPrimaryAbilityTooltip.Delimiter2:SetHeight(1)
+        _G.PetJournalPrimaryAbilityTooltip.Delimiter2:SetColorTexture(0, 0, 0)
+    end
+    if _G.PetJournalSecondaryAbilityTooltip then
+        _G.PetJournalSecondaryAbilityTooltip:HookScript('OnShow', TOOLTIP.ReskinTooltip)
+    end
 end)
 
 TOOLTIP:RegisterTooltips('Blizzard_GarrisonUI', function()
@@ -313,7 +320,8 @@ TOOLTIP:RegisterTooltips('Blizzard_GarrisonUI', function()
         _G.GarrisonFollowerMissionAbilityWithoutCountersTooltip,
     }
     for _, f in pairs(gt) do
-        f:HookScript('OnShow', TOOLTIP.ReskinTooltip)
+        -- 3.80.1: Garrison frames are nil; nil guard
+        if f then f:HookScript('OnShow', TOOLTIP.ReskinTooltip) end
     end
 end)
 
