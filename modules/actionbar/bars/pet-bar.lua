@@ -149,4 +149,11 @@ function ACTIONBAR:CreatePetBar()
     F:RegisterEvent('UPDATE_VEHICLE_ACTIONBAR', ACTIONBAR.PetBarOnEvent)
     F:RegisterEvent('PLAYER_MOUNT_DISPLAY_CHANGED', ACTIONBAR.PetBarOnEvent)
     F:RegisterEvent('PLAYER_FARSIGHT_FOCUS_CHANGED', ACTIONBAR.PetBarOnEvent)
+
+    -- 3.80.1: auto-cast toggle may fire PET_BAR_UPDATE before Blizzard updates; delay refresh
+    if _G.TogglePetAutocast then
+        hooksecurefunc('TogglePetAutocast', function()
+            C_Timer.After(0.1, function() ACTIONBAR.UpdatePetBar(_G.PetActionBar) end)
+        end)
+    end
 end

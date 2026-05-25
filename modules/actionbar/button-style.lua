@@ -104,11 +104,17 @@ function ACTIONBAR:HandleButton(btn)
         spellHighlight:Hide()
         hooksecurefunc(spellHighlight, 'Show', function(f) f:SetAlpha(0); f:Hide() end)
     end
-    -- Hide Blizzard auto-cast shine (replaced by pixel glow)
+    -- Hide Blizzard auto-cast shine/overlay (replaced by pixel glow)
     if autoCastShine then
         autoCastShine:SetAlpha(0)
         autoCastShine:Hide()
         hooksecurefunc(autoCastShine, 'Show', function(f) f:SetAlpha(0); f:Hide() end)
+    end
+    -- 3.80.1: AutoCastOverlay is a separate Blizzard frame on pet buttons
+    if btn.AutoCastOverlay then
+        btn.AutoCastOverlay:SetAlpha(0)
+        btn.AutoCastOverlay:Hide()
+        hooksecurefunc(btn.AutoCastOverlay, 'Show', function(f) f:SetAlpha(0); f:Hide() end)
     end
 
     if normal then
