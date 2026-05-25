@@ -22,11 +22,7 @@ local function addLinesForItem(self)
         return
     end
 
-    local data = self:GetTooltipData()
-    local guid = data and data.guid
-    -- 3.80.1: C_Item.GetItemLinkByGUID may not exist; nil guard
-    local link = guid and C_Item and C_Item.GetItemLinkByGUID and C_Item.GetItemLinkByGUID(guid)
-
+    local _, link = self:GetItem()
     if not link then
         return
     end
@@ -57,9 +53,19 @@ local function addLinesForItem(self)
 end
 
 function TOOLTIP:ItemInfo()
-    _G.ITEM_CREATED_BY = '' -- Remove creator name
-    -- _G.PVP_ENABLED = '' -- Remove PvP text
-    _G.GameTooltip_OnTooltipAddMoney = nop -- Remove sell price
+    _G.ITEM_CREATED_BY = ''
 
-    _G.TooltipDataProcessor.AddTooltipPostCall(Enum.TooltipDataType.Item, addLinesForItem)
+    _G.GameTooltip:HookScript('OnTooltipSetItem', function(self)
+        if self:IsForbidden() then
+            return
+        end
+        addLinesForItem(self)
+    end)
+
+    _G.ItemRefTooltip:HookScript('OnTooltipSetItem', function(self)
+        if self:IsForbidden() then
+            return
+        end
+        addLinesForItem(self)
+    end)
 end

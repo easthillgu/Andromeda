@@ -16,7 +16,7 @@ function TOOLTIP:SetupTooltipIcon(icon)
             break
         end
         local text = line:GetText()
-        if text and text ~= ' ' then
+        if text and text ~= ' ' and not strfind(text, 'UI%-CharacterCreate%-Classes') then
             local newText, count = gsub(text, '|T([^:]-):[%d+:]+|t', '|T%1:14:14:' .. newString .. '|t')
             if count > 0 then
                 line:SetText(newText)
@@ -29,37 +29,36 @@ function TOOLTIP:HookTooltipCleared()
     self.tipModified = false
 end
 
+function TOOLTIP:HookTooltipSetItem()
+    if not self.tipModified then
+        local _, link = self:GetItem()
+        if link then
+            TOOLTIP.SetupTooltipIcon(self, GetItemIcon(link))
+        end
+        self.tipModified = true
+    end
+end
+
+function TOOLTIP:HookTooltipSetSpell()
+    if not self.tipModified then
+        local _, id = self:GetSpell()
+        if id then
+            TOOLTIP.SetupTooltipIcon(self, GetSpellTexture(id))
+        end
+        self.tipModified = true
+    end
+end
+
 function TOOLTIP:HookTooltipMethod()
     self:HookScript('OnTooltipCleared', TOOLTIP.HookTooltipCleared)
 end
 
 function TOOLTIP:ReskinRewardIcon()
-    -- 3.80.1: self may be nil if tooltip sub-frame absent
-    if not self or not self.Icon then return end
+    if not self then return end
     self.Icon:SetTexCoord(unpack(C.TEX_COORD))
     self.bg = F.CreateBDFrame(self.Icon, 0)
     F.ReskinIconBorder(self.IconBorder)
 end
-
-local getTooltipTextureByType = {
-    [Enum.TooltipDataType.Item] = function(id)
-        return GetItemIcon(id)
-    end,
-
-    [Enum.TooltipDataType.Toy] = function(id)
-        return GetItemIcon(id)
-    end,
-
-    [Enum.TooltipDataType.Spell] = function(id)
-        return GetSpellTexture(id)
-    end,
-
-    [Enum.TooltipDataType.Mount] = function(id)
-        -- 3.80.1: C_MountJournal may not exist; nil guard
-        if not C_MountJournal then return end
-        return select(3, C_MountJournal.GetMountInfoByID(id))
-    end,
-}
 
 function TOOLTIP:ReskinTipIcon()
     if not C.DB.Tooltip.Icon then
@@ -68,33 +67,21 @@ function TOOLTIP:ReskinTipIcon()
 
     local GameTooltip = _G.GameTooltip
     local ItemRefTooltip = _G.ItemRefTooltip
-    local TooltipDataProcessor = _G.TooltipDataProcessor
     local EmbeddedItemTooltip = _G.EmbeddedItemTooltip
 
-    -- Add Icons
     TOOLTIP.HookTooltipMethod(GameTooltip)
     TOOLTIP.HookTooltipMethod(ItemRefTooltip)
 
-    for tooltipType, getTex in next, getTooltipTextureByType do
-        TooltipDataProcessor.AddTooltipPostCall(tooltipType, function(self)
-            if self == GameTooltip or self == ItemRefTooltip then
-                local data = self:GetTooltipData()
-                local id = data and data.id
-
-                if id then
-                    TOOLTIP.SetupTooltipIcon(self, getTex(id))
-                end
-            end
-        end)
-    end
-
-    -- Cut Icons
     hooksecurefunc(GameTooltip, 'SetUnitAura', function(self)
         TOOLTIP.SetupTooltipIcon(self)
     end)
 
-    -- 3.80.1: SetAzeriteEssence/SetAzeriteEssenceSlot are Retail BFA APIs
-    if GameTooltip.SetAzeriteEssence then
+    GameTooltip:HookScript('OnTooltipSetItem', TOOLTIP.HookTooltipSetItem)
+    GameTooltip:HookScript('OnTooltipSetSpell', TOOLTIP.HookTooltipSetSpell)
+    ItemRefTooltip:HookScript('OnTooltipSetItem', TOOLTIP.HookTooltipSetItem)
+    ItemRefTooltip:HookScript('OnTooltipSetSpell', TOOLTIP.HookTooltipSetSpell)
+
+    --[[if GameTooltip.SetAzeriteEssence then
         hooksecurefunc(GameTooltip, 'SetAzeriteEssence', function(self)
             TOOLTIP.SetupTooltipIcon(self)
         end)
@@ -104,9 +91,8 @@ function TOOLTIP:ReskinTipIcon()
         hooksecurefunc(GameTooltip, 'SetAzeriteEssenceSlot', function(self)
             TOOLTIP.SetupTooltipIcon(self)
         end)
-    end
+    end]]
 
-    -- Tooltip rewards icon
     TOOLTIP.ReskinRewardIcon(GameTooltip.ItemTooltip)
     TOOLTIP.ReskinRewardIcon(EmbeddedItemTooltip.ItemTooltip)
 end
