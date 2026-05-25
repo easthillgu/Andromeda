@@ -253,7 +253,12 @@ end
 if not _G.TooltipDataProcessor then
     _G.TooltipDataProcessor = {
         AddTooltipPostCall = function(dataType, func) end,
+        AddLinePreCall = function(dataLineType, func) end,
     }
+end
+-- 3.80.1: ensure both methods exist even if native table exists but methods don't
+if not _G.TooltipDataProcessor.AddLinePreCall then
+    _G.TooltipDataProcessor.AddLinePreCall = function(dataLineType, func) end
 end
 
 ---------------------------------------------------------------------------

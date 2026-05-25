@@ -432,7 +432,12 @@ end
 
 function TOOLTIP:ResetUnit(btn)
     if (btn == 'LSHIFT' or btn == 'LALT') and UnitExists('mouseover') then
-        _G.GameTooltip:RefreshData()
+        -- 3.80.1: RefreshData is Retail API; use classic method
+        if _G.GameTooltip.RefreshData then
+            _G.GameTooltip:RefreshData()
+        else
+            _G.GameTooltip:SetUnit('mouseover')
+        end
     end
 end
 
@@ -456,7 +461,10 @@ function TOOLTIP:OnLogin()
     if _G.GameTooltip.StatusBar then
         hooksecurefunc(_G.GameTooltip.StatusBar, 'SetValue', TOOLTIP.RefreshStatusBar)
     end
-    _G.TooltipDataProcessor.AddLinePreCall(Enum.TooltipDataLineType.None, TOOLTIP.UpdateFactionLine)
+    -- 3.80.1: AddLinePreCall may not exist; nil guard
+    if _G.TooltipDataProcessor.AddLinePreCall then
+        _G.TooltipDataProcessor.AddLinePreCall(Enum.TooltipDataLineType.None, TOOLTIP.UpdateFactionLine)
+    end
     _G.TooltipDataProcessor.AddTooltipPostCall(Enum.TooltipDataType.Item, TOOLTIP.FixRecipeItemNameWidth)
 
     hooksecurefunc('GameTooltip_ShowStatusBar', TOOLTIP.GameTooltip_ShowStatusBar)
