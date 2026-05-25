@@ -21,6 +21,8 @@ local linkTypes = {
 }
 
 function TOOLTIP:HyperLink_SetPet(link)
+    -- 3.80.1: BattlePetToolTip_Show doesn't exist; nil guard
+    if not _G.BattlePetToolTip_Show then return end
     _G.GameTooltip:SetOwner(self, 'ANCHOR_TOPRIGHT', -3, 5)
     _G.GameTooltip:Show()
     local _, speciesID, level, breedQuality, maxHealth, power, speed = strsplit(':', link)
@@ -89,7 +91,8 @@ function TOOLTIP:HyperLink_OnEnter(link, ...)
 end
 
 function TOOLTIP:HyperLink_OnLeave(_, ...)
-    _G.BattlePetTooltip:Hide()
+    -- 3.80.1: BattlePetTooltip doesn't exist; nil guard
+    if _G.BattlePetTooltip then _G.BattlePetTooltip:Hide() end
     _G.GameTooltip:Hide()
     _G.GameTooltip.__isHoverTip = nil
 
