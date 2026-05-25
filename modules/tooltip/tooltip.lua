@@ -27,11 +27,9 @@ local function CanAccessObject(obj)
 end
 
 function TOOLTIP:GetUnit()
-    local data = self:GetTooltipData()
-    local guid = data and data.guid
-    local unit = guid and UnitTokenFromGUID(guid)
-
-    return unit, guid
+    -- 3.80.1: use native GetUnit() (returns name, unit), not Retail GetTooltipData()
+    local _, unit = self:GetUnit()
+    return unit
 end
 
 local FACTION_COLORS = {
