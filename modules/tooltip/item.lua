@@ -6,12 +6,7 @@ local expansionList = {
     [1] = _G.EXPANSION_NAME1,
     [2] = _G.EXPANSION_NAME2,
     [3] = _G.EXPANSION_NAME3,
-    [4] = _G.EXPANSION_NAME4,
-    [5] = _G.EXPANSION_NAME5,
-    [6] = _G.EXPANSION_NAME6,
-    [7] = _G.EXPANSION_NAME7,
-    [8] = _G.EXPANSION_NAME8,
-    [9] = _G.EXPANSION_NAME9,
+    -- 3.80.1: EXPANSION_NAME4-9 are Retail-only (WoD→TWW), nil
 }
 
 local function addLinesForItem(self)
@@ -47,7 +42,7 @@ local function addLinesForItem(self)
         self:AddDoubleLine(_G.AUCTION_PRICE .. ':', GetMoneyString(itemSellPrice, true), 0.5, 0.8, 1, 1, 1, 1)
     end
 
-    if expacID then
+    if expacID and expansionList[expacID] then
         self:AddDoubleLine(L['Expansion'] .. ':', expansionList[expacID], 0.5, 0.8, 1)
     end
 end
