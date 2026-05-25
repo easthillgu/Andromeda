@@ -587,7 +587,7 @@ do
 
         function F:SetFontSize(size)
             local name, _, flag = self:GetFont()
-            self:SetFont(name, size, flag)
+            self:SetFont(name, size, flag or '')  -- 3.80.1: SetFont flags rejects nil
         end
 
         function F:SetFontShadow(type)
