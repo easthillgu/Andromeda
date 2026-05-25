@@ -310,45 +310,10 @@ do
                 return iLvlDB[link]
             end
 
-            local data
-            if arg1 and type(arg1) == 'string' then
-                data = C_TooltipInfo.GetInventoryItem(arg1, arg2)
-            elseif arg1 and type(arg1) == 'number' then
-                data = C_TooltipInfo.GetBagItem(arg1, arg2)
-            else
-                data = C_TooltipInfo.GetHyperlink(link, nil, nil, true)
-            end
-
-            if not data then
-                return
-            end
-
-            for i = 2, 5 do
-                local lineData = data.lines[i]
-                if not lineData then
-                    break
-                end
-
-                if C.IS_NEW_PATCH_10_1 then
-                    local text = lineData.leftText
-                    local found = text and strfind(text, ilvlStr)
-                    if found then
-                        local level = strmatch(text, '(%d+)%)?$')
-                        iLvlDB[link] = tonumber(level)
-                        break
-                    end
-                else
-                    local argVal = lineData.args
-                    if argVal then
-                        local text = argVal[2] and argVal[2].stringVal
-                        local found = text and strfind(text, ilvlStr)
-                        if found then
-                            local level = strmatch(text, '(%d+)%)?$')
-                            iLvlDB[link] = tonumber(level)
-                            break
-                        end
-                    end
-                end
+            -- 3.80.1: use native GetDetailedItemLevelInfo instead of C_TooltipInfo (Retail API)
+            local level = GetDetailedItemLevelInfo and GetDetailedItemLevelInfo(link)
+            if level then
+                iLvlDB[link] = level
             end
 
             return iLvlDB[link]
@@ -393,12 +358,17 @@ do
         local name = nameCache[npcID]
         if not name then
             name = loadingStr
-            local data = C_TooltipInfo.GetHyperlink(format('unit:Creature-0-0-0-0-%d', npcID))
+            -- 3.80.1: C_TooltipInfo.GetHyperlink may be stub returning nil; guard + prevent infinite retry
+            local data = C_TooltipInfo and C_TooltipInfo.GetHyperlink and C_TooltipInfo.GetHyperlink(format('unit:Creature-0-0-0-0-%d', npcID))
             local lineData = data and data.lines
             if lineData then
-                local argVal = lineData[1] and lineData[1].args
-                if argVal then
-                    name = argVal[2] and argVal[2].stringVal
+                if C.IS_NEW_PATCH_10_1 then
+                    name = lineData[1] and lineData[1].leftText
+                else
+                    local argVal = lineData[1] and lineData[1].args
+                    if argVal then
+                        name = argVal[2] and argVal[2].stringVal
+                    end
                 end
             end
             if name == loadingStr then
@@ -427,6 +397,8 @@ do
             [_G.TRANSMOGRIFY_TOOLTIP_ITEM_UNKNOWN_APPEARANCE_KNOWN] = true,
         }
         function F.IsUnknownTransmog(bagID, slotID)
+            -- 3.80.1: transmog system absent; C_TooltipInfo.GetBagItem nil guard
+            if not C_TooltipInfo or not C_TooltipInfo.GetBagItem then return end
             local data = C_TooltipInfo.GetBagItem(bagID, slotID)
             local lineData = data and data.lines
             if not lineData then
@@ -459,6 +431,8 @@ do
         end
 
         function F.IsSoulBound(bagID, slotID)
+            -- 3.80.1: C_Container.GetContainerItemLink nil guard
+            if not C_Container or not C_Container.GetContainerItemLink then return end
             local link = C_Container.GetContainerItemLink(bagID, slotID)
             if link and strfind(link, _G.ITEM_SOULBOUND) then return true end
         end
@@ -469,6 +443,8 @@ do
             [_G.ITEM_ACCOUNTBOUND] = true,
         }
         function F.IsBoA(bagID, slotID)
+            -- 3.80.1: C_Container.GetContainerItemLink nil guard
+            if not C_Container or not C_Container.GetContainerItemLink then return false end
             local link = C_Container.GetContainerItemLink(bagID, slotID)
             if link then
                 for key in pairs(boaStr) do
@@ -1241,7 +1217,7 @@ do
 
         local function cancelPicker()
             local swatch = _G.ColorPickerFrame.__swatch
-            local r, g, b = _G.ColorPicker_GetPreviousValues()
+            local r, g, b = _G.ColorPickerFrame:GetPreviousValues()
             swatch.tex:SetVertexColor(r, g, b)
             swatch.color.r, swatch.color.g, swatch.color.b = r, g, b
         end

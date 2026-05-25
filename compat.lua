@@ -235,10 +235,9 @@ if not _G.C_TooltipInfo then
     _G.C_TooltipInfo = {}
 end
 if not _G.C_TooltipInfo.GetHyperlink then
-    _G.C_TooltipInfo.GetHyperlink = function(tooltip)
-        if tooltip and tooltip.GetHyperlink then
-            return tooltip:GetHyperlink()
-        end
+    -- 3.80.1: C_TooltipInfo.GetHyperlink not available; stub returns nil.
+    -- All callers (functions.lua x2, alreadyknown.lua x1) nil-guard this.
+    _G.C_TooltipInfo.GetHyperlink = function()
         return nil
     end
 end
