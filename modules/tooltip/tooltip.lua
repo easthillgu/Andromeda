@@ -456,7 +456,11 @@ function TOOLTIP:OnLogin()
         return
     end
 
-    _G.TooltipDataProcessor.AddTooltipPostCall(Enum.TooltipDataType.Unit, TOOLTIP.OnTooltipSetUnit)
+    -- 3.80.1: use direct HookScript (TooltipDataProcessor may be stubbed noop)
+    if _G.TooltipDataProcessor and _G.TooltipDataProcessor.AddTooltipPostCall then
+        _G.TooltipDataProcessor.AddTooltipPostCall(Enum.TooltipDataType.Unit, TOOLTIP.OnTooltipSetUnit)
+    end
+    _G.GameTooltip:HookScript('OnTooltipSetUnit', TOOLTIP.OnTooltipSetUnit)
     -- 3.80.1: GameTooltip.StatusBar may not exist; nil guard
     if _G.GameTooltip.StatusBar then
         hooksecurefunc(_G.GameTooltip.StatusBar, 'SetValue', TOOLTIP.RefreshStatusBar)
