@@ -206,9 +206,11 @@ TOOLTIP:RegisterTooltips(C.ADDON_NAME, function()
         end)
     end
 
-    hooksecurefunc('PetBattleUnitTooltip_UpdateForUnit', function(self)
-        -- 3.80.1: PetBattle not available; guard entire callback
-        if not C_PetBattles then return end
+    -- 3.80.1: PetBattleUnitTooltip_UpdateForUnit does not exist; nil guard
+    if _G.PetBattleUnitTooltip_UpdateForUnit then
+        hooksecurefunc('PetBattleUnitTooltip_UpdateForUnit', function(self)
+            -- 3.80.1: PetBattle not available; guard entire callback
+            if not C_PetBattles then return end
         local nextBuff, nextDebuff = 1, 1
         for i = 1, C_PetBattles.GetNumAuras(self.petOwner, self.petIndex) do
             local _, _, _, isBuff = C_PetBattles.GetAuraInfo(self.petOwner, self.petIndex, i)
@@ -226,8 +228,9 @@ TOOLTIP:RegisterTooltips(C.ADDON_NAME, function()
                 end
                 nextDebuff = nextDebuff + 1
             end
-        end
-    end)
+            end
+        end)
+    end
 
     -- Others
     F:Delay(5, function()
