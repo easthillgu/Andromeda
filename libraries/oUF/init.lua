@@ -27,6 +27,8 @@ oUF.isCata = WOW_PROJECT_ID == WOW_PROJECT_CATACLYSM_CLASSIC
 oUF.isWrath = WOW_PROJECT_ID == WOW_PROJECT_WRATH_CLASSIC
 oUF.isRetail = WOW_PROJECT_ID == WOW_PROJECT_MAINLINE
 oUF.isClassic = WOW_PROJECT_ID == WOW_PROJECT_CLASSIC
+-- 3.80.1: 时光服 reports as Wrath but has Mists-level API
+if wowtoc == 38001 then oUF.isMists = true end
 
 local season = C_Seasons and C_Seasons.GetActiveSeason()
 oUF.isClassicHC = season == 3 -- Hardcore

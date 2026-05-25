@@ -30,6 +30,7 @@ local function updateHealthColorByIndex(health, index)
     health.colorSmooth = (index == 3)
 
     if index == 1 then
+        -- local color = C.DB.Unitframe.HealthColor
         health:SetStatusBarColor(sbColor[1], sbColor[2], sbColor[3], sbColor[4])
         health.bg:SetVertexColor(bgColor[1], bgColor[2], bgColor[3], bgColor[4])
     elseif index == 4 or index == 5 then
@@ -69,7 +70,8 @@ function UNITFRAME.PostUpdateHealth(element, unit, cur, max)
     end
 
     if useGradient then
-        element.bg:SetVertexColor(self:ColorGradient(cur or 1, max or 1, 1, 0, 0, 1, 0.7, 0, 0.7, 1, 0))
+        -- 3.80.1: Mists oUF doesn't have ColorGradient mixin; use Andromeda's F:ColorGradient
+        element.bg:SetVertexColor(F:ColorGradient(cur or 1, max or 1, 1, 0, 0, 1, 0.7, 0, 0.7, 1, 0))
     end
 
     local color
@@ -91,7 +93,9 @@ function UNITFRAME.PostUpdateHealth(element, unit, cur, max)
 end
 
 function UNITFRAME:CreateHealthBar(self)
-    local healthHeight = UNITFRAME:GetHeightVal(
+    local healthHeight
+    -- stylua: ignore start
+    healthHeight = UNITFRAME:GetHeightVal(
         self,
         C.DB.Unitframe.PlayerHealthHeight,
         C.DB.Unitframe.PetHealthHeight,
@@ -104,6 +108,7 @@ function UNITFRAME:CreateHealthBar(self)
         C.DB.Unitframe.BossHealthHeight,
         C.DB.Unitframe.ArenaHealthHeight
     )
+    -- stylua: ignore end
 
     local health = CreateFrame('StatusBar', nil, self)
     health:SetPoint('LEFT')
@@ -116,11 +121,8 @@ function UNITFRAME:CreateHealthBar(self)
 
     F:SetSmoothing(health, C.DB.Unitframe.Smooth)
 
-    -- 3.80.1: 斜条纹覆盖损失血量区域
     local bg = health:CreateTexture(nil, 'BACKGROUND')
-    bg:SetTexture(C.Assets.Textures.BackdropStripes, true, true)
-    bg:SetHorizTile(true)
-    bg:SetVertTile(true)
+    bg:SetTexture(UNITFRAME.StatusBarTex)
     bg:SetPoint('TOPLEFT', health:GetStatusBarTexture(), 'TOPRIGHT')
     bg:SetPoint('BOTTOMRIGHT', health)
     bg:SetVertexColor(bgColor[1], bgColor[2], bgColor[3], bgColor[4])
@@ -128,16 +130,21 @@ function UNITFRAME:CreateHealthBar(self)
 
     self.Health = health
     self.Health.bg = bg
+
     self.Health.PostUpdate = UNITFRAME.PostUpdateHealth
 
     UNITFRAME:UpdateHealthBarColor(self)
 end
 
+-- set health update frequency
 function UNITFRAME:UpdateRaidHealthMethod()
     for _, frame in pairs(oUF.objects) do
         if frame.unitStyle == 'raid' then
-            -- 3.80.1: SetHealthUpdateMethod not in Mists oUF, use frequentUpdates
-            frame.Health.frequentUpdates = C.DB.Unitframe.FrequentHealth
+            -- 3.80.1: SetHealthUpdateMethod is Retail oUF API; nil guard
+            if frame.SetHealthUpdateMethod then
+                frame:SetHealthUpdateMethod(C.DB.Unitframe.FrequentHealth)
+                frame:SetHealthUpdateSpeed(C.DB.Unitframe.HealthFrequency)
+            end
             frame.Health:ForceUpdate()
         end
     end

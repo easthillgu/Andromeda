@@ -32,7 +32,6 @@ function UNITFRAME:CreateHealPrediction(self)
     oag:SetAlpha(0.7)
     oag:SetPoint('TOPLEFT', self.Health, 'TOPRIGHT', -7, 2)
     oag:SetPoint('BOTTOMLEFT', self.Health, 'BOTTOMRIGHT', -7, -2)
-    oag:Hide() -- 3.80.1: hide initially, prediction element will show if needed
 
     local hab = CreateFrame('StatusBar', nil, frame)
     hab:SetPoint('TOPLEFT', self.Health)
@@ -49,16 +48,19 @@ function UNITFRAME:CreateHealPrediction(self)
     ohg:SetAlpha(0.5)
     ohg:SetPoint('TOPRIGHT', self.Health, 'TOPLEFT', 5, 2)
     ohg:SetPoint('BOTTOMRIGHT', self.Health, 'BOTTOMLEFT', 5, -2)
-    ohg:Hide() -- 3.80.1: hide initially, prediction element will show if needed
+    oag:Hide()
+    ohg:Hide()
+
+    -- 3.80.1: field names match Mists oUF; oUF handles Show/Hide via overAbsorb/overHealAbsorb
 
     self.HealPredictionAndAbsorb = {
         myBar = mhpb,
         otherBar = ohpb,
         absorbBar = abb,
         absorbBarOverlay = abbo,
-        overAbsorbGlow = oag,
+        overAbsorb = oag,          -- 3.80.1: Mists oUF expects 'overAbsorb' not 'overAbsorbGlow'
         healAbsorbBar = hab,
-        overHealAbsorbGlow = ohg,
+        overHealAbsorb = ohg,      -- 3.80.1: Mists oUF expects 'overHealAbsorb' not 'overHealAbsorbGlow'
         maxOverflow = 1,
     }
     self.predicFrame = frame

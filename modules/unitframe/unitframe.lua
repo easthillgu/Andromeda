@@ -2,9 +2,6 @@ local F, C = unpack(select(2, ...))
 local UNITFRAME = F:GetModule('UnitFrame')
 local colors = F.Libs.oUF.colors
 
--- 3.80.1 fallback texture (gui.lua textures not loaded yet)
-UNITFRAME.StatusBarTex = UNITFRAME.StatusBarTex or C.ASSET_PATH .. 'textures\\statusbar-normal'
-
 UNITFRAME.Positions = {
     player = { 'CENTER', _G.UIParent, 'CENTER', 0, -180 },
     pet = { 'RIGHT', 'oUF_Player', 'LEFT', -6, 0 },
@@ -137,8 +134,9 @@ end
 function UNITFRAME:CreateBackdrop(self, onKeyDown)
     local hl = self:CreateTexture(nil, 'OVERLAY')
     hl:SetAllPoints()
-    hl:SetTexture('Interface\\FullScreenTextures\\LowHealth')
-    hl:SetVertexColor(0.3, 0.3, 0.3)
+    hl:SetTexture('Interface\\PETBATTLES\\PetBattle-SelectedPetGlow')
+    hl:SetTexCoord(0, 1, 0.5, 1)
+    hl:SetVertexColor(0.6, 0.6, 0.6)
     hl:SetBlendMode('ADD')
     hl:Hide()
 
@@ -181,7 +179,9 @@ end
 -- Sound effect for target/focus changed
 
 function UNITFRAME:PlayerTargetChanged()
-    if UnitExists('target') and not C_PlayerInteractionManager.IsReplacingUnit() then
+    -- 3.80.1: C_PlayerInteractionManager is Retail DF API; nil guard
+    local isReplacing = C_PlayerInteractionManager and C_PlayerInteractionManager.IsReplacingUnit and C_PlayerInteractionManager.IsReplacingUnit()
+    if UnitExists('target') and not isReplacing then
         if UnitIsEnemy('target', 'player') then
             PlaySound(SOUNDKIT.IG_CREATURE_AGGRO_SELECT)
         elseif UnitIsFriend('target', 'player') then
@@ -195,7 +195,9 @@ function UNITFRAME:PlayerTargetChanged()
 end
 
 function UNITFRAME:PlayerFocusChanged()
-    if UnitExists('focus') and not C_PlayerInteractionManager.IsReplacingUnit() then
+    -- 3.80.1: C_PlayerInteractionManager is Retail DF API; nil guard
+    local isReplacing = C_PlayerInteractionManager and C_PlayerInteractionManager.IsReplacingUnit and C_PlayerInteractionManager.IsReplacingUnit()
+    if UnitExists('focus') and not isReplacing then
         if UnitIsEnemy('focus', 'player') then
             PlaySound(SOUNDKIT.IG_CREATURE_AGGRO_SELECT)
         elseif UnitIsFriend('focus', 'player') then
@@ -238,18 +240,6 @@ function UNITFRAME:UpdateAllElements()
 end
 
 function UNITFRAME:OnLogin()
-    -- 3.80.1: Hide default Blizzard castbars (EditModeManager not available)
-    if _G.PlayerCastingBarFrame then
-        _G.PlayerCastingBarFrame:Hide()
-        _G.PlayerCastingBarFrame:UnregisterAllEvents()
-        _G.PlayerCastingBarFrame.Show = function() end
-    end
-    if _G.PetCastingBarFrame then
-        _G.PetCastingBarFrame:Hide()
-        _G.PetCastingBarFrame:UnregisterAllEvents()
-        _G.PetCastingBarFrame.Show = function() end
-    end
-
     UNITFRAME:InitFilters()
     UNITFRAME:SpawnUnits()
     UNITFRAME:UpdateAllElements()

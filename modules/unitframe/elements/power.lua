@@ -40,17 +40,9 @@ function UNITFRAME:UpdatePowerBarColor(self, force)
 end
 
 local function postUpdatePower(power, unit, _, _, max)
-    if max == 0 or not UnitIsConnected(unit) or UnitIsDead(unit) or UnitIsGhost(unit) then
+    -- 3.80.1: UnitIsConnected may receive nil from GUI update path; nil guard
+    if max == 0 or not unit or not UnitIsConnected(unit) or UnitIsDead(unit) or UnitIsGhost(unit) then
         power:SetValue(0)
-        return
-    end
-    -- 3.80.1: class color with 1.2x brightness
-    local _, class = UnitClass(unit)
-    if class then
-        local c = _G.RAID_CLASS_COLORS[class]
-        if c then
-            power:SetStatusBarColor(min(c.r * 1.2, 1), min(c.g * 1.2, 1), min(c.b * 1.2, 1), 1)
-        end
     end
 end
 
