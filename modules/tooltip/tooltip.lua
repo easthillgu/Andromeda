@@ -437,6 +437,16 @@ function TOOLTIP:ResetUnit(btn)
 end
 
 function TOOLTIP:OnLogin()
+    -- 3.80.1: ensure Tooltip config defaults exist (AccountSettings may not be merged into CDB)
+    local defaults = { Enable = true, ShowId = true, ShowItemInfo = true, SpecIlvl = true,
+        ShowIdByAlt = true, ShowItemInfoByAlt = true, HideInCombat = false, HideTitle = false,
+        HideRealm = false, HideGuildRank = false, TargetedBy = false, FollowCursor = false,
+        Scale = 1, Icon = true, PlayerInfoByAlt = false, MythicPlusScore = false }
+    C.DB.Tooltip = C.DB.Tooltip or {}
+    for k, v in pairs(defaults) do
+        if C.DB.Tooltip[k] == nil then C.DB.Tooltip[k] = v end
+    end
+
     if not C.DB.Tooltip.Enable then
         return
     end
