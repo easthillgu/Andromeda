@@ -1,6 +1,6 @@
 local F, C = unpack(select(2, ...))
 
--- Fix Alertframe bg
+-- Fix AlertFrames bg
 local function fixBg(frame)
     local color = _G.ANDROMEDA_ADB.BackdropColor
     local alpha = _G.ANDROMEDA_ADB.BackdropAlpha
@@ -45,15 +45,17 @@ local function fixAnim(frame)
         frame.Arrows.ArrowsAnim:HookScript('OnFinished', fixParentbg)
     end
 
-    frame.hookded = true
+    frame.hooked = true
 end
 
 tinsert(C.BlizzThemes, function()
     -- AlertFrames
     hooksecurefunc('AlertFrame_PauseOutAnimation', fixBg)
 
-    local AlertTemplateFunc = {
-        [_G.AchievementAlertSystem] = function(frame)
+    local AlertTemplateFunc = {}
+
+    if _G.AchievementAlertSystem then
+        AlertTemplateFunc[_G.AchievementAlertSystem] = function(frame)
             if not frame.bg then
                 frame.bg = F.SetBD(frame)
                 frame.Unlocked:SetTextColor(1, 0.8, 0)
@@ -77,9 +79,11 @@ tinsert(C.BlizzThemes, function()
                 frame.bg:SetPoint('TOPLEFT', frame, -2, -17)
                 frame.bg:SetPoint('BOTTOMRIGHT', 2, 12)
             end
-        end,
+        end
+    end
 
-        [_G.CriteriaAlertSystem] = function(frame)
+    if _G.CriteriaAlertSystem then
+        AlertTemplateFunc[_G.CriteriaAlertSystem] = function(frame)
             if not frame.bg then
                 frame.bg = F.SetBD(frame)
                 frame.bg:SetPoint('TOPLEFT', frame, 5, -7)
@@ -94,9 +98,11 @@ tinsert(C.BlizzThemes, function()
                 frame.glow:SetTexture('')
                 frame.shine:SetTexture('')
             end
-        end,
+        end
+    end
 
-        [_G.LootAlertSystem] = function(frame)
+    if _G.LootAlertSystem then
+        AlertTemplateFunc[_G.LootAlertSystem] = function(frame)
             local lootItem = frame.lootItem
             if not frame.bg then
                 frame.bg = F.SetBD(frame)
@@ -118,9 +124,11 @@ tinsert(C.BlizzThemes, function()
             frame.BGAtlas:SetTexture('')
             lootItem.IconBorder:SetTexture('')
             lootItem.SpecIcon.bg:SetShown(lootItem.SpecIcon:IsShown() and lootItem.SpecIcon:GetTexture() ~= nil)
-        end,
+        end
+    end
 
-        [_G.LootUpgradeAlertSystem] = function(frame)
+    if _G.LootUpgradeAlertSystem then
+        AlertTemplateFunc[_G.LootUpgradeAlertSystem] = function(frame)
             if not frame.bg then
                 frame.bg = F.SetBD(frame)
                 frame.bg:SetPoint('TOPLEFT', 10, -14)
@@ -140,9 +148,11 @@ tinsert(C.BlizzThemes, function()
             end
             frame.BaseQualityBorder:SetTexture('')
             frame.UpgradeQualityBorder:SetTexture('')
-        end,
+        end
+    end
 
-        [_G.MoneyWonAlertSystem] = function(frame)
+    if _G.MoneyWonAlertSystem then
+        AlertTemplateFunc[_G.MoneyWonAlertSystem] = function(frame)
             if not frame.bg then
                 frame.bg = F.SetBD(frame)
                 frame.bg:SetInside(frame, 7, 7)
@@ -151,9 +161,11 @@ tinsert(C.BlizzThemes, function()
                 frame.Background:SetTexture('')
                 frame.IconBorder:SetTexture('')
             end
-        end,
+        end
+    end
 
-        [_G.NewRecipeLearnedAlertSystem] = function(frame)
+    if _G.NewRecipeLearnedAlertSystem then
+        AlertTemplateFunc[_G.NewRecipeLearnedAlertSystem] = function(frame)
             if not frame.bg then
                 frame.bg = F.SetBD(frame)
                 frame.bg:SetPoint('TOPLEFT', 10, -5)
@@ -166,220 +178,119 @@ tinsert(C.BlizzThemes, function()
             end
             frame.Icon:SetMask('')
             frame.Icon:SetTexCoord(unpack(C.TEX_COORD))
-        end,
+        end
+    end
 
-        [_G.WorldQuestCompleteAlertSystem] = function(frame)
+    if _G.NewPetAlertSystem then
+        AlertTemplateFunc[_G.NewPetAlertSystem] = function(frame)
             if not frame.bg then
                 frame.bg = F.SetBD(frame)
-                frame.bg:SetPoint('TOPLEFT', 4, -7)
-                frame.bg:SetPoint('BOTTOMRIGHT', -4, 8)
-
-                F.ReskinIcon(frame.QuestTexture)
-                frame.shine:SetTexture('')
-                frame:DisableDrawLayer('BORDER')
-                frame.ToastText:SetFontObject(_G.NumberFont_GameNormal)
-            end
-        end,
-
-        [_G.GarrisonTalentAlertSystem] = function(frame)
-            if not frame.bg then
-                frame.bg = F.SetBD(frame)
-                frame.bg:SetPoint('TOPLEFT', 10, -10)
-                frame.bg:SetPoint('BOTTOMRIGHT', -10, 13)
-
+                frame.IconBorder:SetAlpha(0)
                 F.ReskinIcon(frame.Icon)
-                frame:GetRegions():Hide()
-                frame.glow:SetTexture('')
-                frame.shine:SetTexture('')
-            end
-        end,
-
-        [_G.GarrisonFollowerAlertSystem] = function(frame)
-            if not frame.bg then
-                frame.bg = F.SetBD(frame)
-                frame.bg:SetPoint('TOPLEFT', 16, -3)
-                frame.bg:SetPoint('BOTTOMRIGHT', -16, 16)
-
-                frame:GetRegions():Hide()
-                select(5, frame:GetRegions()):Hide()
-                F.ReskinGarrisonPortrait(frame.PortraitFrame)
-                frame.PortraitFrame:ClearAllPoints()
-                frame.PortraitFrame:SetPoint('TOPLEFT', 22, -8)
-
-                frame.glow:SetTexture('')
-                frame.shine:SetTexture('')
-            end
-            frame.FollowerBG:SetTexture('')
-        end,
-
-        [_G.GarrisonMissionAlertSystem] = function(frame)
-            if not frame.bg then
-                frame.bg = F.SetBD(frame)
-                frame.bg:SetPoint('TOPLEFT', 8, -8)
-                frame.bg:SetPoint('BOTTOMRIGHT', -8, 10)
-
-                if frame.Blank then
-                    frame.Blank:Hide()
-                end
-                if frame.IconBG then
-                    frame.IconBG:Hide()
-                end
                 frame.Background:Hide()
-                frame.glow:SetTexture('')
-                frame.shine:SetTexture('')
+                frame.Background2:Hide()
             end
+            frame.Icon:SetMask('')
+            frame.Icon:SetTexCoord(unpack(C.TEX_COORD))
+            frame.IconBorder:SetTexture('')
+        end
+    end
 
-            -- Anchor fix in 8.2
-            if frame.Level then
-                local showItemLevel = frame.ItemLevel:IsShown()
-                local isRareMission = frame.Rare:IsShown()
-
-                if showItemLevel and isRareMission then
-                    frame.Level:SetPoint('TOP', frame, 'TOP', -115, -14)
-                    frame.ItemLevel:SetPoint('TOP', frame, 'TOP', -115, -37)
-                    frame.Rare:SetPoint('TOP', frame, 'TOP', -115, -48)
-                elseif isRareMission then
-                    frame.Level:SetPoint('TOP', frame, 'TOP', -115, -19)
-                    frame.Rare:SetPoint('TOP', frame, 'TOP', -115, -45)
-                elseif showItemLevel then
-                    frame.Level:SetPoint('TOP', frame, 'TOP', -115, -19)
-                    frame.ItemLevel:SetPoint('TOP', frame, 'TOP', -115, -45)
-                else
-                    frame.Level:SetPoint('TOP', frame, 'TOP', -115, -28)
-                end
-            end
-        end,
-
-        [_G.DigsiteCompleteAlertSystem] = function(frame)
+    if _G.NewMountAlertSystem then
+        AlertTemplateFunc[_G.NewMountAlertSystem] = function(frame)
             if not frame.bg then
                 frame.bg = F.SetBD(frame)
-                frame.bg:SetInside(frame, 8, 8)
-
-                frame:GetRegions():Hide()
-                frame.glow:SetTexture('')
-                frame.shine:SetTexture('')
-            end
-        end,
-
-        [_G.GuildChallengeAlertSystem] = function(frame)
-            if not frame.bg then
-                frame.bg = F.SetBD(frame)
-                frame.bg:SetPoint('TOPLEFT', 8, -13)
-                frame.bg:SetPoint('BOTTOMRIGHT', -8, 13)
-
-                select(2, frame:GetRegions()):SetTexture('')
-                frame.glow:SetTexture('')
-                frame.shine:SetTexture('')
-            end
-        end,
-
-        [_G.DungeonCompletionAlertSystem] = function(frame)
-            if not frame.bg then
-                frame.bg = F.SetBD(frame)
-                frame.bg:SetPoint('TOPLEFT', 3, -8)
-                frame.bg:SetPoint('BOTTOMRIGHT', -3, 8)
-
-                F.ReskinIcon(frame.dungeonTexture)
-                frame:DisableDrawLayer('Border')
-                frame.heroicIcon:SetTexture('')
-                frame.glowFrame.glow:SetTexture('')
-                frame.shine:SetTexture('')
-            end
-        end,
-
-        [_G.ScenarioAlertSystem] = function(frame)
-            if not frame.bg then
-                frame.bg = F.SetBD(frame)
-                frame.bg:SetInside(frame, 5, 5)
-
-                F.ReskinIcon(frame.dungeonTexture)
-                frame:GetRegions():Hide()
-                select(3, frame:GetRegions()):Hide()
-                frame.glowFrame.glow:SetTexture('')
-                frame.shine:SetTexture('')
-            end
-        end,
-
-        [_G.LegendaryItemAlertSystem] = function(frame)
-            if not frame.bg then
-                frame.bg = F.SetBD(frame)
-                frame.bg:SetPoint('TOPLEFT', 25, -22)
-                frame.bg:SetPoint('BOTTOMRIGHT', -25, 24)
-                frame:HookScript('OnUpdate', fixBg)
-
+                frame.IconBorder:SetAlpha(0)
                 F.ReskinIcon(frame.Icon)
-                frame.Icon:ClearAllPoints()
-                frame.Icon:SetPoint('TOPLEFT', frame.bg, 10, -10)
-
-                frame.Background:SetTexture('')
-                frame.Background2:SetTexture('')
-                frame.Background3:SetTexture('')
-                frame.glow:SetTexture('')
+                frame.Background:Hide()
+                frame.Background2:Hide()
             end
-        end,
+            frame.Icon:SetMask('')
+            frame.Icon:SetTexCoord(unpack(C.TEX_COORD))
+            frame.IconBorder:SetTexture('')
+        end
+    end
 
-        [_G.NewPetAlertSystem] = function(frame)
+    if _G.NewToyAlertSystem then
+        AlertTemplateFunc[_G.NewToyAlertSystem] = function(frame)
             if not frame.bg then
                 frame.bg = F.SetBD(frame)
-                frame.bg:SetPoint('TOPLEFT', 12, -13)
-                frame.bg:SetPoint('BOTTOMRIGHT', -12, 10)
-
+                frame.IconBorder:SetAlpha(0)
                 F.ReskinIcon(frame.Icon)
-                frame.IconBorder:Hide()
-                frame.Background:SetTexture('')
-                frame.shine:SetTexture('')
+                frame.Background:Hide()
+                frame.Background2:Hide()
             end
-        end,
+            frame.Icon:SetMask('')
+            frame.Icon:SetTexCoord(unpack(C.TEX_COORD))
+            frame.IconBorder:SetTexture('')
+        end
+    end
 
-        [_G.InvasionAlertSystem] = function(frame)
-            if not frame.bg then
-                frame.bg = F.SetBD(frame)
-                frame.bg:SetInside(frame, 5, 5)
-
-                local bg, icon = frame:GetRegions()
-                bg:Hide()
-                F.ReskinIcon(icon)
-            end
-        end,
-
-        [_G.EntitlementDeliveredAlertSystem] = function(frame)
+    if _G.EntitlementDeliveredAlertSystem then
+        AlertTemplateFunc[_G.EntitlementDeliveredAlertSystem] = function(frame)
             if not frame.bg then
                 frame.bg = F.SetBD(frame)
                 frame.bg:SetInside(frame, 12, 12)
 
                 F.ReskinIcon(frame.Icon)
-                frame.Title:SetTextColor(0, 0.6, 1)
-                frame.Background:Hide()
+                if frame.Title then
+                    frame.Title:SetTextColor(0, 0.6, 1)
+                end
+                if frame.Background then
+                    frame.Background:Hide()
+                end
             end
-        end,
+        end
+    end
 
-        [_G.RafRewardDeliveredAlertSystem] = function(frame)
+    if _G.RafRewardDeliveredAlertSystem then
+        AlertTemplateFunc[_G.RafRewardDeliveredAlertSystem] = function(frame)
             if not frame.bg then
                 frame.bg = F.SetBD(frame)
                 frame.bg:SetPoint('TOPLEFT', 24, -14)
                 frame.bg:SetPoint('BOTTOMRIGHT', -24, 8)
 
                 F.ReskinIcon(frame.Icon)
-                frame.StandardBackground:SetTexture('')
+                if frame.StandardBackground then
+                    frame.StandardBackground:SetTexture('')
+                end
             end
-        end,
-    }
+        end
+    end
 
-    AlertTemplateFunc[_G.HonorAwardedAlertSystem] = AlertTemplateFunc[_G.MoneyWonAlertSystem]
-    AlertTemplateFunc[_G.MonthlyActivityAlertSystem] = AlertTemplateFunc[_G.CriteriaAlertSystem]
-    AlertTemplateFunc[_G.GarrisonBuildingAlertSystem] = AlertTemplateFunc[_G.GarrisonTalentAlertSystem]
-    AlertTemplateFunc[_G.SkillLineSpecsUnlockedAlertSystem] = AlertTemplateFunc[_G.NewRecipeLearnedAlertSystem]
+    -- Aliases (only if both source and target exist)
+    if _G.MoneyWonAlertSystem and _G.HonorAwardedAlertSystem and AlertTemplateFunc[_G.MoneyWonAlertSystem] then
+        AlertTemplateFunc[_G.HonorAwardedAlertSystem] = AlertTemplateFunc[_G.MoneyWonAlertSystem]
+    end
+    if _G.CriteriaAlertSystem and _G.MonthlyActivityAlertSystem and AlertTemplateFunc[_G.CriteriaAlertSystem] then
+        AlertTemplateFunc[_G.MonthlyActivityAlertSystem] = AlertTemplateFunc[_G.CriteriaAlertSystem]
+    end
 
-    AlertTemplateFunc[_G.GarrisonShipMissionAlertSystem] = AlertTemplateFunc[_G.GarrisonMissionAlertSystem]
-    AlertTemplateFunc[_G.GarrisonShipFollowerAlertSystem] = AlertTemplateFunc[_G.GarrisonMissionAlertSystem]
-    AlertTemplateFunc[_G.GarrisonRandomMissionAlertSystem] = AlertTemplateFunc[_G.GarrisonMissionAlertSystem]
-
-    AlertTemplateFunc[_G.NewToyAlertSystem] = AlertTemplateFunc[_G.NewPetAlertSystem]
-    AlertTemplateFunc[_G.NewMountAlertSystem] = AlertTemplateFunc[_G.NewPetAlertSystem]
-    AlertTemplateFunc[_G.NewRuneforgePowerAlertSystem] = AlertTemplateFunc[_G.NewPetAlertSystem]
-    AlertTemplateFunc[_G.NewCosmeticAlertFrameSystem] = AlertTemplateFunc[_G.NewPetAlertSystem]
+    if _G.GarrisonTalentAlertSystem and _G.GarrisonBuildingAlertSystem and AlertTemplateFunc[_G.GarrisonTalentAlertSystem] then
+        AlertTemplateFunc[_G.GarrisonBuildingAlertSystem] = AlertTemplateFunc[_G.GarrisonTalentAlertSystem]
+    end
+    if _G.NewRecipeLearnedAlertSystem and _G.SkillLineSpecsUnlockedAlertSystem and AlertTemplateFunc[_G.NewRecipeLearnedAlertSystem] then
+        AlertTemplateFunc[_G.SkillLineSpecsUnlockedAlertSystem] = AlertTemplateFunc[_G.NewRecipeLearnedAlertSystem]
+    end
+    if _G.GarrisonMissionAlertSystem and AlertTemplateFunc[_G.GarrisonMissionAlertSystem] then
+        if _G.GarrisonShipMissionAlertSystem then
+            AlertTemplateFunc[_G.GarrisonShipMissionAlertSystem] = AlertTemplateFunc[_G.GarrisonMissionAlertSystem]
+        end
+        if _G.GarrisonShipFollowerAlertSystem then
+            AlertTemplateFunc[_G.GarrisonShipFollowerAlertSystem] = AlertTemplateFunc[_G.GarrisonMissionAlertSystem]
+        end
+        if _G.GarrisonRandomMissionAlertSystem then
+            AlertTemplateFunc[_G.GarrisonRandomMissionAlertSystem] = AlertTemplateFunc[_G.GarrisonMissionAlertSystem]
+        end
+        if _G.GarrisonFollowerAlertSystem then
+            AlertTemplateFunc[_G.GarrisonFollowerAlertSystem] = AlertTemplateFunc[_G.GarrisonMissionAlertSystem]
+        end
+    end
 
     hooksecurefunc(_G.AlertFrame, 'AddAlertFrame', function(_, frame)
+        if not frame or not frame.queue then
+            return
+        end
         local func = AlertTemplateFunc[frame.queue]
         if func then
             func(frame)
@@ -423,30 +334,5 @@ tinsert(C.BlizzThemes, function()
         frame.PvPBackground:SetTexture('')
         frame.BGAtlas:SetAlpha(0)
         lootItem.IconBorder:SetTexture('')
-        lootItem.SpecIcon.bg:SetShown(lootItem.SpecIcon:IsShown() and lootItem.SpecIcon:GetTexture() ~= nil)
-    end)
-
-    -- BonusRollMoneyWonFrame
-    hooksecurefunc('MoneyWonAlertFrame_SetUp', function(frame)
-        if not frame.bg then
-            frame.bg = F.SetBD(frame)
-            frame.bg:SetInside(frame, 5, 5)
-            fixAnim(frame)
-
-            frame.Background:SetTexture('')
-            F.ReskinIcon(frame.Icon)
-            frame.IconBorder:SetTexture('')
-        end
-    end)
-
-    -- Event toast
-    hooksecurefunc(_G.EventToastManagerFrame, 'DisplayToast', function(self)
-        local toast = self.currentDisplayingToast
-        local border = toast and toast.IconBorder
-        if border and not toast.bg then
-            toast.bg = F.ReskinIcon(toast.Icon)
-            border:SetTexture('')
-            F.ReskinIconBorder(border, true)
-        end
     end)
 end)

@@ -194,8 +194,8 @@ local factionStr = {
 function BLIZZARD:ShowLeaderOverallScore()
     local resultID = self.resultID
     local searchResultInfo = resultID and C_LFGList.GetSearchResultInfo(resultID)
-    if searchResultInfo then
-        local activityInfo = C_LFGList.GetActivityInfoTable(searchResultInfo.activityID, nil, searchResultInfo.isWarMode)
+    if searchResultInfo and searchResultInfo.activityID then
+        local activityInfo = C_LFGList.GetActivityInfoTable(searchResultInfo.activityID)
         if activityInfo then
             local showScore = activityInfo.isMythicPlusActivity and searchResultInfo.leaderOverallDungeonScore
                 or activityInfo.isRatedPvpActivity and searchResultInfo.leaderPvpRatingInfo and searchResultInfo.leaderPvpRatingInfo.rating
