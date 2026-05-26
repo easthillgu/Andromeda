@@ -123,10 +123,14 @@ C.Themes['Blizzard_Calendar'] = function()
         F.ClassIconTexCoord(bu:GetNormalTexture(), class)
     end
 
-    F.StripTextures(_G.CalendarFilterFrame)
-    local cffbg = F.CreateBDFrame(_G.CalendarFilterFrame, 0, true)
-    cffbg:SetPoint('TOPLEFT', 35, -1)
-    cffbg:SetPoint('BOTTOMRIGHT', -18, 1)
+    if _G.CalendarFilterFrame then
+        F.StripTextures(_G.CalendarFilterFrame)
+        local cffbg = F.CreateBDFrame(_G.CalendarFilterFrame, 0, true)
+        if cffbg then
+            cffbg:SetPoint('TOPLEFT', 35, -1)
+            cffbg:SetPoint('BOTTOMRIGHT', -18, 1)
+        end
+    end
     F.ReskinArrow(_G.CalendarFilterButton, 'down')
 
     _G.CalendarViewEventFrame:SetPoint('TOPLEFT', _G.CalendarFrame, 'TOPRIGHT', -6, -24)
