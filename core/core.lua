@@ -22,7 +22,7 @@ do
     F:RegisterModule('Inventory')
     F:RegisterModule('ItemLevel')
     F:RegisterModule('Layout')
-    F:RegisterModule('Logo')
+    --F:RegisterModule('Logo')
     F:RegisterModule('Map')
     F:RegisterModule('Nameplate')
     F:RegisterModule('Notification')
