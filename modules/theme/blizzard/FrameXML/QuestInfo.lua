@@ -218,10 +218,12 @@ tinsert(C.BlizzThemes, function()
         end
 
         -- Reputation Rewards
-        for repReward in rewardsFrame.reputationRewardPool:EnumerateActive() do
-            if not repReward.styled then
-                reskinRewardButton(repReward)
-                repReward.styled = true
+        if rewardsFrame.reputationRewardPool then
+            for repReward in rewardsFrame.reputationRewardPool:EnumerateActive() do
+                if not repReward.styled then
+                    reskinRewardButton(repReward)
+                    repReward.styled = true
+                end
             end
         end
     end)
