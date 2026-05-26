@@ -240,6 +240,18 @@ function UNITFRAME:UpdateAllElements()
 end
 
 function UNITFRAME:OnLogin()
+    -- 3.80.1: EditModeManagerFrame doesn't exist, manually hide Blizzard castbars
+    if _G.PlayerCastingBarFrame then
+        _G.PlayerCastingBarFrame:Hide()
+        _G.PlayerCastingBarFrame:UnregisterAllEvents()
+        _G.PlayerCastingBarFrame.Show = function() end
+    end
+    if _G.PetCastingBarFrame then
+        _G.PetCastingBarFrame:Hide()
+        _G.PetCastingBarFrame:UnregisterAllEvents()
+        _G.PetCastingBarFrame.Show = function() end
+    end
+
     UNITFRAME:InitFilters()
     UNITFRAME:SpawnUnits()
     UNITFRAME:UpdateAllElements()
