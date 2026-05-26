@@ -26,8 +26,7 @@
     <!--<Script file="Blizzard_BlackMarketUI.lua"/>-->
     <!-- 3.80.1: InterfaceOptionsFrame missing -->
     <!--<Script file="Blizzard_BlizzardOptions.lua"/>-->
-    <!-- 3.80.1: CalendarFrame missing -->
-    <!--<Script file="Blizzard_Calendar.lua"/>-->
+    <Script file="Blizzard_Calendar.lua"/>
     <!-- 3.80.1: MoP Challenges, not available -->
     <!--<Script file="Blizzard_ChallengesUI.lua"/>-->
     <Script file="Blizzard_Channels.lua"/>

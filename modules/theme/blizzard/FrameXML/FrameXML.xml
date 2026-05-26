@@ -49,6 +49,7 @@
     <!--<Script file="PVPMatch.lua"/>-->
     <Script file="QuestFrame.lua"/>
     <Script file="QuestInfo.lua"/>
+    <Script file="QuestLogFrame.lua"/>
     <!-- 3.80.1: Legion Quest Map, not available -->
     <!--<Script file="QuestMapFrame.lua"/>-->
     <!-- 3.80.1: Retail Queue Status, not available -->

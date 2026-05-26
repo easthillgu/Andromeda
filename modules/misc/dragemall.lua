@@ -30,6 +30,7 @@ local frames = {
     --    ['ProfessionsFrame'] = false,
     ['PVEFrame'] = false,
     ['QuestFrame'] = false,
+    ['QuestLogFrame'] = false,
     ['RaidParentFrame'] = false,
     ['ReputationFrame'] = true,
     ['SendMailFrame'] = true,
