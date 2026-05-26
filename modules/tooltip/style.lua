@@ -347,8 +347,12 @@ TOOLTIP:RegisterTooltips('Blizzard_EncounterJournal', function()
 end)
 
 TOOLTIP:RegisterTooltips('Blizzard_Calendar', function()
-    _G.CalendarContextMenu:HookScript('OnShow', TOOLTIP.ReskinTooltip)
-    _G.CalendarInviteStatusContextMenu:HookScript('OnShow', TOOLTIP.ReskinTooltip)
+    if _G.CalendarContextMenu then
+        _G.CalendarContextMenu:HookScript('OnShow', TOOLTIP.ReskinTooltip)
+    end
+    if _G.CalendarInviteStatusContextMenu then
+        _G.CalendarInviteStatusContextMenu:HookScript('OnShow', TOOLTIP.ReskinTooltip)
+    end
 end)
 
 TOOLTIP:RegisterTooltips('Blizzard_PerksProgram', function()

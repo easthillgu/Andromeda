@@ -68,6 +68,10 @@ function BLIZZARD:DurabilityFrameMover()
     frame:SetSize(100, 100)
     F.Mover(frame, L['DurabilityIndicator'], 'DurabilityIndicator', { 'TOPRIGHT', _G.ObjectiveTrackerFrame, 'TOPLEFT', -10, 0 })
 
+    if not _G.DurabilityFrame.UpdateHeight then
+        _G.DurabilityFrame.UpdateHeight = nop
+    end
+
     hooksecurefunc(_G.DurabilityFrame, 'SetPoint', function(self, _, parent)
         if parent == 'MinimapCluster' or parent == _G.MinimapCluster then
             self:ClearAllPoints()

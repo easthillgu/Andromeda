@@ -51,8 +51,6 @@ function ACTIONBAR:UpdateStance()
 
         if not inCombat then
             button:Show()
-        else
-            button:Hide()
         end
 
         texture, isActive, isCastable = GetShapeshiftFormInfo(i)
@@ -77,10 +75,12 @@ function ACTIONBAR:UpdateStance()
         end
     end
 
-    for i = numForms + 1, num do
-        local button = _G['StanceButton' .. i]
-        if button then
-            button:Hide()
+    if not inCombat then
+        for i = numForms + 1, num do
+            local button = _G['StanceButton' .. i]
+            if button then
+                button:Hide()
+            end
         end
     end
 end
