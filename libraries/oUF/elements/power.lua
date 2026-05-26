@@ -206,9 +206,10 @@ local function UpdateColor(self, event, unit)
 			element:GetStatusBarTexture():SetVertexColor(r, g, b)
 		elseif(color) then
 			if color.GetRGB then
-				element:GetStatusBarTexture():SetVertexColor(color[1], color[2], color[3])
+				local cr, cg, cb = color:GetRGB()
+				element:GetStatusBarTexture():SetVertexColor(cr, cg, cb)
 			else
-				element:GetStatusBarTexture():SetVertexColor(color[1] or 1, color[2] or 1, color[3] or 1)
+				element:GetStatusBarTexture():SetVertexColor(color.r or color[1] or 1, color.g or color[2] or 1, color.b or color[3] or 1)
 			end
 		end
 	end
