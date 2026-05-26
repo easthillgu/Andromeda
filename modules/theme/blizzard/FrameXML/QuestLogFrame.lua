@@ -5,8 +5,11 @@ tinsert(C.BlizzThemes, function()
     if not QuestLogFrame then return end
 
     F.ReskinPortraitFrame(QuestLogFrame)
+    F.ReskinPortraitFrame(_G.QuestLogDetailFrame)
 
     F.StripTextures(_G.QuestLogScrollFrame, 0)
+    F.StripTextures(_G.QuestLogCount)
+    F.CreateBDFrame(_G.QuestLogCount, 0.25)
 
     if C.IS_NEW_PATCH_10_1 then
         F.ReskinTrimScroll(_G.QuestLogScrollFrame.ScrollBar)
@@ -14,9 +17,23 @@ tinsert(C.BlizzThemes, function()
         F.ReskinScroll(_G.QuestLogScrollFrameScrollBar)
     end
 
+    F.ReskinScroll(_G.QuestLogDetailScrollFrameScrollBar)
+    F.ReskinScroll(_G.QuestLogListScrollFrameScrollBar)
+
     F.ReskinButton(_G.QuestLogFrameAbandonButton)
     F.ReskinButton(_G.QuestLogFrameTrackButton)
     F.ReskinButton(_G.QuestLogFrameShareButton)
+    F.ReskinButton(_G.QuestLogFrameCancelButton)
+    F.ReskinButton(_G.QuestFramePushQuestButton)
+
+    hooksecurefunc('QuestLog_Update', function()
+        for _, button in pairs(_G.QuestLogListScrollFrame.buttons) do
+            if button and not button.styled then
+                F.ReskinCollapse(button)
+                button.styled = true
+            end
+        end
+    end)
 
     hooksecurefunc('QuestLog_UpdateQuestDetails', function()
         local rewardsFrame = _G.QuestInfoFrame.rewardsFrame
