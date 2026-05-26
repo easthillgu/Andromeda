@@ -58,11 +58,9 @@ function M:Bar_Update()
             rest:SetValue(min(xp + rxp, mxp))
             rest:Show()
         end
-
-        if IsXPUserDisabled() then
-            self:SetStatusBarColor(0.7, 0, 0)
-        end
-    elseif GetWatchedFactionInfo() then
+    elseif IsXPUserDisabled() then
+        self:SetStatusBarColor(0.7, 0, 0)
+    --[[elseif GetWatchedFactionInfo() then
         local _, standing, barMin, barMax, value, factionID = GetWatchedFactionInfo()
 
         if factionID and C_MajorFactions and C_Reputation.IsMajorFaction(factionID) then
@@ -96,6 +94,8 @@ function M:Bar_Update()
         self:SetMinMaxValues(barMin, barMax)
         self:SetValue(value)
         self:Show()
+    end]]
+
     elseif IsWatchingHonorAsXP() then
         local current, barMax = UnitHonor('player'), UnitHonorMax('player')
         self:SetStatusBarColor(1, 0.24, 0)
@@ -194,12 +194,13 @@ function M:Bar_OnEnter()
         end
     end
 
-    if IsWatchingHonorAsXP() then
+    --[[if IsWatchingHonorAsXP() then
         local current, barMax, level = UnitHonor('player'), UnitHonorMax('player'), UnitHonorLevel('player')
         _G.GameTooltip:AddLine(' ')
         _G.GameTooltip:AddLine(_G.HONOR, 0, 0.6, 1)
         _G.GameTooltip:AddDoubleLine(_G.LEVEL .. ' ' .. level, current .. ' / ' .. barMax, 0.6, 0.8, 1, 1, 1, 1)
     end
+    ]]--
 
     -- 3.80.1: Azerite, Artifact, Covenant tooltip sections removed (Retail-only)
 
@@ -232,6 +233,7 @@ end
 
 -- #TODO
 -- Paragon reputation info
+--[[
 function M:ParagonReputationSetup()
     hooksecurefunc('ReputationFrame_InitReputationRow', function(factionRow)
         local factionID = factionRow.factionID
@@ -249,9 +251,11 @@ function M:ParagonReputationSetup()
                 factionBar:SetValue(barValue)
                 factionStanding:SetText(factionStandingtext)
                 factionRow.standingText = factionStandingtext
-                factionRow.rolloverText = format(_G.REPUTATION_PROGRESS_FORMAT, BreakUpLargeNumbers(barValue),
+                local progressFormat = _G.REPUTATION_PROGRESS_FORMAT
+                factionRow.rolloverText = format(progressFormat, BreakUpLargeNumbers(barValue),
                     BreakUpLargeNumbers(threshold))
             end
         end
     end)
 end
+]]--
