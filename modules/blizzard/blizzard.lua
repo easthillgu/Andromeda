@@ -111,7 +111,7 @@ function BLIZZARD:UIWidgetFrameMover()
     end)
     end
 end
-
+--[[
 -- Add ClickBinding tab to SpellBookFrame
 function BLIZZARD:ClickBindingTab()
     local cb = CreateFrame('CheckButton', C.ADDON_TITLE .. 'ClickCastingTab', _G.SpellBookSideTabsFrame, 'SpellBookSkillLineTabTemplate')
@@ -140,7 +140,7 @@ function BLIZZARD:ClickBindingTab()
         end
     end)
 end
-
+]]
 -- Kill blizz tutorial, real man dont need these crap
 -- Credit: ketho
 -- https://github.com/ketho-wow/HideTutorial
