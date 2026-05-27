@@ -140,9 +140,15 @@ C.Themes['Blizzard_Calendar'] = function()
     _G.CalendarCreateEventInviteButton:SetPoint('TOPLEFT', _G.CalendarCreateEventInviteEdit, 'TOPRIGHT', 1, 1)
     _G.CalendarClassButton1:SetPoint('TOPLEFT', _G.CalendarClassButtonContainer, 'TOPLEFT', 5, 0)
 
-    _G.CalendarCreateEventHourDropDown:SetWidth(80)
-    _G.CalendarCreateEventMinuteDropDown:SetWidth(80)
-    _G.CalendarCreateEventAMPMDropDown:SetWidth(90)
+    if _G.CalendarCreateEventHourDropDown then
+        _G.CalendarCreateEventHourDropDown:SetWidth(80)
+    end
+    if _G.CalendarCreateEventMinuteDropDown then
+        _G.CalendarCreateEventMinuteDropDown:SetWidth(80)
+    end
+    if _G.CalendarCreateEventAMPMDropDown then
+        _G.CalendarCreateEventAMPMDropDown:SetWidth(90)
+    end
 
     local line = _G.CalendarMassInviteFrame:CreateTexture(nil, 'BACKGROUND')
     line:SetSize(240, C.MULT)
@@ -207,5 +213,7 @@ C.Themes['Blizzard_Calendar'] = function()
     _G.CalendarNextMonthButton:SetSize(19, 19)
     F.ReskinCheckbox(_G.CalendarCreateEventLockEventCheck)
 
-    _G.CalendarCreateEventDifficultyOptionDropDown:SetWidth(150)
+    if _G.CalendarCreateEventDifficultyOptionDropDown then
+        _G.CalendarCreateEventDifficultyOptionDropDown:SetWidth(150)
+    end
 end

@@ -37,7 +37,7 @@
     <!-- 3.80.1: Retail ClickBinding, not available -->
     <!--<Script file="Blizzard_ClickBindingUI.lua"/>-->
     <!-- 3.80.1: CollectionsJournal missing -->
-    <!--<Script file="Blizzard_Collections.lua"/>-->
+    <Script file="Blizzard_Collections.lua"/>
     <!-- 3.80.1: CombatLogFrame missing -->
     <!--<Script file="Blizzard_CombatLog.lua"/>-->
     <Script file="Blizzard_Communities.lua"/>

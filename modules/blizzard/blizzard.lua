@@ -28,7 +28,9 @@ function BLIZZARD:OnLogin()
     -- BLIZZARD:EnhancedFriendsList()
     BLIZZARD:EnhancedPremade()
     BLIZZARD:EnhancedDressup()
-    BLIZZARD:ClickBindingTab()
+    if BLIZZARD.ClickBindingTab then
+        BLIZZARD:ClickBindingTab()
+    end
 end
 
 function BLIZZARD:UpdateBossBanner()

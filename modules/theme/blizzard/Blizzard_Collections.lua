@@ -25,9 +25,13 @@ local function reskinFrameButton(self)
                 child.DragButton:GetHighlightTexture():SetAllPoints(icon)
             else
                 child.dragButton.ActiveTexture:SetTexture('')
-                child.dragButton.levelBG:SetAlpha(0)
-                child.dragButton.level:SetFontObject(_G.GameFontNormal)
-                child.dragButton.level:SetTextColor(1, 1, 1)
+                if child.dragButton.levelBG then
+                    child.dragButton.levelBG:SetAlpha(0)
+                end
+                if child.dragButton.level then
+                    child.dragButton.level:SetFontObject(_G.GameFontNormal)
+                    child.dragButton.level:SetTextColor(1, 1, 1)
+                end
                 child.dragButton:GetHighlightTexture():SetColorTexture(1, 1, 1, 0.25)
                 child.dragButton:GetHighlightTexture():SetAllPoints(icon)
             end
@@ -66,9 +70,15 @@ C.Themes['Blizzard_Collections'] = function()
     MountJournal.MountDisplay.ShadowOverlay:Hide()
     PetJournal.LeftInset:Hide()
     PetJournal.RightInset:Hide()
-    PetJournal.PetCardInset:Hide()
-    PetJournal.loadoutBorder:Hide()
-    _G.PetJournalTutorialButton.Ring:Hide()
+    if PetJournal.PetCardInset then
+        PetJournal.PetCardInset:Hide()
+    end
+    if PetJournal.loadoutBorder then
+        PetJournal.loadoutBorder:Hide()
+    end
+    if _G.PetJournalTutorialButton then
+        _G.PetJournalTutorialButton.Ring:Hide()
+    end
 
     F.StripTextures(MountJournal.MountCount)
     F.CreateBDFrame(MountJournal.MountCount, 0.25)
@@ -145,23 +155,34 @@ C.Themes['Blizzard_Collections'] = function()
     F.ReskinEditbox(_G.PetJournalSearchBox)
     F.ReskinArrow(MountJournal.MountDisplay.ModelScene.RotateLeftButton, 'left')
     F.ReskinArrow(MountJournal.MountDisplay.ModelScene.RotateRightButton, 'right')
-    F.ReskinFilterButton(_G.PetJournalFilterButton)
-    F.ReskinFilterButton(_G.MountJournalFilterButton)
+    F.ReskinDropdown(_G.PetJournalFilterButton)
+    F.ReskinDropdown(_G.MountJournalFilterButton)
 
     local togglePlayer = MountJournal.MountDisplay.ModelScene.TogglePlayer
-    F.ReskinCheckbox(togglePlayer)
-    togglePlayer:SetSize(28, 28)
+    if togglePlayer then
+        F.ReskinCheckbox(togglePlayer)
+        togglePlayer:SetSize(28, 28)
+    end
 
     F.StripTextures(MountJournal.BottomLeftInset)
     local bg = F.CreateBDFrame(MountJournal.BottomLeftInset, 0.25)
-    bg:SetPoint('TOPLEFT', 3, 0)
-    bg:SetPoint('BOTTOMRIGHT', -24, 2)
+    if bg then
+        bg:SetPoint('TOPLEFT', 3, 0)
+        bg:SetPoint('BOTTOMRIGHT', -24, 2)
+    end
 
-    _G.MountJournalFilterButton:SetPoint('TOPRIGHT', MountJournal.LeftInset, -5, -8)
-    _G.PetJournalFilterButton:SetPoint('TOPRIGHT', _G.PetJournalLeftInset, -5, -8)
-    _G.PetJournalTutorialButton:SetPoint('TOPLEFT', PetJournal, 'TOPLEFT', -14, 14)
+    if _G.MountJournalFilterButton then
+        _G.MountJournalFilterButton:SetPoint('TOPRIGHT', MountJournal.LeftInset, -5, -8)
+    end
+    if _G.PetJournalFilterButton then
+        _G.PetJournalFilterButton:SetPoint('TOPRIGHT', _G.PetJournalLeftInset, -5, -8)
+    end
+    if _G.PetJournalTutorialButton then
+        _G.PetJournalTutorialButton:SetPoint('TOPLEFT', PetJournal, 'TOPLEFT', -14, 14)
+    end
 
     local function reskinToolButton(button)
+        if not button then return end
         local border = _G[button:GetName() .. 'Border']
         if border then
             border:Hide()
@@ -173,8 +194,10 @@ C.Themes['Blizzard_Collections'] = function()
 
     reskinToolButton(_G.PetJournalHealPetButton)
 
-    _G.PetJournalLoadoutBorderSlotHeaderText:SetParent(PetJournal)
-    _G.PetJournalLoadoutBorderSlotHeaderText:SetPoint('CENTER', _G.PetJournalLoadoutBorderTop, 'TOP', 0, 4)
+    if _G.PetJournalLoadoutBorderSlotHeaderText then
+        _G.PetJournalLoadoutBorderSlotHeaderText:SetParent(PetJournal)
+        _G.PetJournalLoadoutBorderSlotHeaderText:SetPoint('CENTER', _G.PetJournalLoadoutBorderTop, 'TOP', 0, 4)
+    end
 
     reskinToolButton(_G.PetJournalSummonRandomFavoritePetButton)
 
@@ -184,7 +207,7 @@ C.Themes['Blizzard_Collections'] = function()
 
     local movedButton
     MountJournal:HookScript('OnShow', function()
-        if not InCombatLockdown() and not movedButton then
+        if not InCombatLockdown() and not movedButton and _G.MountJournalSummonRandomFavoriteButton then
             _G.MountJournalSummonRandomFavoriteButton:SetPoint('TOPRIGHT', -10, -26)
             movedButton = true
         end
@@ -193,18 +216,34 @@ C.Themes['Blizzard_Collections'] = function()
     -- Pet card
 
     local card = _G.PetJournalPetCard
+    if not card then return end
 
-    _G.PetJournalPetCardBG:Hide()
-    card.PetInfo.levelBG:SetAlpha(0)
-    card.PetInfo.qualityBorder:SetAlpha(0)
-    card.AbilitiesBG1:SetAlpha(0)
-    card.AbilitiesBG2:SetAlpha(0)
-    card.AbilitiesBG3:SetAlpha(0)
+    if _G.PetJournalPetCardBG then
+        _G.PetJournalPetCardBG:Hide()
+    end
+    if card.PetInfo then
+        if card.PetInfo.levelBG then
+            card.PetInfo.levelBG:SetAlpha(0)
+        end
+        if card.PetInfo.qualityBorder then
+            card.PetInfo.qualityBorder:SetAlpha(0)
+        end
+        if card.PetInfo.level then
+            card.PetInfo.level:SetFontObject(_G.GameFontNormal)
+            card.PetInfo.level:SetTextColor(1, 1, 1)
+        end
 
-    card.PetInfo.level:SetFontObject(_G.GameFontNormal)
-    card.PetInfo.level:SetTextColor(1, 1, 1)
-
-    card.PetInfo.icon.bg = F.ReskinIcon(card.PetInfo.icon)
+        card.PetInfo.icon.bg = F.ReskinIcon(card.PetInfo.icon)
+    end
+    if card.AbilitiesBG1 then
+        card.AbilitiesBG1:SetAlpha(0)
+    end
+    if card.AbilitiesBG2 then
+        card.AbilitiesBG2:SetAlpha(0)
+    end
+    if card.AbilitiesBG3 then
+        card.AbilitiesBG3:SetAlpha(0)
+    end
 
     F.CreateBDFrame(card, 0.25)
 
@@ -323,7 +362,7 @@ C.Themes['Blizzard_Collections'] = function()
 
     F.StripTextures(iconsFrame)
     F.ReskinEditbox(ToyBox.searchBox)
-    F.ReskinFilterButton(_G.ToyBoxFilterButton)
+    F.ReskinDropdown(_G.ToyBoxFilterButton)
     F.ReskinArrow(ToyBox.PagingFrame.PrevPageButton, 'left')
     F.ReskinArrow(ToyBox.PagingFrame.NextPageButton, 'right')
 
@@ -388,7 +427,7 @@ C.Themes['Blizzard_Collections'] = function()
     F.StripTextures(icons)
     F.ReskinEditbox(_G.HeirloomsJournalSearchBox)
     F.ReskinDropdown(_G.HeirloomsJournalClassDropDown)
-    F.ReskinFilterButton(HeirloomsJournal.FilterButton)
+    F.ReskinDropdown(HeirloomsJournal.FilterButton)
     F.ReskinArrow(HeirloomsJournal.PagingFrame.PrevPageButton, 'left')
     F.ReskinArrow(HeirloomsJournal.PagingFrame.NextPageButton, 'right')
 
@@ -488,20 +527,26 @@ C.Themes['Blizzard_Collections'] = function()
     local ItemsCollectionFrame = WardrobeCollectionFrame.ItemsCollectionFrame
 
     F.StripTextures(ItemsCollectionFrame)
-    F.ReskinFilterButton(WardrobeCollectionFrame.FilterButton)
+    F.ReskinDropdown(WardrobeCollectionFrame.FilterButton)
     F.ReskinDropdown(_G.WardrobeCollectionFrameWeaponDropDown)
     F.ReskinEditbox(_G.WardrobeCollectionFrameSearchBox)
 
+    for index = 1, 2 do
+        local tab = _G['WardrobeCollectionFrameTab' .. index]
+        if tab then
+            F.ReskinTab(tab)
+        end
+    end
+
     hooksecurefunc(WardrobeCollectionFrame, 'SetTab', function(self, tabID)
         for index = 1, 2 do
-            local tab = self.Tabs[index]
-            if not tab.bg then
-                F.ReskinTab(tab)
-            end
-            if tabID == index then
-                tab.bg:SetBackdropColor(C.r, C.g, C.b, 0.25)
-            else
-                tab.bg:SetBackdropColor(0, 0, 0, 0.25)
+            local tab = _G['WardrobeCollectionFrameTab' .. index]
+            if tab and tab.bg then
+                if tabID == index then
+                    tab.bg:SetBackdropColor(C.r, C.g, C.b, 0.25)
+                else
+                    tab.bg:SetBackdropColor(0, 0, 0, 0.25)
+                end
             end
         end
     end)
