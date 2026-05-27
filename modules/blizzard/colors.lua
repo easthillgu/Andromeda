@@ -197,7 +197,9 @@ do
         if strfind(message, '|cff') then
             for hex, class in pairs(blizzHexColors) do
                 local color = C.ClassColors[class]
-                message = gsub(message, hex, color.colorStr)
+                if color and color.colorStr then
+                    message = gsub(message, hex, color.colorStr)
+                end
             end
         end
         return AddMessage(frame, message, ...)

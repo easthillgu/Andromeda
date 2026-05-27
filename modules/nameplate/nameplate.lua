@@ -707,7 +707,7 @@ end
 function NAMEPLATE:OnUnitFactionChanged(unit)
     local nameplate = C_NamePlate.GetNamePlateForUnit(unit, issecure())
     local unitFrame = nameplate and nameplate.unitFrame
-    if unitFrame and unitFrame.unitName then
+    if unitFrame and unitFrame.unitName and unitFrame.NameTag then
         NAMEPLATE.RefreshPlateType(unitFrame, unit)
     end
 end

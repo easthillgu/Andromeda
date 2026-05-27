@@ -159,7 +159,7 @@ local function IsUnitInRange(unit)
             if not maxRange then
                 maxRange = minRange
             end
-            if maxRange < 30 then
+            if maxRange and maxRange < 30 then
                 return true
             end
         end
@@ -168,7 +168,7 @@ local function IsUnitInRange(unit)
             if not maxRange then
                 maxRange = minRange
             end
-            if maxRange < 40 then
+            if maxRange and maxRange < 40 then
                 return true
             end
         end

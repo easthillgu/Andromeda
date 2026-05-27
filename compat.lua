@@ -524,9 +524,13 @@ end
 -- C_Garrison stub (6.0+, not in 3.80.1; Map minimap 用到)
 ---------------------------------------------------------------------------
 if not _G.C_Garrison then
-    _G.C_Garrison = {
-        HasGarrison = function() return false end,
-    }
+    _G.C_Garrison = {}
+end
+if not _G.C_Garrison.HasGarrison then
+    _G.C_Garrison.HasGarrison = function() return false end
+end
+if not _G.C_Garrison.IsOnGarrisonMap then
+    _G.C_Garrison.IsOnGarrisonMap = function() return false end
 end
 
 ---------------------------------------------------------------------------

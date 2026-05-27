@@ -138,6 +138,8 @@ function NAMEPLATE.ConfigureNameTag(frame)
     local name = frame.NameTag
     local outline = _G.ANDROMEDA_ADB.FontOutline
 
+    if not name then return end
+
     name:SetShown(not frame.widgetsOnly)
     name:ClearAllPoints()
 
