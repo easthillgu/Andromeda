@@ -534,14 +534,14 @@ end
 
 function NAMEPLATE:ToggleNameplateAuras()
     if C.DB.Nameplate.ShowAura then
-        if not self:IsElementEnabled('Auras') then
+        if self.IsElementEnabled and not self:IsElementEnabled('Auras') then
             self:EnableElement('Auras')
         end
         if self.Auras then
             self.Auras:Show()
         end
     else
-        if self:IsElementEnabled('Auras') then
+        if self.IsElementEnabled and self:IsElementEnabled('Auras') then
             self:DisableElement('Auras')
         end
         if self.Auras then
@@ -655,7 +655,7 @@ function NAMEPLATE:UpdatePlateByType()
         return
     elseif self.plateType == 'NameOnly' then
         for _, element in pairs(disabledElements) do
-            if self:IsElementEnabled(element) then
+            if self.IsElementEnabled and self:IsElementEnabled(element) then
                 self:DisableElement(element)
             end
         end
@@ -666,7 +666,7 @@ function NAMEPLATE:UpdatePlateByType()
         end
     else
         for _, element in pairs(disabledElements) do
-            if not self:IsElementEnabled(element) then
+            if self.IsElementEnabled and not self:IsElementEnabled(element) then
                 self:EnableElement(element)
             end
         end
