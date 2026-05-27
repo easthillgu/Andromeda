@@ -115,7 +115,33 @@ tinsert(C.BlizzThemes, function()
         end
     end
     F.ReskinDropdown(_G.LFDQueueFrameTypeDropDown)
-    
+
+    -- 3.80.1: define role button lists before reskinLFDButtons (closure needs them)
+    local tanks = {
+        _G.LFDQueueFrameRoleButtonTank,
+        _G.LFDRoleCheckPopupRoleButtonTank,
+        _G.RaidFinderQueueFrameRoleButtonTank,
+        _G.LFGInvitePopupRoleButtonTank,
+        _G.LFGListApplicationDialog.TankButton,
+        _G.LFGDungeonReadyStatusGroupedTank,
+    }
+    local healers = {
+        _G.LFDQueueFrameRoleButtonHealer,
+        _G.LFDRoleCheckPopupRoleButtonHealer,
+        _G.RaidFinderQueueFrameRoleButtonHealer,
+        _G.LFGInvitePopupRoleButtonHealer,
+        _G.LFGListApplicationDialog.HealerButton,
+        _G.LFGDungeonReadyStatusGroupedHealer,
+    }
+    local dps = {
+        _G.LFDQueueFrameRoleButtonDPS,
+        _G.LFDRoleCheckPopupRoleButtonDPS,
+        _G.RaidFinderQueueFrameRoleButtonDPS,
+        _G.LFGInvitePopupRoleButtonDPS,
+        _G.LFGListApplicationDialog.DamagerButton,
+        _G.LFGDungeonReadyStatusGroupedDamager,
+    }
+
     local function reskinLFDButtons()
         if _G.LFDQueueFrameFindGroupButton then
             F.ReskinButton(_G.LFDQueueFrameFindGroupButton)
@@ -131,6 +157,15 @@ tinsert(C.BlizzThemes, function()
         end
         if _G.LFDQueueFrameRandomScrollFrameChildFrameMoneyReward then
             styleRewardButton(_G.LFDQueueFrameRandomScrollFrameChildFrameMoneyReward)
+        end
+        -- 3.80.1: reskin role buttons on each update (Blizzard may recreate them)
+        if _G.LFDQueueFrameRoleButtonTank then
+            reskinRoleButton(tanks, 'TANK')
+            reskinRoleButton(healers, 'HEALER')
+            reskinRoleButton(dps, 'DPS')
+        end
+        if _G.LFDQueueFrameRoleButtonLeader then
+            F.ReskinRole(_G.LFDQueueFrameRoleButtonLeader, 'LEADER')
         end
     end
     
@@ -217,36 +252,6 @@ tinsert(C.BlizzThemes, function()
     F.ReskinButton(_G.LFGInvitePopupDeclineButton)
     F.ReskinClose(_G.LFGDungeonReadyDialogCloseButton)
     F.ReskinClose(_G.LFGDungeonReadyStatusCloseButton)
-
-    local tanks = {
-        _G.LFDQueueFrameRoleButtonTank,
-        _G.LFDRoleCheckPopupRoleButtonTank,
-        _G.RaidFinderQueueFrameRoleButtonTank,
-        _G.LFGInvitePopupRoleButtonTank,
-        _G.LFGListApplicationDialog.TankButton,
-        _G.LFGDungeonReadyStatusGroupedTank,
-    }
-    reskinRoleButton(tanks, 'TANK')
-
-    local healers = {
-        _G.LFDQueueFrameRoleButtonHealer,
-        _G.LFDRoleCheckPopupRoleButtonHealer,
-        _G.RaidFinderQueueFrameRoleButtonHealer,
-        _G.LFGInvitePopupRoleButtonHealer,
-        _G.LFGListApplicationDialog.HealerButton,
-        _G.LFGDungeonReadyStatusGroupedHealer,
-    }
-    reskinRoleButton(healers, 'HEALER')
-
-    local dps = {
-        _G.LFDQueueFrameRoleButtonDPS,
-        _G.LFDRoleCheckPopupRoleButtonDPS,
-        _G.RaidFinderQueueFrameRoleButtonDPS,
-        _G.LFGInvitePopupRoleButtonDPS,
-        _G.LFGListApplicationDialog.DamagerButton,
-        _G.LFGDungeonReadyStatusGroupedDamager,
-    }
-    reskinRoleButton(dps, 'DPS')
 
     F.ReskinRole(_G.LFDQueueFrameRoleButtonLeader, 'LEADER')
     F.ReskinRole(_G.RaidFinderQueueFrameRoleButtonLeader, 'LEADER')

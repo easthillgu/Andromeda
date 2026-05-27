@@ -105,8 +105,8 @@
     <!--<Script file="Blizzard_Soulbinds.lua"/>-->
     <!-- 3.80.1: Retail Subscription Interstitial, not available -->
     <!--<Script file="Blizzard_SubscriptionInterstitialUI.lua"/>-->
-    <!-- 3.80.1: PlayerTalentFrame missing -->
-    <!--<Script file="Blizzard_TalentUI.lua"/>-->
+    <!-- 3.80.1: PlayerTalentFrame exists, re-enabled -->
+    <Script file="Blizzard_TalentUI.lua"/>
     <Script file="Blizzard_Tooltip.lua"/>
     <!-- 3.80.1: SL Torghast Level Picker, not available -->
     <!--<Script file="Blizzard_TorghastLevelPicker.lua"/>-->
