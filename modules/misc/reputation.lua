@@ -1,6 +1,8 @@
 local F, C, L = unpack(select(2, ...))
 local ER = F:RegisterModule('EnhancedReputation')
 
+-- 3.80.1: C_Reputation (paragon system) not available; all paragon paths already nil-guarded
+
 -- #FIXME
 
 local rep = {}

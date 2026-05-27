@@ -758,12 +758,13 @@ GUI.OptionsList = {
             L['Durability Low'],
             true,
         },
-        {
-            1,
-            'Notification',
-            'ParagonChest',
-            L['Paragon Award'],
-        },
+        -- 3.80.1: Paragon not available
+        --{
+        --    1,
+        --    'Notification',
+        --    'ParagonChest',
+        --    L['Paragon Award'],
+        --},
         {
             1,
             'ACCOUNT',
@@ -1823,7 +1824,8 @@ GUI.OptionsList = {
             L['Show Mythic Plus Score'],
             true,
         },
-        { 1, 'Tooltip', 'Covenant', L['Show Covenant'] },
+        -- 3.80.1: Covenant not available
+        -- { 1, 'Tooltip', 'Covenant', L['Show Covenant'] },
         {
             1,
             'Tooltip',

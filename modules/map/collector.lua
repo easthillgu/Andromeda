@@ -10,7 +10,8 @@ local buttonBlackList = {
     ['MiniMapBattlefieldFrame'] = true,
     ['QueueStatusButton'] = true,
     ['QueueStatusMinimapButton'] = true,
-    ['GarrisonLandingPageMinimapButton'] = true,
+    -- 3.80.1: Garrison not available
+    --['GarrisonLandingPageMinimapButton'] = true,
     ['MinimapZoneTextButton'] = true,
     [C.ADDON_TITLE .. 'MinimapAddOnIconCollectorTray'] = true,
     [C.ADDON_TITLE .. 'MinimapAddOnIconCollector'] = true,

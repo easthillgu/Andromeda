@@ -126,6 +126,8 @@ tinsert(C.BlizzThemes, function()
 
     -- Pet battle queue popup
 
+    -- 3.80.1: Pet battles not available; nil guard
+    if _G.PetBattleQueueReadyFrame then
     F.SetBD(_G.PetBattleQueueReadyFrame)
     F.CreateBDFrame(_G.PetBattleQueueReadyFrame.Art)
     if _G.PetBattleQueueReadyFrame.Border then
@@ -133,6 +135,7 @@ tinsert(C.BlizzThemes, function()
     end
     F.ReskinButton(_G.PetBattleQueueReadyFrame.AcceptButton)
     F.ReskinButton(_G.PetBattleQueueReadyFrame.DeclineButton)
+    end
 
     -- PlayerReportFrame
     F.StripTextures(_G.ReportFrame)

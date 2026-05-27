@@ -266,6 +266,7 @@ tinsert(C.BlizzThemes, function()
         AlertTemplateFunc[_G.MonthlyActivityAlertSystem] = AlertTemplateFunc[_G.CriteriaAlertSystem]
     end
 
+    -- 3.80.1: Garrison alert systems not available; already nil-guarded
     if _G.GarrisonTalentAlertSystem and _G.GarrisonBuildingAlertSystem and AlertTemplateFunc[_G.GarrisonTalentAlertSystem] then
         AlertTemplateFunc[_G.GarrisonBuildingAlertSystem] = AlertTemplateFunc[_G.GarrisonTalentAlertSystem]
     end

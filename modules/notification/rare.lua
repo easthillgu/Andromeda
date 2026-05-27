@@ -40,7 +40,9 @@ local function onEvent(id)
             return
         end
 
-        F:CreateNotification(_G.GARRISON_MISSION_RARE, tex .. (info.name or ''), 'Interface\\ICONS\\INV_Misc_Map_01')
+        -- 3.80.1: Garrison not available; use fallback string
+        local missionRare = _G.GARRISON_MISSION_RARE or 'Rare'
+        F:CreateNotification(missionRare, tex .. (info.name or ''), 'Interface\\ICONS\\INV_Misc_Map_01')
 
         local nameStr
         local mapID = C_Map.GetBestMapForUnit('player')

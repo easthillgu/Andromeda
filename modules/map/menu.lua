@@ -78,13 +78,14 @@ MAP.MenuList = {
             _G.StoreMicroButton:Click()
         end,
     },
-    {
-        text = _G.GARRISON_TYPE_8_0_LANDING_PAGE_TITLE,
-        notCheckable = true,
-        func = function()
-            GarrisonLandingPageMinimapButton_OnClick(_G.GarrisonLandingPageMinimapButton)
-        end,
-    },
+    -- 3.80.1: Garrison Landing Page not available
+    --{
+    --    text = _G.GARRISON_TYPE_8_0_LANDING_PAGE_TITLE,
+    --    notCheckable = true,
+    --    func = function()
+    --        GarrisonLandingPageMinimapButton_OnClick(_G.GarrisonLandingPageMinimapButton)
+    --    end,
+    --},
     -- 3.80.1: Encounter Journal not available
     --[[
     {

@@ -232,7 +232,7 @@ function NOTIFICATION:OnLogin()
     self:BagFullNotify()
     self:VersionCheck()
     if self.RareNotify then self:RareNotify() end
-    self:ParagonNotify()
+    -- 3.80.1: Paragon not available; paragon.lua removed
     self:InstanceNotify()
     self:CheckIncompatible()
 end

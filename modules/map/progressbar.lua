@@ -71,7 +71,8 @@ function M:Bar_Update()
             local repInfo = C_GossipInfo.GetFriendshipReputation(factionID)
             local friendID, friendRep, friendThreshold, nextFriendThreshold = repInfo.friendshipFactionID,
                 repInfo.standing, repInfo.reactionThreshold, repInfo.nextThreshold
-            if C_Reputation.IsFactionParagon(factionID) then
+            -- 3.80.1: C_Reputation may not exist; nil guard
+            if C_Reputation and C_Reputation.IsFactionParagon and C_Reputation.IsFactionParagon(factionID) then
                 local currentValue, threshold = C_Reputation.GetFactionParagonInfo(factionID)
                 currentValue = mod(currentValue, threshold)
                 barMin, barMax, value = 0, threshold, currentValue
@@ -169,7 +170,8 @@ function M:Bar_OnEnter()
             ' / ' .. barMax - barMin .. ' (' .. floor((value - barMin) / (barMax - barMin) * 100) .. '%)', 0.6, 0.8, 1, 1,
             1, 1)
 
-        if C_Reputation.IsFactionParagon(factionID) then
+        -- 3.80.1: C_Reputation may not exist; nil guard
+        if C_Reputation and C_Reputation.IsFactionParagon and C_Reputation.IsFactionParagon(factionID) then
             local currentValue, threshold = C_Reputation.GetFactionParagonInfo(factionID)
             local paraCount = floor(currentValue / threshold)
             currentValue = mod(currentValue, threshold)

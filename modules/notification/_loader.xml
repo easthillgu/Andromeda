@@ -4,7 +4,7 @@
     <Script file="incompatible.lua"/>
     <Script file="instance.lua"/>
     <Script file="mail.lua"/>
-    <Script file="paragon.lua"/>
+    <!-- 3.80.1: paragon.lua removed (Retail BFA/DF) -->
     <Script file="rare.lua"/>
     <Script file="version.lua"/>
 </Ui>

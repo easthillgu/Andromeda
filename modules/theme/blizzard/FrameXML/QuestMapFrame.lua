@@ -142,8 +142,11 @@ tinsert(C.BlizzThemes, function()
             ReskinQuestHeader(header)
         end
 
+        -- 3.80.1: covenantCallingsHeaderFramePool not available; nil guard
+        if QuestScrollFrame.covenantCallingsHeaderFramePool then
         for header in QuestScrollFrame.covenantCallingsHeaderFramePool:EnumerateActive() do
             ReskinQuestHeader(header, true)
+        end
         end
 
         ReskinAWQHeader()

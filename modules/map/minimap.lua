@@ -322,8 +322,8 @@ function MAP:CreateDifficultyFlag()
     frame:SetScript('OnEvent', UpdateDifficultyFlag)
 end
 
--- Garrision Icon
-
+-- 3.80.1: Garrison / Expansion Landing Page not available
+--[[
 local function toggleExpansionLandingPageButton(_, ...)
     --if InCombatLockdown() then UIErrorsFrame:AddMessage(C.RED_COLOR..ERR_NOT_IN_COMBAT) return end -- fix by LibShowUIPanel
 
@@ -386,6 +386,7 @@ function MAP:CreateExpansionLandingPageButton()
         _G.GameTooltip:Show()
     end)
 end
+--]]  -- 3.80.1: Garrison/Expansion Landing Page end
 
 -- Queue Status
 
@@ -679,7 +680,8 @@ function MAP:SetupMinimap()
     MAP:RemoveBlizzStuff()
     MAP:RestyleMinimap()
     MAP:UpdateMinimapScale()
-    MAP:CreateExpansionLandingPageButton()
+    -- 3.80.1: Garrison not available
+    --MAP:CreateExpansionLandingPageButton()
     MAP:CreatePendingInvitation()
     MAP:CreateZoneText()
     MAP:CreateMailButton()
