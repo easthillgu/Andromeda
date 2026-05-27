@@ -2520,19 +2520,28 @@ do
 
         function F:ReskinRole(role)
             if not self then return end
+            if self._andmStyled then return end -- 3.80.1: skip already-skinned buttons
+
             if self.background then
                 self.background:SetTexture('')
+                self.background:Hide()
             end
 
             local cover = self.cover or self.Cover
             if cover then
                 cover:SetTexture('')
+                cover:SetVertexColor(0, 0, 0, 0)
             end
+
+            if self.SetCheckedTexture then self:SetCheckedTexture(0) end
+            if self.SetHighlightTexture then self:SetHighlightTexture(0) end
+            if self.SetPushedTexture then self:SetPushedTexture(0) end
 
             local texture = self.GetNormalTexture and self:GetNormalTexture() or self.texture or self.Texture or (self.SetTexture and self) or self.Icon
             if texture then
                 texture:SetTexture(C.Assets.Textures.RoleLfgIcons)
-                texture:SetTexCoord(F.GetRoleTexCoord(role))
+                local l, r, t, b = F.GetRoleTexCoord(role)
+                texture:SetTexCoord(l, r, t, b)
             end
             self.bg = F.CreateBDFrame(self)
 
@@ -2554,6 +2563,8 @@ do
                 F.ReskinIcon(icon.texture)
                 icon.border:SetTexture('')
             end
+
+            self._andmStyled = true
         end
     end
 
