@@ -252,6 +252,19 @@ function UNITFRAME:OnLogin()
         _G.PetCastingBarFrame.Show = function() end
     end
 
+    -- Hide default combo point frame
+    local function hideComboFrame(frame)
+        if _G[frame] then
+            _G[frame]:Hide()
+            _G[frame]:UnregisterAllEvents()
+            _G[frame].Show = function() end
+        end
+    end
+
+    hideComboFrame('ComboFrame')
+    hideComboFrame('TargetFrameComboFrame')
+    hideComboFrame('PlayerFrameComboFrame')
+
     UNITFRAME:InitFilters()
     UNITFRAME:SpawnUnits()
     UNITFRAME:UpdateAllElements()
