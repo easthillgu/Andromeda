@@ -26,8 +26,7 @@
     <!-- 3.80.1: Retail HelpTip Template, not available -->
     <!--<Script file="HelpTipTemplate.lua"/>-->
     <Script file="ItemTextFrame.lua"/>
-    <!-- 3.80.1: LFGFrame missing -->
-    <!--<Script file="LFGFrame.lua"/>-->
+    <Script file="LFGFrame.lua"/>
     <Script file="LFGList.lua"/>
     <Script file="LootFrame.lua"/>
     <Script file="LootHistory.lua"/>

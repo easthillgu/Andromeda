@@ -104,18 +104,43 @@ tinsert(C.BlizzThemes, function()
     if C.IS_NEW_PATCH_10_1 then
         F.ReskinTrimScroll(_G.LFDQueueFrameRandomScrollFrame.ScrollBar)
     else
-        F.StripTextures(_G.LFDQueueFrameRandomScrollFrameScrollBar, 0)
-        F.ReskinScroll(_G.LFDQueueFrameRandomScrollFrameScrollBar)
+        if _G.LFDQueueFrameRandomScrollFrameScrollBar then
+            F.StripTextures(_G.LFDQueueFrameRandomScrollFrameScrollBar, 0)
+            F.ReskinScroll(_G.LFDQueueFrameRandomScrollFrameScrollBar)
 
-        _G.LFDQueueFrameRandomScrollFrame:SetWidth(_G.LFDQueueFrameRandomScrollFrame:GetWidth() + 1)
-        _G.LFDQueueFrameRandomScrollFrameScrollBarScrollDownButton:SetPoint('TOP', LFDQueueFrameRandomScrollFrameScrollBar, 'BOTTOM', 0, 2)
+            _G.LFDQueueFrameRandomScrollFrame:SetWidth(_G.LFDQueueFrameRandomScrollFrame:GetWidth() + 1)
+            if _G.LFDQueueFrameRandomScrollFrameScrollBarScrollDownButton then
+                _G.LFDQueueFrameRandomScrollFrameScrollBarScrollDownButton:SetPoint('TOP', LFDQueueFrameRandomScrollFrameScrollBar, 'BOTTOM', 0, 2)
+            end
+        end
     end
     F.ReskinDropdown(_G.LFDQueueFrameTypeDropDown)
-    F.ReskinButton(_G.LFDQueueFrameFindGroupButton)
-    F.ReskinButton(_G.LFDQueueFramePartyBackfillBackfillButton)
-    F.ReskinButton(_G.LFDQueueFramePartyBackfillNoBackfillButton)
-    F.ReskinButton(_G.LFDQueueFrameNoLFDWhileLFRLeaveQueueButton)
-    styleRewardButton(_G.LFDQueueFrameRandomScrollFrameChildFrameMoneyReward)
+    
+    local function reskinLFDButtons()
+        if _G.LFDQueueFrameFindGroupButton then
+            F.ReskinButton(_G.LFDQueueFrameFindGroupButton)
+        end
+        if _G.LFDQueueFramePartyBackfillBackfillButton then
+            F.ReskinButton(_G.LFDQueueFramePartyBackfillBackfillButton)
+        end
+        if _G.LFDQueueFramePartyBackfillNoBackfillButton then
+            F.ReskinButton(_G.LFDQueueFramePartyBackfillNoBackfillButton)
+        end
+        if _G.LFDQueueFrameNoLFDWhileLFRLeaveQueueButton then
+            F.ReskinButton(_G.LFDQueueFrameNoLFDWhileLFRLeaveQueueButton)
+        end
+        if _G.LFDQueueFrameRandomScrollFrameChildFrameMoneyReward then
+            styleRewardButton(_G.LFDQueueFrameRandomScrollFrameChildFrameMoneyReward)
+        end
+    end
+    
+    hooksecurefunc('LFDQueueFrame_Update', reskinLFDButtons)
+    
+    if _G.LFDQueueFrame then
+        _G.LFDQueueFrame:HookScript('OnShow', reskinLFDButtons)
+    end
+    
+    reskinLFDButtons()
 
     -- LFGFrame
     hooksecurefunc('LFGRewardsFrame_SetItemButton', function(parentFrame, _, index)
@@ -143,7 +168,9 @@ tinsert(C.BlizzThemes, function()
     local bg = F.CreateBDFrame(iconTexture)
 
     hooksecurefunc('LFGDungeonReadyPopup_Update', function()
-        _G.LFGDungeonReadyDialog:SetBackdrop(nil)
+        if _G.LFGDungeonReadyDialog.SetBackdrop then
+            _G.LFGDungeonReadyDialog:SetBackdrop(nil)
+        end
         leaderFrame:SetShown(_G.LFGDungeonReadyDialogRoleIconLeaderIcon:IsShown())
 
         if _G.LFGDungeonReadyDialogRoleIcon:IsShown() then
