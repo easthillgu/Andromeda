@@ -12,17 +12,17 @@ C.CharacterSettings = {
 
         SimplifyErrors = true,
 
-        OrderHallIcon = true,
+        OrderHallIcon = false,  -- 3.80.1: not available
         TradeTabs = true,
         PetFilter = true,
         NakedButton = true,
         MissingStats = true,
         ItemLevel = true,
         GemEnchant = true,
-        AzeriteTrait = true,
+        AzeriteTrait = false,  -- 3.80.1: not available
         AutoScreenshot = true,
         EarnedNewAchievement = true,
-        ChallengeModeCompleted = true,
+        ChallengeModeCompleted = false,  -- 3.80.1: not available
         PlayerLevelUp = false,
         PlayerDead = false,
         FasterZooming = true,
@@ -59,7 +59,7 @@ C.CharacterSettings = {
         Countdown = '10',
 
         MuteAnnoyingSounds = true,
-        WeeklyLottery = true,
+        WeeklyLottery = false,  -- 3.80.1: Great Vault not available
 
         BlockStrangerInvite = false,
         BlockStrangerRequest = false,
@@ -163,8 +163,8 @@ C.CharacterSettings = {
         FilterLegendary = true,
         FilterCollection = true,
         FilterFavourite = true,
-        FilterAnima = true,
-        FilterRelic = true,
+        FilterAnima = false,  -- 3.80.1: not available
+        FilterRelic = false,  -- 3.80.1: not available
         FilterStone = true,
         AutoSellJunk = true,
         AutoRepair = true,
@@ -339,13 +339,13 @@ C.CharacterSettings = {
     Nameplate = {
         Enable = false,
         Width = 120,
-        Height = 5,
+        Height = 4,
         ClickableWidth = 120,
-        ClickableHeight = 7,
+        ClickableHeight = 4,
         FriendlyWidth = 120,
-        FriendlyHeight = 5,
+        FriendlyHeight = 4,
         FriendlyClickableWidth = 120,
-        FriendlyClickableHeight = 5,
+        FriendlyClickableHeight = 4,
         EnemyClickThrough = false,
         FriendlyClickThrough = true,
         ForceCVars = true,
@@ -390,7 +390,7 @@ C.CharacterSettings = {
         DotSpellsList = {},
         DotColor = { r = 0.8, g = 0.6, b = 0.4 },
 
-        ShowAura = false,
+        ShowAura = true,
         AuraFilterMode = 2,
         AuraPerRow = 5,
         AuraNumTotal = 32,
@@ -408,7 +408,7 @@ C.CharacterSettings = {
         TargetName = true,
 
         InsideView = true,
-        MinScale = 0.7,
+        MinScale = 0.5,
         TargetScale = 1,
         MinAlpha = 0.6,
         OccludedAlpha = 0.2,
@@ -707,7 +707,7 @@ C.AccountSettings = {
 
     CooldownPulseIgnoredSpellsList = {},
 
-    KeystoneInfo = {},
+    KeystoneInfo = {},  -- 3.80.1: M+ not available
     ProfileIndex = {},
     ProfileNames = {},
     UseCustomClassColor = true,
@@ -727,7 +727,7 @@ C.AccountSettings = {
         EVOKER = { r = 0.3, g = 0.64, b = 0.67 },
     },
     ContactList = {},
-    RenownLevels = {},
+    RenownLevels = {},  -- 3.80.1: not available
     SmoothAmount = 0.25,
     MinimapAddOnCollector = true,
     IgnoredAddOns = '',

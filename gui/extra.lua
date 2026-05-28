@@ -478,14 +478,11 @@ function GUI:SetupInventoryFilter(parent)
         [2] = { value = 'FilterQuestItem', text = _G.QUESTS_LABEL },
         [3] = { value = 'FilterTradeGoods', text = _G.AUCTION_CATEGORY_TRADE_GOODS },
         [4] = { value = 'FilterConsumable', text = _G.BAG_FILTER_CONSUMABLES },
-        [5] = { value = 'FilterAnima', text = _G.POWER_TYPE_ANIMA },
-        [6] = { value = 'FilterRelic', text = L['Korthia Relics'] },
-        [7] = { value = 'FilterStone', text = L['Primordial Stones'] },
-        [8] = { value = 'FilterEquipment', text = _G.BAG_FILTER_EQUIPMENT },
-        [9] = { value = 'FilterEquipSet', text = L['Equipement Set'] },
-        [10] = { value = 'FilterLegendary', text = _G.LOOT_JOURNAL_LEGENDARIES },
-        [11] = { value = 'FilterCollection', text = _G.COLLECTIONS },
-        [12] = { value = 'FilterFavourite', text = _G.PREFERENCES },
+        [5] = { value = 'FilterEquipment', text = _G.BAG_FILTER_EQUIPMENT },
+        [6] = { value = 'FilterEquipSet', text = L['Equipement Set'] },
+        [7] = { value = 'FilterLegendary', text = _G.LOOT_JOURNAL_LEGENDARIES },
+        [8] = { value = 'FilterCollection', text = _G.COLLECTIONS },
+        [9] = { value = 'FilterFavourite', text = _G.PREFERENCES },
     }
 
     local offset = -10
@@ -3010,9 +3007,8 @@ function GUI:SetupAutoScreenshot(parent)
 
     local datas = {
         [1] = { value = 'EarnedNewAchievement', text = L['Earned new achievement'] },
-        [2] = { value = 'ChallengeModeCompleted', text = L['Mythic+ completed'] },
-        [3] = { value = 'PlayerLevelUp', text = L['Level up'] },
-        [4] = { value = 'PlayerDead', text = _G.DEAD },
+        [2] = { value = 'PlayerLevelUp', text = L['Level up'] },
+        [3] = { value = 'PlayerDead', text = _G.DEAD },
     }
 
     local offset = -10

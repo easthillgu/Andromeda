@@ -581,16 +581,17 @@ GUI.OptionsList = {
             nil,
             L['Enhance the default merchant frame by expanding it to twice the width.'],
         },
-        {
-            1,
-            'General',
-            'WeeklyLottery',
-            L['Weekly Lottery'],
-            true,
-            nil,
-            nil,
-            L['The great vault rewards are hidden by default and shown when clicked to simulate the feel of a lottery.'],
-        },
+-- 3.80.1: WeeklyLottery (Great Vault) not available
+--        {
+--            1,
+--            'General',
+--            'WeeklyLottery',
+--            L['Weekly Lottery'],
+--            true,
+--            nil,
+--            nil,
+--            L['The great vault rewards are hidden by default and shown when clicked to simulate the feel of a lottery.'],
+--        },
         {},
         {
             1,
@@ -1817,20 +1818,15 @@ GUI.OptionsList = {
         },
         {},
         { 1, 'Tooltip', 'SpecIlvl', L['Show Spec&iLvl'] },
-        {
-            1,
-            'Tooltip',
-            'MythicPlusScore',
-            L['Show Mythic Plus Score'],
-            true,
-        },
+        -- 3.80.1: MythicPlusScore not available
+        -- { 1, 'Tooltip', 'MythicPlusScore', L['Show Mythic Plus Score'], true },
         -- 3.80.1: Covenant not available
         -- { 1, 'Tooltip', 'Covenant', L['Show Covenant'] },
         {
             1,
             'Tooltip',
             'PlayerInfoByAlt',
-            L['Show Spec&iLvl&Coven by ALT'],
+            L['Show Spec&iLvl by ALT'],  -- 3.80.1: Covenant removed from label
             true,
         },
         { 1, 'Tooltip', 'HideRealm', L['Hide Realm'] },
