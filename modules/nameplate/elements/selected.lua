@@ -15,28 +15,13 @@ function NAMEPLATE:UpdateSelectedChange()
 
     if UnitIsUnit(unit, 'target') and not UnitIsUnit(unit, 'player') then
         element:Show()
-        if element.aggroR:IsShown() and not element.animGroupR:IsPlaying() then
-            element.animGroupR:Play()
-        end
-        if element.aggroL:IsShown() and not element.animGroupL:IsPlaying() then
-            element.animGroupL:Play()
-        end
     else
         element:Hide()
-        if element.animGroupR:IsPlaying() then
-            element.animGroupR:Stop()
-        end
-        if element.animGroupL:IsPlaying() then
-            element.animGroupL:Stop()
-        end
     end
 end
 
 function NAMEPLATE:UpdateSelectedIndicatorColor(self, r, g, b)
-    if self.SelectedIndicator then
-        self.SelectedIndicator.aggroL:SetVertexColor(r, g, b)
-        self.SelectedIndicator.aggroR:SetVertexColor(r, g, b)
-    end
+    -- 3.80.1: bracket decorations removed, no vertex color to update
 end
 
 function NAMEPLATE:UpdateSelectedIndicatorVisibility()
@@ -51,16 +36,9 @@ function NAMEPLATE:UpdateSelectedIndicatorVisibility()
         if isNameOnly then
             element.nameGlow:Show()
             element.Glow:Hide()
-            element.aggroL:Hide()
-            element.aggroR:Hide()
         else
             element.nameGlow:Hide()
             element.Glow:Show()
-            element.aggroL:Show()
-            element.aggroR:Show()
-
-            element.animR.points[1]:SetOffset(4, 0)
-            element.animL.points[1]:SetOffset(-4, 0)
         end
         element:Show()
     else
@@ -89,37 +67,7 @@ function NAMEPLATE:CreateSelectedIndicator(self)
     frame.Glow:SetRotation(rad(180))
     frame.Glow:SetVertexColor(r, g, b)
 
-    frame.aggroL = frame:CreateTexture(nil, 'BACKGROUND', nil, -5)
-    frame.aggroL:SetSize(C.DB.Nameplate.Height * 8, C.DB.Nameplate.Height * 4)
-    frame.aggroL:SetPoint('CENTER', frame, 'LEFT', -10, 0)
-    frame.aggroL:SetTexture(C.Assets.Textures.NameplateBracket)
-
-    local animGroupL = frame.aggroL:CreateAnimationGroup()
-    animGroupL:SetLooping('NONE')
-    local animL = animGroupL:CreateAnimation('Path')
-    animL:SetSmoothing('IN_OUT')
-    animL:SetDuration(0.5)
-    animL.points = {}
-    animL.points[1] = animL:CreateControlPoint()
-    animL.points[1]:SetOrder(1)
-    frame.animL = animL
-    frame.animGroupL = animGroupL
-
-    frame.aggroR = frame:CreateTexture(nil, 'BACKGROUND', nil, -5)
-    frame.aggroR:SetSize(C.DB.Nameplate.Height * 8, C.DB.Nameplate.Height * 4)
-    frame.aggroR:SetPoint('CENTER', frame, 'RIGHT', 10, 0)
-    frame.aggroR:SetTexture(C.Assets.Textures.NameplateBracket)
-    frame.aggroR:SetRotation(rad(180))
-
-    local animGroupR = frame.aggroR:CreateAnimationGroup()
-    animGroupR:SetLooping('NONE')
-    local animR = animGroupR:CreateAnimation('Path')
-    animR:SetDuration(0.5)
-    animR.points = {}
-    animR.points[1] = animR:CreateControlPoint()
-    animR.points[1]:SetOrder(1)
-    frame.animR = animR
-    frame.animGroupR = animGroupR
+    -- 3.80.1: bracket decorations (aggroL/aggroR) removed
 
     frame.nameGlow = frame:CreateTexture(nil, 'BACKGROUND', nil, -5)
     frame.nameGlow:SetSize(150, 80)
