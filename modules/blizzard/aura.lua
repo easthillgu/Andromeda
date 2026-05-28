@@ -318,7 +318,9 @@ function AURA:CreateAuraIcon(button)
     F.CreateBD(button, 0.25)
     F.CreateSD(button)
 
-    pcall(button.RegisterForClicks, button, 'RightButtonUp')
+    if button.RegisterForClicks then
+        pcall(function() button:RegisterForClicks('RightButtonUp') end)
+    end
     button:SetScript('OnAttributeChanged', AURA.OnAttributeChanged)
     button:SetScript('OnEnter', AURA.Button_OnEnter)
     button:SetScript('OnLeave', F.HideTooltip)

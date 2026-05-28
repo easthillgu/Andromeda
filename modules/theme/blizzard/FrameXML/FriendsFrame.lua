@@ -358,13 +358,17 @@ tinsert(C.BlizzThemes, function()
 
             if _G.GuildControlWithdrawGoldEditBox then
                 F.ReskinEditbox(_G.GuildControlWithdrawGoldEditBox)
-                _G.GuildControlWithdrawGoldEditBox.bg:SetPoint('TOPLEFT', -2, -7)
-                _G.GuildControlWithdrawGoldEditBox.bg:SetPoint('BOTTOMRIGHT', 2, 7)
+                if _G.GuildControlWithdrawGoldEditBox.bg then
+                    _G.GuildControlWithdrawGoldEditBox.bg:SetPoint('TOPLEFT', -2, -7)
+                    _G.GuildControlWithdrawGoldEditBox.bg:SetPoint('BOTTOMRIGHT', 2, 7)
+                end
             end
             if _G.GuildControlWithdrawItemsEditBox then
                 F.ReskinEditbox(_G.GuildControlWithdrawItemsEditBox)
-                _G.GuildControlWithdrawItemsEditBox.bg:SetPoint('TOPLEFT', -2, -7)
-                _G.GuildControlWithdrawItemsEditBox.bg:SetPoint('BOTTOMRIGHT', 2, 7)
+                if _G.GuildControlWithdrawItemsEditBox.bg then
+                    _G.GuildControlWithdrawItemsEditBox.bg:SetPoint('TOPLEFT', -2, -7)
+                    _G.GuildControlWithdrawItemsEditBox.bg:SetPoint('BOTTOMRIGHT', 2, 7)
+                end
             end
 
             F.ReskinCheckbox(_G.GuildControlTabPermissionsViewTab)

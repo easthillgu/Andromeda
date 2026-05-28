@@ -37,15 +37,16 @@ tinsert(C.BlizzThemes, function()
 
     if DressUpFrame.OutfitDetailsPanel then
         hooksecurefunc(DressUpFrame.OutfitDetailsPanel, 'Refresh', function(self)
-        if self.slotPool then
-            for slot in self.slotPool:EnumerateActive() do
-                if not slot.bg then
-                    slot.bg = F.ReskinIcon(slot.Icon)
-                    F.ReskinIconBorder(slot.IconBorder, true, true)
+            if self.slotPool then
+                for slot in self.slotPool:EnumerateActive() do
+                    if not slot.bg then
+                        slot.bg = F.ReskinIcon(slot.Icon)
+                        F.ReskinIconBorder(slot.IconBorder, true, true)
+                    end
                 end
             end
-        end
-    end)
+        end)
+    end
 
     _G.DressUpFrameOutfitDropDown:SetHeight(32)
     _G.DressUpFrameOutfitDropDown.SaveButton:SetPoint('LEFT', _G.DressUpFrameOutfitDropDown, 'RIGHT', -13, 2)
@@ -89,7 +90,8 @@ tinsert(C.BlizzThemes, function()
                     button.styled = true
                 end
             end
-    end)
+        end)
+    end
 
     -- 3.80.1: WardrobeOutfitEditFrame Retail-only, nil guard
     if _G.WardrobeOutfitEditFrame then
@@ -102,6 +104,5 @@ tinsert(C.BlizzThemes, function()
         F.ReskinButton(_G.WardrobeOutfitEditFrame.AcceptButton)
         F.ReskinButton(_G.WardrobeOutfitEditFrame.CancelButton)
         F.ReskinButton(_G.WardrobeOutfitEditFrame.DeleteButton)
-    end
     end
 end)

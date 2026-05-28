@@ -69,6 +69,14 @@ tinsert(C.BlizzThemes, function()
     end
 
     F.ReskinPortraitFrame(_G.SpellBookFrame)
+    -- 美化关闭按钮
+    if _G.SpellBookFrameCloseButton then
+        F.ReskinClose(_G.SpellBookFrameCloseButton)
+    elseif _G.SpellBookFrame.CloseButton then
+        F.ReskinClose(_G.SpellBookFrame.CloseButton)
+    elseif _G.SpellBookFrame.ClosePanelButton then
+        F.ReskinClose(_G.SpellBookFrame.ClosePanelButton)
+    end
     _G.SpellBookFrame:DisableDrawLayer('BACKGROUND')
     _G.SpellBookFrameTabButton1:ClearAllPoints()
     _G.SpellBookFrameTabButton1:SetPoint('TOPLEFT', _G.SpellBookFrame, 'BOTTOMLEFT', 0, 0)
