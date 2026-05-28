@@ -54,46 +54,54 @@ tinsert(C.BlizzThemes, function()
     DressUpFrame.ModelBackground:Hide()
     F.CreateBDFrame(DressUpFrame.ModelScene)
 
-    F.ReskinCheckbox(_G.TransmogAndMountDressupFrame.ShowMountCheckButton)
+    -- 3.80.1: TransmogAndMountDressupFrame Retail-only, nil guard
+    if _G.TransmogAndMountDressupFrame then
+        F.ReskinCheckbox(_G.TransmogAndMountDressupFrame.ShowMountCheckButton)
+    end
 
-    -- SideDressUp
+    -- SideDressUp (3.80.1: Retail-only, nil guard)
+    if _G.SideDressUpFrame then
+        F.StripTextures(_G.SideDressUpFrame, 0)
+        F.SetBD(_G.SideDressUpFrame)
+        F.ReskinButton(_G.SideDressUpFrame.ResetButton)
+        F.ReskinClose(_G.SideDressUpFrameCloseButton)
 
-    F.StripTextures(_G.SideDressUpFrame, 0)
-    F.SetBD(_G.SideDressUpFrame)
-    F.ReskinButton(_G.SideDressUpFrame.ResetButton)
-    F.ReskinClose(_G.SideDressUpFrameCloseButton)
+        _G.SideDressUpFrame:HookScript('OnShow', function(self)
+            _G.SideDressUpFrame:ClearAllPoints()
+            _G.SideDressUpFrame:SetPoint('LEFT', self:GetParent(), 'RIGHT', 3, 0)
+        end)
+    end
 
-    _G.SideDressUpFrame:HookScript('OnShow', function(self)
-        _G.SideDressUpFrame:ClearAllPoints()
-        _G.SideDressUpFrame:SetPoint('LEFT', self:GetParent(), 'RIGHT', 3, 0)
-    end)
+    -- Outfit frame (3.80.1: Retail-only, nil guard)
+    if _G.WardrobeOutfitFrame then
+        F.StripTextures(_G.WardrobeOutfitFrame)
+        F.SetBD(_G.WardrobeOutfitFrame, 0.7)
 
-    -- Outfit frame
+        hooksecurefunc(_G.WardrobeOutfitFrame, 'Update', function(self)
+            if not C_TransmogCollection then return end
+            for i = 1, C_TransmogCollection.GetNumMaxOutfits() do
+                local button = self.Buttons[i]
+                if button and button:IsShown() and not button.styled then
+                    F.ReskinIcon(button.Icon)
+                    button.Selection:SetColorTexture(1, 1, 1, 0.25)
+                    button.Highlight:SetColorTexture(C.r, C.g, C.b, 0.25)
 
-    F.StripTextures(_G.WardrobeOutfitFrame)
-    F.SetBD(_G.WardrobeOutfitFrame, 0.7)
-
-    hooksecurefunc(_G.WardrobeOutfitFrame, 'Update', function(self)
-        for i = 1, C_TransmogCollection.GetNumMaxOutfits() do
-            local button = self.Buttons[i]
-            if button and button:IsShown() and not button.styled then
-                F.ReskinIcon(button.Icon)
-                button.Selection:SetColorTexture(1, 1, 1, 0.25)
-                button.Highlight:SetColorTexture(C.r, C.g, C.b, 0.25)
-
-                button.styled = true
+                    button.styled = true
+                end
             end
-        end
     end)
 
-    F.StripTextures(_G.WardrobeOutfitEditFrame)
-    _G.WardrobeOutfitEditFrame.EditBox:DisableDrawLayer('BACKGROUND')
-    F.SetBD(_G.WardrobeOutfitEditFrame)
-    local ebbg = F.CreateBDFrame(_G.WardrobeOutfitEditFrame.EditBox, 0.25, true)
-    ebbg:SetPoint('TOPLEFT', -5, -3)
-    ebbg:SetPoint('BOTTOMRIGHT', 5, 3)
-    F.ReskinButton(_G.WardrobeOutfitEditFrame.AcceptButton)
-    F.ReskinButton(_G.WardrobeOutfitEditFrame.CancelButton)
-    F.ReskinButton(_G.WardrobeOutfitEditFrame.DeleteButton)
+    -- 3.80.1: WardrobeOutfitEditFrame Retail-only, nil guard
+    if _G.WardrobeOutfitEditFrame then
+        F.StripTextures(_G.WardrobeOutfitEditFrame)
+        _G.WardrobeOutfitEditFrame.EditBox:DisableDrawLayer('BACKGROUND')
+        F.SetBD(_G.WardrobeOutfitEditFrame)
+        local ebbg = F.CreateBDFrame(_G.WardrobeOutfitEditFrame.EditBox, 0.25, true)
+        ebbg:SetPoint('TOPLEFT', -5, -3)
+        ebbg:SetPoint('BOTTOMRIGHT', 5, 3)
+        F.ReskinButton(_G.WardrobeOutfitEditFrame.AcceptButton)
+        F.ReskinButton(_G.WardrobeOutfitEditFrame.CancelButton)
+        F.ReskinButton(_G.WardrobeOutfitEditFrame.DeleteButton)
+    end
     end
 end)

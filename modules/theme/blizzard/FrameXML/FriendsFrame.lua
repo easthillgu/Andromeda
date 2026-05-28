@@ -252,4 +252,133 @@ tinsert(C.BlizzThemes, function()
             end
         end)
     end
+
+    -- GuildFrame (3.80.1: ported from NDui, was in separate Retail-only files)
+
+    if _G.GuildFrame then
+        F.StripTextures(_G.GuildFrame)
+        F.ReskinArrow(_G.GuildFrameGuildListToggleButton, 'right')
+        F.ReskinButton(_G.GuildFrameGuildInformationButton)
+        F.ReskinButton(_G.GuildFrameAddMemberButton)
+        F.ReskinButton(_G.GuildFrameControlButton)
+        F.StripTextures(_G.GuildFrameLFGFrame)
+        F.ReskinCheckbox(_G.GuildFrameLFGButton)
+        F.ReskinScroll(_G.GuildListScrollFrameScrollBar)
+        for i = 1, 4 do
+            local tab = _G['GuildFrameColumnHeader' .. i]
+            if tab then
+                local bg = F.ReskinTab(tab)
+                if bg then
+                    bg:SetPoint('TOPLEFT', 5, -2)
+                    bg:SetPoint('BOTTOMRIGHT', 0, 0)
+                end
+            end
+            local statusTab = _G['GuildFrameGuildStatusColumnHeader' .. i]
+            if statusTab then
+                local bg = F.ReskinTab(statusTab)
+                if bg then
+                    bg:SetPoint('TOPLEFT', 5, -2)
+                    bg:SetPoint('BOTTOMRIGHT', 0, 0)
+                end
+            end
+        end
+
+        -- Member detail
+        if _G.GuildMemberDetailFrame then
+            F.StripTextures(_G.GuildMemberDetailFrame)
+            F.SetBD(_G.GuildMemberDetailFrame)
+            _G.GuildMemberDetailFrame:SetPoint('TOPLEFT', _G.GuildFrame, 'TOPRIGHT', 4, -15)
+            F.ReskinClose(_G.GuildMemberDetailCloseButton)
+            if _G.GuildMemberNoteBackground then
+                F.StripTextures(_G.GuildMemberNoteBackground)
+                F.CreateBDFrame(_G.GuildMemberNoteBackground, .25)
+            end
+            if _G.GuildMemberOfficerNoteBackground then
+                F.StripTextures(_G.GuildMemberOfficerNoteBackground)
+                F.CreateBDFrame(_G.GuildMemberOfficerNoteBackground, .25)
+            end
+        end
+
+        F.ReskinArrow(_G.GuildFramePromoteButton, 'up')
+        F.ReskinArrow(_G.GuildFrameDemoteButton, 'down')
+        _G.GuildFramePromoteButton:SetHitRectInsets(0, 0, 0, 0)
+        _G.GuildFrameDemoteButton:SetHitRectInsets(0, 0, 0, 0)
+        _G.GuildFrameDemoteButton:SetPoint('LEFT', _G.GuildFramePromoteButton, 'RIGHT', 4, 0)
+        F.ReskinButton(_G.GuildMemberRemoveButton)
+        F.ReskinButton(_G.GuildMemberGroupInviteButton)
+
+        -- Guild info
+        if _G.GuildInfoFrame then
+            F.StripTextures(_G.GuildInfoFrame)
+            F.SetBD(_G.GuildInfoFrame)
+            F.ReskinScroll(_G.GuildInfoFrameScrollFrameScrollBar)
+            F.ReskinClose(_G.GuildInfoCloseButton)
+            if _G.GuildInfoTextBackground then
+                F.StripTextures(_G.GuildInfoTextBackground)
+                F.CreateBDFrame(_G.GuildInfoTextBackground, .25)
+            end
+            F.ReskinButton(_G.GuildInfoSaveButton)
+            F.ReskinButton(_G.GuildInfoCancelButton)
+            F.ReskinButton(_G.GuildInfoGuildEventButton)
+        end
+
+        -- Event log
+        if _G.GuildEventLogFrame then
+            F.StripTextures(_G.GuildEventLogFrame)
+            F.SetBD(_G.GuildEventLogFrame)
+            F.ReskinClose(_G.GuildEventLogCloseButton)
+            F.ReskinScroll(_G.GuildEventLogScrollFrameScrollBar)
+            F.ReskinButton(_G.GuildEventLogCancelButton)
+        end
+        if _G.GuildEventFrame then
+            F.StripTextures(_G.GuildEventFrame)
+            F.CreateBDFrame(_G.GuildEventFrame, .25)
+        end
+
+        -- Guild control popup
+        if _G.GuildControlPopupFrame then
+            F.StripTextures(_G.GuildControlPopupFrame)
+            _G.GuildControlPopupFrame:SetPoint('TOPLEFT', _G.GuildFrame, 'TOPRIGHT', 3, 0)
+            F.SetBD(_G.GuildControlPopupFrame)
+            F.ReskinDropdown(_G.GuildControlPopupFrameDropdown)
+            F.ReskinArrow(_G.GuildControlPopupFrameAddRankButton, 'right')
+            F.StripTextures(_G.GuildControlPopupFrameEditBox)
+            local bg = F.CreateBDFrame(_G.GuildControlPopupFrameEditBox, 0, true)
+            bg:SetPoint('TOPLEFT', -5, -5)
+            bg:SetPoint('BOTTOMRIGHT', 5, 5)
+            F.ReskinButton(_G.GuildControlPopupAcceptButton)
+            F.ReskinButton(_G.GuildControlPopupFrameCancelButton)
+
+            for i = 1, 16 do
+                local checkbox = _G['GuildControlPopupFrameCheckbox' .. i]
+                if checkbox then
+                    F.ReskinCheckbox(checkbox)
+                end
+            end
+
+            if _G.GuildControlWithdrawGoldEditBox then
+                F.ReskinEditbox(_G.GuildControlWithdrawGoldEditBox)
+                _G.GuildControlWithdrawGoldEditBox.bg:SetPoint('TOPLEFT', -2, -7)
+                _G.GuildControlWithdrawGoldEditBox.bg:SetPoint('BOTTOMRIGHT', 2, 7)
+            end
+            if _G.GuildControlWithdrawItemsEditBox then
+                F.ReskinEditbox(_G.GuildControlWithdrawItemsEditBox)
+                _G.GuildControlWithdrawItemsEditBox.bg:SetPoint('TOPLEFT', -2, -7)
+                _G.GuildControlWithdrawItemsEditBox.bg:SetPoint('BOTTOMRIGHT', 2, 7)
+            end
+
+            F.ReskinCheckbox(_G.GuildControlTabPermissionsViewTab)
+            F.ReskinCheckbox(_G.GuildControlTabPermissionsDepositItems)
+            F.ReskinCheckbox(_G.GuildControlTabPermissionsUpdateText)
+            if _G.GuildControlPopupFrameTabPermissions then
+                _G.GuildControlPopupFrameTabPermissions:HideBackdrop()
+            end
+        end
+
+        -- Font width fix
+        for i = 1, 13 do
+            local level = _G['GuildFrameButton' .. i .. 'Level']
+            if level then level:SetWidth(30) end
+        end
+    end
 end)

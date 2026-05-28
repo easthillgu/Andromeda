@@ -229,8 +229,11 @@ tinsert(C.BlizzThemes, function()
     F.ReskinDropdown(entryCreation.GroupDropDown)
     F.ReskinDropdown(entryCreation.ActivityDropDown)
     F.ReskinDropdown(entryCreation.PlayStyleDropdown)
-    F.ReskinCheckbox(entryCreation.MythicPlusRating.CheckButton)
-    F.ReskinEditbox(entryCreation.MythicPlusRating.EditBox)
+    -- 3.80.1: MythicPlusRating Retail-only
+    if entryCreation.MythicPlusRating then
+        F.ReskinCheckbox(entryCreation.MythicPlusRating.CheckButton)
+        F.ReskinEditbox(entryCreation.MythicPlusRating.EditBox)
+    end
     F.ReskinCheckbox(entryCreation.PVPRating.CheckButton)
     F.ReskinEditbox(entryCreation.PVPRating.EditBox)
     if entryCreation.PvpItemLevel then -- I do believe blizz will rename Pvp into PvP in future build

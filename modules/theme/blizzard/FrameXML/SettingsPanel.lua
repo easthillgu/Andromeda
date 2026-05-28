@@ -110,8 +110,9 @@ tinsert(C.BlizzThemes, function()
     end
 
     local function UpdateHeaderExpand(self, expanded)
+        -- 3.80.1: Soulbinds atlases don't exist, use simple text indicator instead
         local atlas = expanded and 'Soulbinds_Collection_CategoryHeader_Collapse' or 'Soulbinds_Collection_CategoryHeader_Expand'
-        self.__texture:SetAtlas(atlas, true)
+        pcall(self.__texture.SetAtlas, self.__texture, atlas, true)
 
         UpdateKeybindButtons(self)
     end

@@ -58,12 +58,13 @@ C.Themes['Blizzard_Collections'] = function()
         end
     end
 
-    -- [[ Mounts and pets ]]
+    -- [[ Mounts and pets ]] (3.80.1: Retail-only, nil guard)
 
     local PetJournal = _G.PetJournal
     local MountJournal = _G.MountJournal
 
-    MountJournal.LeftInset:Hide()
+    if PetJournal or MountJournal then
+    if MountJournal then
     MountJournal.RightInset:Hide()
     MountJournal.MountDisplay.YesMountsTex:SetAlpha(0)
     MountJournal.MountDisplay.NoMountsTex:SetAlpha(0)
@@ -376,9 +377,11 @@ C.Themes['Blizzard_Collections'] = function()
             F.ReskinIcon(bu.icon)
         end
     end
+    end -- 3.80.1: if PetJournal or MountJournal
 
-    -- [[ Toy box ]]
+    -- [[ Toy box ]] (3.80.1: Retail-only, nil guard)
 
+    if _G.ToyBox then
     local ToyBox = _G.ToyBox
     local iconsFrame = ToyBox.iconsFrame
 
@@ -439,10 +442,13 @@ C.Themes['Blizzard_Collections'] = function()
         F.ReskinIcon(ic)
 
         hooksecurefunc(bu.name, 'SetTextColor', changeTextColor)
+        hooksecurefunc(bu.name, 'SetTextColor', changeTextColor)
     end
+    end -- 3.80.1: if _G.ToyBox
 
-    -- [[ Heirlooms ]]
+    -- [[ Heirlooms ]] (3.80.1: Retail-only, nil guard)
 
+    if _G.HeirloomsJournal then
     local HeirloomsJournal = _G.HeirloomsJournal
     local icons = HeirloomsJournal.iconsFrame
 
@@ -554,6 +560,7 @@ C.Themes['Blizzard_Collections'] = function()
             end
         end
     end)
+    end -- 3.80.1: if _G.HeirloomsJournal
 
     -- [[ WardrobeCollectionFrame ]]
 
@@ -589,6 +596,9 @@ C.Themes['Blizzard_Collections'] = function()
     F.ReskinArrow(ItemsCollectionFrame.PagingFrame.NextPageButton, 'right')
     ItemsCollectionFrame.BGCornerTopLeft:SetAlpha(0)
     ItemsCollectionFrame.BGCornerTopRight:SetAlpha(0)
+
+    -- 3.80.1: Wardrobe/Transmog Retail-only, nil guard the entire section
+    if WardrobeCollectionFrame then
 
     local wcprogressBar = WardrobeCollectionFrame.progressBar
     wcprogressBar:DisableDrawLayer('BACKGROUND')
@@ -640,9 +650,12 @@ C.Themes['Blizzard_Collections'] = function()
         itemFrame.IconBorder:SetTexture('')
 
         if itemFrame.collected then
-            local quality = C_TransmogCollection.GetSourceInfo(itemFrame.sourceID).quality
-            local color = C.QualityColors[quality or 1]
-            ic.bg:SetBackdropBorderColor(color.r, color.g, color.b)
+            -- 3.80.1: C_TransmogCollection Retail-only
+            if C_TransmogCollection then
+                local quality = C_TransmogCollection.GetSourceInfo(itemFrame.sourceID).quality
+                local color = C.QualityColors[quality or 1]
+                ic.bg:SetBackdropBorderColor(color.r, color.g, color.b)
+            end
         else
             ic.bg:SetBackdropBorderColor(0, 0, 0)
         end
@@ -693,6 +706,8 @@ C.Themes['Blizzard_Collections'] = function()
         _G.WardrobeOutfitDropDown:SetHeight(32)
         _G.WardrobeOutfitDropDown.SaveButton:SetPoint('LEFT', _G.WardrobeOutfitDropDown, 'RIGHT', -13, 2)
     end
+
+    end -- 3.80.1: closes if WardrobeCollectionFrame
 
     -- HPetBattleAny
     local reskinHPet

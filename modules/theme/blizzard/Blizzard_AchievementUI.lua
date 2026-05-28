@@ -19,10 +19,14 @@ C.Themes['Blizzard_AchievementUI'] = function()
 
     F.StripTextures(AchievementFrame)
     F.SetBD(AchievementFrame)
-    _G.AchievementFrameWaterMark:SetAlpha(0)
-    F.StripTextures(AchievementFrame.Header)
-    AchievementFrame.Header.Title:Hide()
-    AchievementFrame.Header.Points:SetPoint('TOP', AchievementFrame, 0, -3)
+    if _G.AchievementFrameWaterMark then
+        _G.AchievementFrameWaterMark:SetAlpha(0)
+    end
+    if AchievementFrame.Header then
+        F.StripTextures(AchievementFrame.Header)
+        AchievementFrame.Header.Title:Hide()
+        AchievementFrame.Header.Points:SetPoint('TOP', AchievementFrame, 0, -3)
+    end
 
     for i = 1, 3 do
         local tab = _G['AchievementFrameTab' .. i]

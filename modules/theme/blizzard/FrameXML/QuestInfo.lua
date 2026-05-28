@@ -111,6 +111,8 @@ tinsert(C.BlizzThemes, function()
     end)
 
     _G.MapQuestInfoRewardsFrame.XPFrame.Name:SetShadowOffset(0, 0)
+    -- 3.80.1: nil-guard MapQuestInfoRewardsFrame
+    if _G.MapQuestInfoRewardsFrame then
     for _, name in
         next,
         {
@@ -123,11 +125,17 @@ tinsert(C.BlizzThemes, function()
             'WarModeBonusFrame',
         }
     do
-        reskinRewardButtonWithSize(_G.MapQuestInfoRewardsFrame[name], true)
+        local frame = _G.MapQuestInfoRewardsFrame[name]
+        if frame then reskinRewardButtonWithSize(frame, true) end
+    end
     end
 
-    for _, name in next, { 'HonorFrame', 'SkillPointFrame', 'ArtifactXPFrame', 'WarModeBonusFrame' } do
-        reskinRewardButtonWithSize(_G.QuestInfoRewardsFrame[name])
+    -- 3.80.1: nil-guard QuestInfoRewardsFrame
+    if _G.QuestInfoRewardsFrame then
+        for _, name in next, { 'HonorFrame', 'SkillPointFrame', 'ArtifactXPFrame', 'WarModeBonusFrame' } do
+            local frame = _G.QuestInfoRewardsFrame[name]
+            if frame then reskinRewardButtonWithSize(frame) end
+        end
     end
 
     -- Title Reward, needs review

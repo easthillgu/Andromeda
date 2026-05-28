@@ -1,45 +1,45 @@
 local F, C = unpack(select(2, ...))
 
 local function reskinOptionCheck(button)
+    if not button then return end  -- 3.80.1: nil guard
     F.ReskinCheckbox(button)
-    button.bg:SetInside(button, 6, 6)
+    if button.bg then
+        button.bg:SetInside(button, 6, 6)
+    end
 end
 
 tinsert(C.BlizzThemes, function()
-    if not _G.ANDROMEDA_ADB.ReskinBlizz then
-        return
-    end
-
-    local frame = _G.EditModeManagerFrame
+    local frame = EditModeManagerFrame
+    if not frame then return end  -- 3.80.1: frame may not exist
 
     F.StripTextures(frame)
     F.SetBD(frame)
     F.ReskinClose(frame.CloseButton)
     F.ReskinButton(frame.RevertAllChangesButton)
     F.ReskinButton(frame.SaveChangesButton)
-    F.ReskinDropdown(frame.LayoutDropdown.DropDownMenu)
+    F.ReskinDropdown(frame.LayoutDropdown)
     reskinOptionCheck(frame.ShowGridCheckButton.Button)
     reskinOptionCheck(frame.EnableSnapCheckButton.Button)
-    if C.IS_NEW_PATCH_10_1 then
-        reskinOptionCheck(frame.EnableAdvancedOptionsCheckButton.Button)
-    end
+    reskinOptionCheck(frame.EnableAdvancedOptionsCheckButton.Button)
     F.ReskinStepperSlider(frame.GridSpacingSlider.Slider, true)
     if frame.Tutorial then
         frame.Tutorial.Ring:Hide()
     end
 
-    local ssd = _G.EditModeSystemSettingsDialog
-    F.StripTextures(ssd)
-    F.SetBD(ssd)
-    F.ReskinClose(ssd.CloseButton)
+    local dialog = EditModeSystemSettingsDialog
+    if dialog then
+        F.StripTextures(dialog)
+        F.SetBD(dialog)
+        F.ReskinClose(dialog.CloseButton)
+    end
 
-    hooksecurefunc(frame.AccountSettings, 'OnEditModeEnter', function(self)
-        local settings = C.IS_NEW_PATCH_10_1 and self.SettingsContainer.ScrollChild.BasicOptionsContainer or self.Settings
+    if frame.AccountSettings then
+        frame.AccountSettings.SettingsContainer.BorderArt:Hide()
+        F.CreateBDFrame(frame.AccountSettings.SettingsContainer, .25)
+        F.ReskinTrimScroll(frame.AccountSettings.SettingsContainer.ScrollBar)
+    end
 
-        if not settings then
-            return
-        end
-
+    local function reskinOptionChecks(settings)
         for i = 1, settings:GetNumChildren() do
             local option = select(i, settings:GetChildren())
             if option.Button and not option.styled then
@@ -47,51 +47,78 @@ tinsert(C.BlizzThemes, function()
                 option.styled = true
             end
         end
-    end)
+    end
 
-    hooksecurefunc(ssd, 'UpdateExtraButtons', function(self)
-        local revertButton = self.Buttons and self.Buttons.RevertChangesButton
-        if revertButton and not revertButton.styled then
-            F.ReskinButton(revertButton)
-            revertButton.styled = true
+    hooksecurefunc(frame.AccountSettings, "OnEditModeEnter", function(self)
+        local basicOptions = self.SettingsContainer.ScrollChild.BasicOptionsContainer
+        if basicOptions then
+            reskinOptionChecks(basicOptions)
         end
 
-        for button in self.pools:EnumerateActiveByTemplate('EditModeSystemSettingsDialogExtraButtonTemplate') do
-            if not button.styled then
-                F.ReskinButton(button)
-                button.styled = true
+        local advancedOptions = self.SettingsContainer.ScrollChild.AdvancedOptionsContainer
+        if advancedOptions then
+            if advancedOptions.FramesContainer then
+                reskinOptionChecks(advancedOptions.FramesContainer)
             end
-        end
-
-        for check in self.pools:EnumerateActiveByTemplate('EditModeSettingCheckboxTemplate') do
-            if not check.styled then
-                F.ReskinCheckbox(check.Button)
-                check.Button.bg:SetInside(nil, 6, 6)
-                check.styled = true
+            if advancedOptions.CombatContainer then
+                reskinOptionChecks(advancedOptions.CombatContainer)
             end
-        end
-
-        for dropdown in self.pools:EnumerateActiveByTemplate('EditModeSettingDropdownTemplate') do
-            if not dropdown.styled then
-                F.ReskinDropdown(dropdown.Dropdown.DropDownMenu)
-                dropdown.styled = true
-            end
-        end
-
-        for slider in self.pools:EnumerateActiveByTemplate('EditModeSettingSliderTemplate') do
-            if not slider.styled then
-                F.ReskinStepperSlider(slider.Slider, true)
-                slider.styled = true
+            if advancedOptions.MiscContainer then
+                reskinOptionChecks(advancedOptions.MiscContainer)
             end
         end
     end)
 
-    local ucd = _G.EditModeUnsavedChangesDialog
-    F.StripTextures(ucd)
-    F.SetBD(ucd)
-    F.ReskinButton(ucd.SaveAndProceedButton)
-    F.ReskinButton(ucd.ProceedButton)
-    F.ReskinButton(ucd.CancelButton)
+    if dialog then
+        hooksecurefunc(dialog, "UpdateExtraButtons", function(self)
+            local revertButton = self.Buttons and self.Buttons.RevertChangesButton
+            if revertButton and not revertButton.styled then
+                F.ReskinButton(revertButton)
+                revertButton.styled = true
+            end
+
+            for button in self.pools:EnumerateActiveByTemplate("EditModeSystemSettingsDialogExtraButtonTemplate") do
+                if not button.styled then
+                    F.ReskinButton(button)
+                    button.styled = true
+                end
+            end
+
+            for check in self.pools:EnumerateActiveByTemplate("EditModeSettingCheckboxTemplate") do
+                if not check.styled then
+                    F.ReskinCheckbox(check.Button)
+                    if check.Button.bg then
+                        check.Button.bg:SetInside(nil, 6, 6)
+                    end
+                    check.styled = true
+                end
+            end
+
+            for dropdown in self.pools:EnumerateActiveByTemplate("EditModeSettingDropdownTemplate") do
+                if not dropdown.styled then
+                    F.ReskinDropdown(dropdown.Dropdown)
+                    dropdown.styled = true
+                end
+            end
+
+            for slider in self.pools:EnumerateActiveByTemplate("EditModeSettingSliderTemplate") do
+                if not slider.styled then
+                    F.ReskinStepperSlider(slider.Slider, true)
+                    slider.styled = true
+                end
+            end
+        end)
+    end
+
+    -- Unsaved Changes dialog
+    local unsavedDialog = EditModeUnsavedChangesDialog
+    if unsavedDialog then
+        F.StripTextures(unsavedDialog)
+        F.SetBD(unsavedDialog)
+        F.ReskinButton(unsavedDialog.SaveAndProceedButton)
+        F.ReskinButton(unsavedDialog.ProceedButton)
+        F.ReskinButton(unsavedDialog.CancelButton)
+    end
 
     local function ReskinLayoutDialog(dialog)
         F.StripTextures(dialog)
@@ -102,23 +129,27 @@ tinsert(C.BlizzThemes, function()
         local check = dialog.CharacterSpecificLayoutCheckButton
         if check then
             F.ReskinCheckbox(check.Button)
-            check.Button.bg:SetInside(nil, 6, 6)
+            if check.Button.bg then
+                check.Button.bg:SetInside(nil, 6, 6)
+            end
         end
 
         local editbox = dialog.LayoutNameEditBox
         if editbox then
             F.ReskinEditbox(editbox)
-            editbox.__bg:SetPoint('TOPLEFT', -5, -5)
-            editbox.__bg:SetPoint('BOTTOMRIGHT', 5, 5)
+            if editbox.bg then
+                editbox.bg:SetPoint("TOPLEFT", -5, -5)
+                editbox.bg:SetPoint("BOTTOMRIGHT", 5, 5)
+            end
         end
 
         local importBox = dialog.ImportBox
         if importBox then
             F.StripTextures(importBox)
-            F.CreateBDFrame(importBox, 0.25)
+            F.CreateBDFrame(importBox, .25)
         end
     end
 
-    ReskinLayoutDialog(_G.EditModeNewLayoutDialog)
-    ReskinLayoutDialog(_G.EditModeImportLayoutDialog)
+    ReskinLayoutDialog(EditModeNewLayoutDialog)
+    ReskinLayoutDialog(EditModeImportLayoutDialog)
 end)
