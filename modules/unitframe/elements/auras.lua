@@ -269,7 +269,7 @@ do
                 return true
             else
                 local auraFilter = C.DB.Nameplate.AuraFilterMode
-                return (auraFilter == 3 and nameplateShowAll) or (auraFilter ~= 1 and data.isPlayerAura)
+                return (auraFilter == 3 and nameplateShowAll) or (auraFilter ~= 1 and data.isPlayerAura and data.isHarmful)
             end
         elseif style == 'player' then
             return true
@@ -493,6 +493,8 @@ do
         local bu = CreateFrame('Frame', nil, self)
         bu.gap = true
         bu.spacing = 5
+        bu.numBuffs = 0
+        bu.numDebuffs = 32
         bu.numTotal = 32
         bu.initialAnchor = 'BOTTOMLEFT'
         bu:SetPoint('BOTTOM', self, 'TOP', 0, 16)
