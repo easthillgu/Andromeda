@@ -1,120 +1,39 @@
 <Ui xmlns="http://www.blizzard.com/wow/ui/">
-    <!-- 3.80.1: AchievementFrame missing -->
-    <!--<Script file="Blizzard_AchievementUI.lua"/>-->
-    <!-- 3.80.1: BFA+ Adventure Map, not available -->
-    <!--<Script file="Blizzard_AdventureMap.lua"/>-->
-    <!-- 3.80.1: BFA+ Allied Races, not available -->
-    <!--<Script file="Blizzard_AlliedRacesUI.lua"/>-->
-    <!-- 3.80.1: SL Anima Diversion, not available -->
-    <!--<Script file="Blizzard_AnimaDiversionUI.lua"/>-->
-    <!-- 3.80.1: ArchaeologyFrame missing -->
-    <!--<Script file="Blizzard_ArchaeologyUI.lua"/>-->
+    <Script file="Blizzard_AchievementUI.lua"/>
     <Script file="Blizzard_ArenaRegistrar.lua"/>
-    <!-- 3.80.1: Legion Artifact, not available -->
-    <!--<Script file="Blizzard_ArtifactUI.lua"/>-->
-    <!-- 3.80.1: AuctionHouseFrame missing -->
-    <!--<Script file="Blizzard_AuctionHouseUI.lua"/>-->
-    <!-- 3.80.1: BFA Azerite, not available -->
-    <!--<Script file="Blizzard_AzeriteUI.lua"/>-->
-    <!-- 3.80.1: BarberShopFrame missing -->
-    <!--<Script file="Blizzard_BarbershopUI.lua"/>-->
-    <!-- 3.80.1: BattlefieldMapFrame missing -->
-    <!--<Script file="Blizzard_BattlefieldMap.lua"/>-->
+    <!-- 3.80.1: ArchaeologyFrame check needed -->
+    <!--<Script file="Blizzard_ArchaeologyUI.lua"/>-->
+    <Script file="Blizzard_AuctionHouseUI.lua"/>
+    <Script file="Blizzard_BarbershopUI.lua"/>
+    <Script file="Blizzard_BattlefieldMap.lua"/>
     <Script file="Blizzard_Battlenet.lua"/>
     <Script file="Blizzard_BGScore.lua"/>
-    <!-- 3.80.1: MoP Black Market, not available -->
-    <!--<Script file="Blizzard_BlackMarketUI.lua"/>-->
-    <!-- 3.80.1: InterfaceOptionsFrame missing -->
+    <!-- 3.80.1: InterfaceOptionsFrame, keep commented -->
     <!--<Script file="Blizzard_BlizzardOptions.lua"/>-->
     <Script file="Blizzard_Calendar.lua"/>
-    <!-- 3.80.1: MoP Challenges, not available -->
-    <!--<Script file="Blizzard_ChallengesUI.lua"/>-->
     <Script file="Blizzard_Channels.lua"/>
-    <!-- 3.80.1: SL Chromie Time, not available -->
-    <!--<Script file="Blizzard_ChromieTimeUI.lua"/>-->
-    <!-- 3.80.1: DF Class Talent, not available -->
-    <!--<Script file="Blizzard_ClassTalentUI.lua"/>-->
-    <!-- 3.80.1: Retail ClickBinding, not available -->
-    <!--<Script file="Blizzard_ClickBindingUI.lua"/>-->
-    <!-- 3.80.1: CollectionsJournal missing -->
     <Script file="Blizzard_Collections.lua"/>
-    <!-- 3.80.1: CombatLogFrame missing -->
+    <!-- 3.80.1: CombatLogFrame check needed -->
     <!--<Script file="Blizzard_CombatLog.lua"/>-->
     <Script file="Blizzard_Communities.lua"/>
-    <!-- 3.80.1: SL Contribution, not available -->
-    <!--<Script file="Blizzard_Contribution.lua"/>-->
-    <!-- 3.80.1: SL Covenant, not available -->
-    <!--<Script file="Blizzard_Covenant.lua"/>-->
-    <!-- 3.80.1: Retail Death Recap, not available -->
-    <!--<Script file="Blizzard_DeathRecap.lua"/>-->
     <Script file="Blizzard_DebugTools.lua"/>
-    <!-- 3.80.1: EncounterJournal missing -->
-    <!--<Script file="Blizzard_EncounterJournal.lua"/>-->
-    <!-- 3.80.1: Retail EventTrace, not available -->
-    <!--<Script file="Blizzard_EventTrace.lua"/>-->
-    <!-- 3.80.1: DF Expansion Landing Page, not available -->
-    <!--<Script file="Blizzard_ExpansionLandingPage.lua"/>-->
-    <!-- 3.80.1: BFA Flight Map, not available -->
-    <!--<Script file="Blizzard_FlightMap.lua"/>-->
-    <!-- 3.80.1: WoD Garrison, not available -->
-    <!--<Script file="Blizzard_GarrisonUI.lua"/>-->
-    <!-- 3.80.1: SL Generic Trait, not available -->
-    <!--<Script file="Blizzard_GenericTraitUI.lua"/>-->
-    <!-- 3.80.1: GMChatFrame missing -->
-    <!--<Script file="Blizzard_GMChatUI.lua"/>-->
+    <Script file="Blizzard_EventTrace.lua"/>
+    <Script file="Blizzard_FlightMap.lua"/>
+    <Script file="Blizzard_GMChatUI.lua"/>
     <Script file="Blizzard_Gossip.lua"/>
-    <!-- 3.80.1: GuildBankFrame missing -->
-    <!--<Script file="Blizzard_GuildBankUI.lua"/>-->
-    <Script file="Blizzard_GuildControlUI.lua"/>
-    <Script file="Blizzard_GuildUI.lua"/>
-    <!-- 3.80.1: InspectFrame missing -->
-    <!--<Script file="Blizzard_InspectUI.lua"/>-->
-    <!-- 3.80.1: BFA Islands Queue, not available -->
-    <!--<Script file="Blizzard_IslandsQueueUI.lua"/>-->
-    <!-- 3.80.1: ItemSocketingFrame missing -->
-    <!--<Script file="Blizzard_ItemSocketingUI.lua"/>-->
-    <!-- 3.80.1: MoP Item Upgrade, not available -->
-    <!--<Script file="Blizzard_ItemUpgradeUI.lua"/>-->
-    <!-- 3.80.1: Cata Looking For Guild, not available -->
-    <!--<Script file="Blizzard_LookingForGuildUI.lua"/>-->
-    <!-- 3.80.1: MacroFrame missing -->
-    <!--<Script file="Blizzard_MacroUI.lua"/>-->
-    <!-- 3.80.1: DF Major Factions, not available -->
-    <!--<Script file="Blizzard_MajorFactions.lua"/>-->
-    <!-- 3.80.1: NPE Frame missing -->
-    <!--<Script file="Blizzard_NewPlayerExperienceGuide.lua"/>-->
-    <!-- 3.80.1: Legion Obliterum, not available -->
-    <!--<Script file="Blizzard_ObliterumUI.lua"/>-->
-    <!-- 3.80.1: BFA Party Pose, not available -->
-    <!--<Script file="Blizzard_PartyPoseUI.lua"/>-->
-    <!-- 3.80.1: DF Perks Program, not available -->
-    <!--<Script file="Blizzard_PerksProgram.lua"/>-->
-    <!-- 3.80.1: SL Player Choice, not available -->
-    <!--<Script file="Blizzard_PlayerChoice.lua"/>-->
-    <!-- 3.80.1: DF Professions (reworked), not available -->
-    <!--<Script file="Blizzard_Professions.lua"/>-->
-    <!-- 3.80.1: DF Professions Customer Orders, not available -->
-    <!--<Script file="Blizzard_ProfessionsCustomerOrders.lua"/>-->
-    <Script file="Blizzard_PVPUI.lua"/>
+    <Script file="Blizzard_GuildBankUI.lua"/>
+    <!-- 3.80.1: GuildControlUI Retail-only, structure differs -->
+    <!--<Script file="Blizzard_GuildControlUI.lua"/>-->
+    <!-- 3.80.1: GuildUI Retail-only, structure differs -->
+    <!--<Script file="Blizzard_GuildUI.lua"/>-->
+    <Script file="Blizzard_InspectUI.lua"/>
+    <Script file="Blizzard_ItemSocketingUI.lua"/>
+    <Script file="Blizzard_MacroUI.lua"/>
+    <!-- 3.80.1: PVPUI Retail-only, Honor/Conquest system differs -->
+    <!--<Script file="Blizzard_PVPUI.lua"/>-->
     <Script file="Blizzard_RaidUI.lua"/>
-    <!-- 3.80.1: SL Runeforge, not available -->
-    <!--<Script file="Blizzard_RuneforgeUI.lua"/>-->
-    <!-- 3.80.1: BFA Scrapping Machine, not available -->
-    <!--<Script file="Blizzard_ScrappingMachineUI.lua"/>-->
-    <!-- 3.80.1: SL Soulbinds, not available -->
-    <!--<Script file="Blizzard_Soulbinds.lua"/>-->
-    <!-- 3.80.1: Retail Subscription Interstitial, not available -->
-    <!--<Script file="Blizzard_SubscriptionInterstitialUI.lua"/>-->
-    <!-- 3.80.1: PlayerTalentFrame exists, re-enabled -->
     <Script file="Blizzard_TalentUI.lua"/>
     <Script file="Blizzard_Tooltip.lua"/>
-    <!-- 3.80.1: SL Torghast Level Picker, not available -->
-    <!--<Script file="Blizzard_TorghastLevelPicker.lua"/>-->
-    <!-- 3.80.1: ClassTrainerFrame missing -->
-    <!--<Script file="Blizzard_TrainerUI.lua"/>-->
+    <Script file="Blizzard_TrainerUI.lua"/>
     <Script file="Blizzard_Tutorial.lua"/>
-    <!-- 3.80.1: MoP Void Storage, not available -->
-    <!--<Script file="Blizzard_VoidStorageUI.lua"/>-->
-    <!-- 3.80.1: SL+ Weekly Rewards, not available -->
-    <!--<Script file="Blizzard_WeeklyRewards.lua"/>-->
 </Ui>
