@@ -24,9 +24,11 @@ tinsert(C.BlizzThemes, function()
     end
     F.ReskinButton(_G.TradeFrameTradeButton)
     F.ReskinButton(_G.TradeFrameCancelButton)
-    F.ReskinEditbox(_G.TradePlayerInputMoneyFrameGold)
-    F.ReskinEditbox(_G.TradePlayerInputMoneyFrameSilver)
-    F.ReskinEditbox(_G.TradePlayerInputMoneyFrameCopper)
+
+    -- Skip reskinning money editboxes as they are protected in secure frames
+    -- F.ReskinEditbox(_G.TradePlayerInputMoneyFrameGold)
+    -- F.ReskinEditbox(_G.TradePlayerInputMoneyFrameSilver)
+    -- F.ReskinEditbox(_G.TradePlayerInputMoneyFrameCopper)
 
     _G.TradePlayerInputMoneyFrameSilver:SetPoint('LEFT', _G.TradePlayerInputMoneyFrameGold, 'RIGHT', 1, 0)
     _G.TradePlayerInputMoneyFrameCopper:SetPoint('LEFT', _G.TradePlayerInputMoneyFrameSilver, 'RIGHT', 1, 0)

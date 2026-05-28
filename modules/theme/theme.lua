@@ -15,26 +15,27 @@ function THEME:LoadSkins(list)
     end
 
     for addonName, func in pairs(list) do
-        local isLoaded, isFinished = IsAddOnLoaded(addonName)
+        local isLoaded, isFinished = C_AddOns.IsAddOnLoaded(addonName)
         if isLoaded and isFinished then
-            xpcall(func, function(err)
-                F:Debug(('|cffff0000[Theme:%s]|r %s'):format(addonName, tostring(err)))
-            end)
+            xpcall(func, geterrorhandler())
             list[addonName] = nil
         end
     end
 end
 
 function THEME:LoadAddOnSkins()
-    for _, func in pairs(C.BlizzThemes) do
-        xpcall(func, function(err)
-            F:Debug(('|cffff0000[Theme:BlizzThemes]|r %s'):format(tostring(err)))
-        end)
-    end
-    wipe(C.BlizzThemes)
+    if C_AddOns.IsAddOnLoaded("AuroraClassic") or C_AddOns.IsAddOnLoaded("Aurora") then return end
 
     if not _G.ANDROMEDA_ADB.ReskinBlizz then
+        wipe(C.BlizzThemes)
         wipe(C.Themes)
+    end
+
+    if next(C.BlizzThemes) then
+        for _, func in pairs(C.BlizzThemes) do
+            xpcall(func, geterrorhandler())
+        end
+        wipe(C.BlizzThemes)
     end
 
     THEME:LoadSkins(C.Themes) -- blizzard ui
@@ -43,28 +44,55 @@ function THEME:LoadAddOnSkins()
     F:RegisterEvent('ADDON_LOADED', function(_, addonName)
         local blizzFunc = C.Themes[addonName]
         if blizzFunc then
-            xpcall(blizzFunc, function(err)
-                F:Debug(('|cffff0000[Theme:%s]|r %s'):format(addonName, tostring(err)))
-            end)
+            xpcall(blizzFunc, geterrorhandler())
             C.Themes[addonName] = nil
         end
 
         local addonFunc = C.AddonThemes[addonName]
         if addonFunc then
-            xpcall(addonFunc, function(err)
-                F:Debug(('|cffff0000[Theme:Addon:%s]|r %s'):format(addonName, tostring(err)))
-            end)
+            xpcall(addonFunc, geterrorhandler())
             C.AddonThemes[addonName] = nil
+        end
+    end)
+
+    hooksecurefunc("SetItemButtonQuality", function(button, quality, itemID)
+        if quality then
+            if quality >= Enum.ItemQuality.Standard and C.QualityColors and C.QualityColors[quality] then
+                local colors = C.QualityColors[quality]
+                if button.IconBorder then
+                    button.IconBorder:Show()
+                    button.IconBorder:SetVertexColor(colors.r, colors.g, colors.b)
+                end
+            else
+                if button.IconBorder then
+                    button.IconBorder:Hide()
+                end
+            end
+        else
+            if button.IconBorder then
+                button.IconBorder:Hide()
+            end
         end
     end)
 end
 
 do
     local function reskinTimerBar(bar)
+        if not bar then return end
+
         bar:SetSize(200, 18)
         F.StripTextures(bar)
 
-        local statusbar = bar.StatusBar or _G[bar:GetName() .. 'StatusBar']
+        local statusbar
+        if bar.StatusBar then
+            statusbar = bar.StatusBar
+        elseif bar.GetName then
+            local name = bar:GetName()
+            if name then
+                statusbar = _G[name .. 'StatusBar']
+            end
+        end
+
         if statusbar then
             statusbar:SetAllPoints()
         elseif bar.SetStatusBarTexture then
@@ -118,10 +146,11 @@ do
     end
 
     local function updateTimerTracker()
-        for _, timer in pairs(_G.TimerTracker.timerList) do
-            if timer.bar and not timer.bar.styled then
-                reskinTimerBar(timer.bar)
+        if not _G.TimerTracker or not _G.TimerTracker.timerList then return end
 
+        for _, timer in pairs(_G.TimerTracker.timerList) do
+            if timer and timer.bar and not timer.bar.styled then
+                xpcall(reskinTimerBar, geterrorhandler(), timer.bar)
                 timer.bar.styled = true
             end
         end
@@ -132,7 +161,7 @@ do
             return
         end
 
-        pcall(updateTimerTracker)
+        xpcall(updateTimerTracker, geterrorhandler())
 
         F:RegisterEvent('START_TIMER', updateTimerTracker)
     end

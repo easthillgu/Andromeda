@@ -243,9 +243,17 @@ C.Themes['Blizzard_AchievementUI'] = function()
         end
     end)
 
+    hooksecurefunc('AchievementButton_GetProgressBar', function(index)
+        local bar = _G['AchievementFrameProgressBar' .. index]
+        if bar and not bar.styled then
+            SetupStatusbar(bar)
+            bar.styled = true
+        end
+    end)
+
     -- Summaries
     _G.AchievementFrameStatsBG:Hide()
-    select(4, _G.AchievementFrameStats:GetChildren()):Hide()
+    select(3, _G.AchievementFrameStats:GetChildren()):Hide()
     F.ReskinTrimScroll(_G.AchievementFrameStats.ScrollBar)
     hooksecurefunc(_G.AchievementFrameStats.ScrollBox, 'Update', function(self)
         for i = 1, self.ScrollTarget:GetNumChildren() do
@@ -261,6 +269,17 @@ C.Themes['Blizzard_AchievementUI'] = function()
             end
         end
     end)
+
+    for i = 1, 20 do
+        local bu = _G['AchievementFrameStatsContainerButton' .. i]
+        if bu then
+            F.StripTextures(bu)
+            local bg = F.CreateBDFrame(bu, 0.25)
+            bg:SetPoint('TOPLEFT', 2, -C.MULT)
+            bg:SetPoint('BOTTOMRIGHT', 4, C.MULT)
+            SetupButtonHighlight(bu, bg)
+        end
+    end
 
     -- Comparison
 
@@ -311,6 +330,35 @@ C.Themes['Blizzard_AchievementUI'] = function()
 
                 child.styled = true
             end
+        end
+    end)
+
+    -- Comparison Stats
+    F.ReskinTrimScroll(_G.AchievementFrameComparison.StatsContainer.ScrollBar)
+    for i = 1, 20 do
+        local bu = _G['AchievementFrameComparisonStatsContainerButton' .. i]
+        if bu then
+            F.StripTextures(bu)
+            local bg = F.CreateBDFrame(bu, 0.25)
+            bg:SetPoint('TOPLEFT', 2, -C.MULT)
+            bg:SetPoint('BOTTOMRIGHT', 4, C.MULT)
+            SetupButtonHighlight(bu, bg)
+        end
+    end
+
+    _G.AchievementFrameComparisonWatermark:SetAlpha(0)
+
+    -- Font width fix for mini achievements
+    local fixedIndex = 1
+    hooksecurefunc('AchievementObjectives_DisplayProgressiveAchievement', function()
+        local mini = _G['AchievementFrameMiniAchievement' .. fixedIndex]
+        while mini do
+            mini.points:SetWidth(22)
+            mini.points:ClearAllPoints()
+            mini.points:SetPoint('BOTTOMRIGHT', 2, 2)
+
+            fixedIndex = fixedIndex + 1
+            mini = _G['AchievementFrameMiniAchievement' .. fixedIndex]
         end
     end)
 end
