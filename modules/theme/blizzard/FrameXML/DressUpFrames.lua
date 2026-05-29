@@ -48,9 +48,16 @@ tinsert(C.BlizzThemes, function()
         end)
     end
 
-    _G.DressUpFrameOutfitDropDown:SetHeight(32)
-    _G.DressUpFrameOutfitDropDown.SaveButton:SetPoint('LEFT', _G.DressUpFrameOutfitDropDown, 'RIGHT', -13, 2)
-    _G.DressUpFrameResetButton:SetPoint('RIGHT', _G.DressUpFrameCancelButton, 'LEFT', -1, 0)
+    -- 3.80.1: DressUpFrameOutfitDropDown may not exist
+    if _G.DressUpFrameOutfitDropDown then
+        _G.DressUpFrameOutfitDropDown:SetHeight(32)
+        if _G.DressUpFrameOutfitDropDown.SaveButton then
+            _G.DressUpFrameOutfitDropDown.SaveButton:SetPoint('LEFT', _G.DressUpFrameOutfitDropDown, 'RIGHT', -13, 2)
+        end
+    end
+    if _G.DressUpFrameResetButton and _G.DressUpFrameCancelButton then
+        _G.DressUpFrameResetButton:SetPoint('RIGHT', _G.DressUpFrameCancelButton, 'LEFT', -1, 0)
+    end
 
     DressUpFrame.ModelBackground:Hide()
     F.CreateBDFrame(DressUpFrame.ModelScene)
