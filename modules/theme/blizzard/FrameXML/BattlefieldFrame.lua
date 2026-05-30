@@ -15,7 +15,10 @@ do
                     orig(self, CreateColor(r, g, b, a or 1))
                 end
             else
-                orig(self, r, g or 1)
+                local ok = pcall(orig, self, r, g or 1)
+                if not ok and type(r) == 'table' and r.r then
+                    orig(self, r.r, r.g, r.b, g or 1)
+                end
             end
         end
     end
