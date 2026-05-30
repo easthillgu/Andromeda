@@ -52,21 +52,13 @@ local iconsPerRow = 5
 local rowMult = iconsPerRow / 2 - 1
 local currentIndex, pendingTime, timeThreshold = 0, 5, 12
 local buttons = {}
-local removedTextures = {
-    [136430] = true,
-    [136467] = true,
-}
 
 local function RestyleAddOnIcon(child, name)
     for j = 1, child:GetNumRegions() do
         local region = select(j, child:GetRegions())
         if region:IsObjectType('Texture') then
             local texture = region:GetTexture()
-            if not texture then
-                -- skip
-            elseif removedTextures[texture] then
-                region:SetTexture(nil)
-            elseif type(texture) == 'string' and (strfind(texture, 'Interface\\CharacterFrame') or strfind(texture, 'Interface\\Minimap')) then
+            if texture and type(texture) == 'string' and (strfind(texture, 'Interface\\CharacterFrame') or strfind(texture, 'Interface\\Minimap')) then
                 region:SetTexture(nil)
             end
 
