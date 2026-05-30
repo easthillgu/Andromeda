@@ -242,7 +242,7 @@ function INVENTORY:CreateReagentButton(f)
                 f.bank:Hide()
 
                 if btn == 'RightButton' then
-                    DepositReagentBank()
+                    pcall(DepositReagentBank)
                 end
             end
         end
@@ -283,7 +283,7 @@ end
 
 function INVENTORY:AutoDeposit()
     if C.DB.Inventory.AutoDeposit and not IsShiftKeyDown() then
-        DepositReagentBank()
+        pcall(DepositReagentBank)
     end
 end
 
@@ -296,7 +296,7 @@ function INVENTORY:CreateDepositButton()
             C.DB.Inventory.AutoDeposit = not C.DB.Inventory.AutoDeposit
             updateDepositButtonStatus(bu)
         else
-            DepositReagentBank()
+            pcall(DepositReagentBank)
         end
     end)
 
@@ -346,17 +346,17 @@ function INVENTORY:CreateSortButton(name)
         end
 
         if name == 'Bank' then
-            pcall(SortBankBags)
+            INVENTORY:SortBankBags()
         elseif name == 'Reagent' then
             pcall(C_Container.SortReagentBankBags)
         else
             if C.DB.Inventory.SortMode == 1 then
-                pcall(SortBags)
+                INVENTORY:SortBags()
             elseif C.DB.Inventory.SortMode == 2 then
                 if InCombatLockdown() then
                     _G.UIErrorsFrame:AddMessage(C.INFO_COLOR .. _G.ERR_NOT_IN_COMBAT)
                 else
-                    pcall(SortBags)
+                    INVENTORY:SortBags()
                     wipe(sortCache)
                     INVENTORY.Bags.isSorting = true
                     F:Delay(0.5, INVENTORY.ReverseSort)
@@ -974,17 +974,8 @@ function INVENTORY:OnLogin()
     end
 
     local function GetIconOverlayAtlas(item)
-        if not item.link then
-            return
-        end
-
-        if C_AzeriteEmpoweredItem and C_AzeriteEmpoweredItem.IsAzeriteEmpoweredItemByID(item.link) then
-            return 'AzeriteIconFrame'
-        elseif IsCosmeticItem(item.link) then
-            return 'CosmeticIconFrame'
-        elseif C_Soulbinds and C_Soulbinds.IsItemConduitByItemInfo(item.link) then
-            return 'ConduitIconFrame', 'ConduitIconFrame-Corners'
-        end
+        -- 3.80.1: C_AzeriteEmpoweredItem, IsCosmeticItem, C_Soulbinds all Retail-only
+        return nil
     end
 
     local function UpdateCanIMogIt(self, item)
@@ -1351,8 +1342,7 @@ function INVENTORY:OnLogin()
         end
     end
 
-    -- Sort order
-    pcall(SetSortBagsRightToLeft, C.DB.Inventory.SortMode == 1)
+    -- Sort order (3.80.1: SetSortBagsRightToLeft not available)
     pcall(C_Container.SetInsertItemsLeftToRight, false)
 
     -- Init

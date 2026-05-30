@@ -58,19 +58,8 @@ local function isItemEquipSet(item)
 end
 
 local function isAzeriteArmor(item)
-    if not C.DB.Inventory.ItemFilter then
-        return
-    end
-
-    if not C.DB.Inventory.FilterAzeriteArmor then
-        return
-    end
-
-    if not item.link then
-        return
-    end
-
-    return C_AzeriteEmpoweredItem and C_AzeriteEmpoweredItem.IsAzeriteEmpoweredItemByID(item.link)
+    -- 3.80.1: C_AzeriteEmpoweredItem does not exist, always return false
+    return false
 end
 
 local iLvlClassIDs = {
