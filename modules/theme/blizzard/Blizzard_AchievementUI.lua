@@ -228,11 +228,17 @@ C.Themes['Blizzard_AchievementUI'] = function()
 
     for i = 1, 12 do
         local bu = _G['AchievementFrameSummaryCategoriesCategory' .. i]
-        SetupStatusbar(bu)
-        bu.Label:SetTextColor(1, 1, 1)
-        bu.Label:SetPoint('LEFT', bu, 'LEFT', 6, 0)
-        bu.Text:SetPoint('RIGHT', bu, 'RIGHT', -5, 0)
-        _G[bu:GetName() .. 'ButtonHighlight']:SetAlpha(0)
+        if bu then
+            SetupStatusbar(bu)
+            if bu.Label then
+                bu.Label:SetTextColor(1, 1, 1)
+                bu.Label:SetPoint('LEFT', bu, 'LEFT', 6, 0)
+            end
+            if bu.Text then
+                bu.Text:SetPoint('RIGHT', bu, 'RIGHT', -5, 0)
+            end
+            _G[bu:GetName() .. 'ButtonHighlight']:SetAlpha(0)
+        end
     end
 
     local bar = _G.AchievementFrameSummaryCategoriesStatusBar
