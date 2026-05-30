@@ -69,8 +69,10 @@ tinsert(C.BlizzThemes, function()
     end
 
     F.ReskinPortraitFrame(_G.SpellBookFrame)
-    -- 美化关闭按钮
-    if _G.SpellBookFrameCloseButton then
+    -- 美化关闭按钮 (3.80.1: try multiple possible names)
+    if _G.SpellBookCloseButton then
+        F.ReskinClose(_G.SpellBookCloseButton)
+    elseif _G.SpellBookFrameCloseButton then
         F.ReskinClose(_G.SpellBookFrameCloseButton)
     elseif _G.SpellBookFrame.CloseButton then
         F.ReskinClose(_G.SpellBookFrame.CloseButton)
