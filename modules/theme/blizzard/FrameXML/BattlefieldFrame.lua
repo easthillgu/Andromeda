@@ -15,7 +15,7 @@ do
                     orig(self, CreateColor(r, g, b, a or 1))
                 end
             else
-                orig(self, r, g)
+                orig(self, r, g or 1)
             end
         end
     end

@@ -54,7 +54,9 @@ tinsert(C.BlizzThemes, function()
     end
     _G.DressUpFrameResetButton:SetPoint('RIGHT', _G.DressUpFrameCancelButton, 'LEFT', -1, 0)
 
-    DressUpFrame.ModelBackground:Hide()
+    if DressUpFrame.ModelBackground then
+        DressUpFrame.ModelBackground:Hide()
+    end
     F.CreateBDFrame(DressUpFrame.ModelScene)
 
     -- 3.80.1: TransmogAndMountDressupFrame Retail-only, nil guard
