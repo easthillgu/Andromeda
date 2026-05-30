@@ -100,83 +100,91 @@ C.Themes['Blizzard_AchievementUI'] = function()
     end
 
     -- AchievementFrameCategories
-    F.StripTextures(_G.AchievementFrameCategories)
-    F.ReskinTrimScroll(_G.AchievementFrameCategories.ScrollBar)
-    hooksecurefunc(_G.AchievementFrameCategories.ScrollBox, 'Update', function(self)
-        for i = 1, self.ScrollTarget:GetNumChildren() do
-            local child = select(i, self.ScrollTarget:GetChildren())
-            local button = child.Button
-            if button and not button.styled then
-                button.Background:Hide()
-                local bg = F.CreateBDFrame(button, 0.25)
-                bg:SetPoint('TOPLEFT', 0, -1)
-                bg:SetPoint('BOTTOMRIGHT')
-                SetupButtonHighlight(button, bg)
+    if _G.AchievementFrameCategories then
+        F.StripTextures(_G.AchievementFrameCategories)
+        F.ReskinTrimScroll(_G.AchievementFrameCategories.ScrollBar)
+        if _G.AchievementFrameCategories.ScrollBox then
+            hooksecurefunc(_G.AchievementFrameCategories.ScrollBox, 'Update', function(self)
+                for i = 1, self.ScrollTarget:GetNumChildren() do
+                    local child = select(i, self.ScrollTarget:GetChildren())
+                    local button = child.Button
+                    if button and not button.styled then
+                        button.Background:Hide()
+                        local bg = F.CreateBDFrame(button, 0.25)
+                        bg:SetPoint('TOPLEFT', 0, -1)
+                        bg:SetPoint('BOTTOMRIGHT')
+                        SetupButtonHighlight(button, bg)
 
-                button.styled = true
-            end
-        end
-    end)
-
-    F.StripTextures(_G.AchievementFrameAchievements)
-    F.ReskinTrimScroll(_G.AchievementFrameAchievements.ScrollBar)
-    select(3, _G.AchievementFrameAchievements:GetChildren()):Hide()
-
-    local function updateAccountString(button)
-        if button.DateCompleted:IsShown() then
-            if button.accountWide then
-                button.Label:SetTextColor(0, 0.6, 1)
-            else
-                button.Label:SetTextColor(0.9, 0.9, 0.9)
-            end
-        else
-            if button.accountWide then
-                button.Label:SetTextColor(0, 0.3, 0.5)
-            else
-                button.Label:SetTextColor(0.65, 0.65, 0.65)
-            end
+                        button.styled = true
+                    end
+                end
+            end)
         end
     end
 
-    local function updateProgressBars(frame)
-        local objectives = frame:GetObjectiveFrame()
-        if objectives and objectives.progressBars then
-            for _, bar in next, objectives.progressBars do
-                if not bar.styled then
-                    SetupStatusbar(bar)
-                    bar.styled = true
+    if _G.AchievementFrameAchievements then
+        F.StripTextures(_G.AchievementFrameAchievements)
+        F.ReskinTrimScroll(_G.AchievementFrameAchievements.ScrollBar)
+        select(3, _G.AchievementFrameAchievements:GetChildren()):Hide()
+
+        local function updateAccountString(button)
+            if button.DateCompleted:IsShown() then
+                if button.accountWide then
+                    button.Label:SetTextColor(0, 0.6, 1)
+                else
+                    button.Label:SetTextColor(0.9, 0.9, 0.9)
+                end
+            else
+                if button.accountWide then
+                    button.Label:SetTextColor(0, 0.3, 0.5)
+                else
+                    button.Label:SetTextColor(0.65, 0.65, 0.65)
                 end
             end
         end
-    end
 
-    hooksecurefunc(_G.AchievementFrameAchievements.ScrollBox, 'Update', function(self)
-        for i = 1, self.ScrollTarget:GetNumChildren() do
-            local child = select(i, self.ScrollTarget:GetChildren())
-            if child and not child.styled then
-                F.StripTextures(child, true)
-                child.Background:SetAlpha(0)
-                child.Highlight:SetAlpha(0)
-                child.Icon.frame:Hide()
-                child.Description:SetTextColor(0.9, 0.9, 0.9)
-                child.Description.SetTextColor = nop
-
-                local bg = F.CreateBDFrame(child, 0.25)
-                bg:SetPoint('TOPLEFT', 1, -1)
-                bg:SetPoint('BOTTOMRIGHT', 0, 2)
-                F.ReskinIcon(child.Icon.texture)
-
-                F.ReskinCheckbox(child.Tracked)
-                child.Tracked:SetSize(20, 20)
-                child.Check:SetAlpha(0)
-
-                hooksecurefunc(child, 'UpdatePlusMinusTexture', updateAccountString)
-                hooksecurefunc(child, 'DisplayObjectives', updateProgressBars)
-
-                child.styled = true
+        local function updateProgressBars(frame)
+            local objectives = frame:GetObjectiveFrame()
+            if objectives and objectives.progressBars then
+                for _, bar in next, objectives.progressBars do
+                    if not bar.styled then
+                        SetupStatusbar(bar)
+                        bar.styled = true
+                    end
+                end
             end
         end
-    end)
+
+        if _G.AchievementFrameAchievements.ScrollBox then
+            hooksecurefunc(_G.AchievementFrameAchievements.ScrollBox, 'Update', function(self)
+                for i = 1, self.ScrollTarget:GetNumChildren() do
+                    local child = select(i, self.ScrollTarget:GetChildren())
+                    if child and not child.styled then
+                        F.StripTextures(child, true)
+                        child.Background:SetAlpha(0)
+                        child.Highlight:SetAlpha(0)
+                        child.Icon.frame:Hide()
+                        child.Description:SetTextColor(0.9, 0.9, 0.9)
+                        child.Description.SetTextColor = nop
+
+                        local bg = F.CreateBDFrame(child, 0.25)
+                        bg:SetPoint('TOPLEFT', 1, -1)
+                        bg:SetPoint('BOTTOMRIGHT', 0, 2)
+                        F.ReskinIcon(child.Icon.texture)
+
+                        F.ReskinCheckbox(child.Tracked)
+                        child.Tracked:SetSize(20, 20)
+                        child.Check:SetAlpha(0)
+
+                        hooksecurefunc(child, 'UpdatePlusMinusTexture', updateAccountString)
+                        hooksecurefunc(child, 'DisplayObjectives', updateProgressBars)
+
+                        child.styled = true
+                    end
+                end
+            end)
+        end
+    end
 
     F.StripTextures(_G.AchievementFrameSummary)
     _G.AchievementFrameSummary:GetChildren():Hide()
