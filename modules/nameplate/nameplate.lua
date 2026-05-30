@@ -570,6 +570,7 @@ function NAMEPLATE:ConfigureAuras(element)
     element.alwaysShowStealable = C.DB.Nameplate.DispellMode == 2
     element.desaturateDebuff = C.DB.Nameplate.DesaturateIcon
     element.disableMouse = C.DB.Nameplate.DisableMouse
+    element.onlyShowPlayer = C.DB.Nameplate.OnlyShowPlayer
 end
 
 function NAMEPLATE:RefreshAuras(frame)

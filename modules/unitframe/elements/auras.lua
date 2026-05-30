@@ -489,6 +489,45 @@ do
         F:RegisterEvent('PLAYER_ENTERING_WORLD', UNITFRAME.UpdateAuraFilter)
     end
 
+    -- 3.80.1: Match oUF CustomFilter signature (was dead code as FilterAura)
+    function NAMEPLATE.NameplateAuraFilter(frame, element, unit, button, aura, name, icon,
+        applications, dispelName, duration, expirationTime, sourceUnit, isStealable,
+        nameplateShowPersonal, spellId, canApplyAura, isBossAura, isFromPlayerOrPlayerPet,
+        nameplateShowAll, timeMod)
+
+        local isPlayerAura = isFromPlayerOrPlayerPet
+        local isHarmful = button.isDebuff
+
+        if name and spellId == 209859 then -- pass all bolster
+            return true
+        end
+
+        if element.__owner.plateType == 'NameOnly' then
+            return NAMEPLATE.NameplateAuraWhiteList[spellId]
+        end
+
+        if NAMEPLATE.NameplateAuraBlackList[spellId] then
+            return false
+        end
+
+        if (element.showStealableBuffs and isStealable or element.alwaysShowStealable and dispellType[dispelName]) and not UnitIsPlayer(unit) and not isHarmful then
+            return true
+        end
+
+        if NAMEPLATE.NameplateAuraWhiteList[spellId] then
+            return true
+        end
+
+        local auraFilter = C.DB.Nameplate.AuraFilterMode
+        if auraFilter == 1 then
+            return false
+        elseif auraFilter == 2 then
+            return isPlayerAura and isHarmful
+        else  -- mode 3: show all debuffs
+            return isHarmful
+        end
+    end
+
     function NAMEPLATE:CreateAuras(self)
         local bu = CreateFrame('Frame', nil, self)
         bu.gap = true
@@ -514,7 +553,7 @@ do
         bu.disableMouse = true
         bu.disableCooldown = true
 
-        bu.FilterAura = UNITFRAME.FilterAura
+        bu.CustomFilter = NAMEPLATE.NameplateAuraFilter
         bu.PostCreateButton = UNITFRAME.PostCreateButton
         bu.PostUpdateButton = UNITFRAME.PostUpdateButton
         bu.PostUpdateGapButton = UNITFRAME.PostUpdateGapButton
