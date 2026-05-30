@@ -50,48 +50,54 @@ C.Themes['Blizzard_AchievementUI'] = function()
     F.ReskinClose(_G.AchievementFrameCloseButton)
 
     -- Search box
-    F.ReskinEditbox(AchievementFrame.SearchBox)
-    AchievementFrame.SearchBox:ClearAllPoints()
-    AchievementFrame.SearchBox:SetPoint('TOPRIGHT', AchievementFrame, 'TOPRIGHT', -25, -5)
-    AchievementFrame.SearchBox:SetPoint('BOTTOMLEFT', AchievementFrame, 'TOPRIGHT', -130, -25)
-
-    local previewContainer = AchievementFrame.SearchPreviewContainer
-    local showAllSearchResults = previewContainer.ShowAllSearchResults
-    F.StripTextures(previewContainer)
-    previewContainer:ClearAllPoints()
-    previewContainer:SetPoint('TOPLEFT', AchievementFrame, 'TOPRIGHT', 7, -2)
-    local bg = F.SetBD(previewContainer)
-    bg:SetPoint('TOPLEFT', -3, 3)
-    bg:SetPoint('BOTTOMRIGHT', showAllSearchResults, 3, -3)
-
-    for i = 1, 5 do
-        F.StyleSearchButton(previewContainer['SearchPreview' .. i])
+    if AchievementFrame.SearchBox then
+        F.ReskinEditbox(AchievementFrame.SearchBox)
+        AchievementFrame.SearchBox:ClearAllPoints()
+        AchievementFrame.SearchBox:SetPoint('TOPRIGHT', AchievementFrame, 'TOPRIGHT', -25, -5)
+        AchievementFrame.SearchBox:SetPoint('BOTTOMLEFT', AchievementFrame, 'TOPRIGHT', -130, -25)
     end
-    F.StyleSearchButton(showAllSearchResults)
 
-    local result = AchievementFrame.SearchResults
-    result:SetPoint('BOTTOMLEFT', AchievementFrame, 'BOTTOMRIGHT', 15, -1)
-    F.StripTextures(result)
-    local rbg = F.SetBD(result)
-    rbg:SetPoint('TOPLEFT', -10, 0)
-    rbg:SetPoint('BOTTOMRIGHT')
+    if AchievementFrame.SearchPreviewContainer then
+        local previewContainer = AchievementFrame.SearchPreviewContainer
+        local showAllSearchResults = previewContainer.ShowAllSearchResults
+        F.StripTextures(previewContainer)
+        previewContainer:ClearAllPoints()
+        previewContainer:SetPoint('TOPLEFT', AchievementFrame, 'TOPRIGHT', 7, -2)
+        local bg = F.SetBD(previewContainer)
+        bg:SetPoint('TOPLEFT', -3, 3)
+        bg:SetPoint('BOTTOMRIGHT', showAllSearchResults, 3, -3)
 
-    F.ReskinClose(result.CloseButton)
-    F.ReskinTrimScroll(result.ScrollBar)
-    hooksecurefunc(result.ScrollBox, 'Update', function(self)
-        for i = 1, self.ScrollTarget:GetNumChildren() do
-            local child = select(i, self.ScrollTarget:GetChildren())
-            if not child.styled then
-                F.StripTextures(child, 2)
-                F.ReskinIcon(child.Icon)
-                local bg = F.CreateBDFrame(child, 0.25)
-                bg:SetInside()
-                SetupButtonHighlight(child, bg)
-
-                child.styled = true
-            end
+        for i = 1, 5 do
+            F.StyleSearchButton(previewContainer['SearchPreview' .. i])
         end
-    end)
+        F.StyleSearchButton(showAllSearchResults)
+    end
+
+    if AchievementFrame.SearchResults then
+        local result = AchievementFrame.SearchResults
+        result:SetPoint('BOTTOMLEFT', AchievementFrame, 'BOTTOMRIGHT', 15, -1)
+        F.StripTextures(result)
+        local rbg = F.SetBD(result)
+        rbg:SetPoint('TOPLEFT', -10, 0)
+        rbg:SetPoint('BOTTOMRIGHT')
+
+        F.ReskinClose(result.CloseButton)
+        F.ReskinTrimScroll(result.ScrollBar)
+        hooksecurefunc(result.ScrollBox, 'Update', function(self)
+            for i = 1, self.ScrollTarget:GetNumChildren() do
+                local child = select(i, self.ScrollTarget:GetChildren())
+                if not child.styled then
+                    F.StripTextures(child, 2)
+                    F.ReskinIcon(child.Icon)
+                    local bg = F.CreateBDFrame(child, 0.25)
+                    bg:SetInside()
+                    SetupButtonHighlight(child, bg)
+
+                    child.styled = true
+                end
+            end
+        end)
+    end
 
     -- AchievementFrameCategories
     F.StripTextures(_G.AchievementFrameCategories)
