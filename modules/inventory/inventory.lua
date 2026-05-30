@@ -854,7 +854,6 @@ function INVENTORY:OnLogin()
 
     local initBagType
     function Backpack:OnBankOpened()
-        _G.BankFrame:Show()
         self:GetContainer('Bank'):Show()
 
         if not initBagType then
@@ -865,13 +864,8 @@ function INVENTORY:OnLogin()
     end
 
     function Backpack:OnBankClosed()
-        _G.BankFrame.selectedTab = 1
-        _G.BankFrame:Hide()
         self:GetContainer('Bank'):Hide()
         self:GetContainer('Reagent'):Hide()
-        if _G.ReagentBankFrame then
-            _G.ReagentBankFrame:Hide()
-        end
     end
 
     local MyButton = Backpack:GetItemButtonClass()

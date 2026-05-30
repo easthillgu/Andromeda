@@ -1,11 +1,11 @@
 local F, C, L = unpack(select(2, ...))
 local INVENTORY = F:GetModule('Inventory')
 
--- 3.80.1: Use C_Container API, no _G. override
-local GetContainerNumSlots = C_Container.GetContainerNumSlots
-local GetContainerItemInfo = C_Container.GetContainerItemInfo
-local GetContainerItemLink = C_Container.GetContainerItemLink
-local PickupContainerItem = C_Container.PickupContainerItem
+-- 3.80.1: C_Container API with global fallback
+local GetContainerNumSlots = C_Container.GetContainerNumSlots or _G.GetContainerNumSlots
+local GetContainerItemInfo = C_Container.GetContainerItemInfo or _G.GetContainerItemInfo
+local GetContainerItemLink = C_Container.GetContainerItemLink or _G.GetContainerItemLink
+local PickupContainerItem = C_Container.PickupContainerItem or _G.PickupContainerItem
 
 CreateFrame('GameTooltip', 'AndromedaSortBagsTooltip', nil, 'GameTooltipTemplate')
 
