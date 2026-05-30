@@ -159,8 +159,12 @@ function MAP:CreateMailButton()
         updateIndicatorFrameAnchor(indicatorFrame)
         hooksecurefunc(indicatorFrame, 'SetPoint', updateIndicatorFrameAnchor)
         indicatorFrame:SetFrameLevel(11)
+        icon:SetTexture(C.Assets.Textures.MinimapMail)
+        icon:SetSize(21, 21)
+        icon:SetVertexColor(1, 1, 0)
         icon:SetScale(1.2)
         icon:SetPoint('CENTER', indicatorFrame)
+        F.ReskinIcon(icon)
     end
 end
 
