@@ -45,7 +45,8 @@ tinsert(C.BlizzThemes, function()
                     end
                 end
             end
-        end)
+        end
+    end)
     end
 
     -- 3.80.1: DressUpFrameOutfitDropDown may not exist
