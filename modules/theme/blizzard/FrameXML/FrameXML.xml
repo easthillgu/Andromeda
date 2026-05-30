@@ -2,6 +2,7 @@
     <Script file="AddonList.lua"/>
     <Script file="AlertFrames.lua"/>
     <Script file="Bags.lua"/>
+    <Script file="BattlefieldFrame.lua"/>
     <Script file="CharacterFrame.lua"/>
     <Script file="ChatBubbles.lua"/>
     <Script file="ChatConfigFrame.lua"/>
@@ -10,11 +11,12 @@
     <Script file="CompactRaidFrames.lua"/>
     <Script file="DressUpFrames.lua"/>
     <Script file="EditModeManager.lua"/>
+    <Script file="Fonts.lua"/>
     <Script file="FriendsFrame.lua"/>
     <Script file="GameMenuFrame.lua"/>
     <Script file="GhostFrame.lua"/>
     <Script file="GossipFrame.lua"/>
-    <!-- 3.80.1: GuildInviteFrame check needed -->
+    <!-- 3.80.1: Retail-only (GuildInviteFrame) -->
     <!--<Script file="GuildInviteFrame.lua"/>-->
     <Script file="GuildRegistrarFrame.lua"/>
     <Script file="HelpFrame.lua"/>
@@ -23,15 +25,18 @@
     <Script file="LFGList.lua"/>
     <Script file="LootFrame.lua"/>
     <Script file="LootHistory.lua"/>
+    <Script file="MainMenuBarMicroButtons.lua"/>
     <Script file="MailFrame.lua"/>
+    <Script file="Menu.lua"/>
     <Script file="MerchantFrame.lua"/>
     <Script file="ModelPreviewFrame.lua"/>
     <Script file="MovieFrame.lua"/>
     <Script file="NavigationBar.lua"/>
-    <!-- 3.80.1: ObjectiveTracker check needed -->
+    <!-- 3.80.1: Retail-only (ObjectiveTracker) -->
     <!--<Script file="ObjectiveTracker.lua"/>-->
     <Script file="PetitionFrame.lua"/>
     <Script file="PetStable.lua"/>
+    <Script file="ProductChoiceFrame.lua"/>
     <Script file="PVEFrame.lua"/>
     <Script file="QuestFrame.lua"/>
     <Script file="QuestInfo.lua"/>

@@ -1,7 +1,7 @@
 <Ui xmlns="http://www.blizzard.com/wow/ui/">
     <Script file="Blizzard_AchievementUI.lua"/>
     <Script file="Blizzard_ArenaRegistrar.lua"/>
-    <!-- 3.80.1: ArchaeologyFrame check needed -->
+    <!-- 3.80.1: Retail-only (ArchaeologyFrame) -->
     <!--<Script file="Blizzard_ArchaeologyUI.lua"/>-->
     <Script file="Blizzard_AuctionHouseUI.lua"/>
     <Script file="Blizzard_BarbershopUI.lua"/>
@@ -13,7 +13,7 @@
     <Script file="Blizzard_Calendar.lua"/>
     <Script file="Blizzard_Channels.lua"/>
     <Script file="Blizzard_Collections.lua"/>
-    <!-- 3.80.1: CombatLogFrame check needed -->
+    <!-- 3.80.1: Retail-only (CombatLogFrame) -->
     <!--<Script file="Blizzard_CombatLog.lua"/>-->
     <Script file="Blizzard_Communities.lua"/>
     <Script file="Blizzard_DebugTools.lua"/>
