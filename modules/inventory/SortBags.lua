@@ -80,7 +80,7 @@ local function GetItemInfo(bagID, slotID)
     if not itemInfo then return end
     local itemLink = GetContainerItemLink(bagID, slotID)
     if not itemLink then return end
-    local _, _, quality, itemLevel, _, _, _, _, _, _, _, classID, subclassID, _, equipLoc = GetItemInfo(itemLink)
+    local _, _, quality, itemLevel, _, _, _, _, _, _, _, classID, subclassID, _, equipLoc = _G.GetItemInfo(itemLink)
     return {
         bagID = bagID,
         slotID = slotID,
