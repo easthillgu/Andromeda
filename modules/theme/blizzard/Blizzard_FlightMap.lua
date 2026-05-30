@@ -1,7 +1,9 @@
 local F, C = unpack(select(2, ...))
 
 C.Themes['Blizzard_FlightMap'] = function()
-    F.ReskinPortraitFrame(_G.FlightMapFrame)
+    local frame = _G.FlightMapFrame
     _G.FlightMapFrameBg:Hide()
-    -- 3.80.1: TiledBackground is the actual map surface, don't hide it
+    -- Don't use ReskinPortraitFrame — its StripTextures + dark bg covers the map art
+    F.SetBD(frame)
+    F.ReskinClose(frame.CloseButton)
 end
