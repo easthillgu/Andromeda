@@ -79,11 +79,10 @@ local function RestyleAddOnIcon(child, name)
                 region:SetTexCoord(unpack(C.TEX_COORD))
             end
         end
-        child:SetSize(24, 24)
-        child.bg = F.CreateBDFrame(child, 1)
-        child.bg:SetBackdropBorderColor(0, 0, 0)
     end
-
+    child:SetSize(24, 24)
+    child.bg = F.CreateBDFrame(child, 1)
+    child.bg:SetBackdropBorderColor(0, 0, 0)
     tinsert(buttons, child)
 end
 
@@ -157,7 +156,7 @@ local function SortRubbish()
 
     wipe(shownButtons)
     for _, button in pairs(buttons) do
-        if next(button) and button:IsShown() then -- fix for fuxking AHDB
+        if next(button) and button:GetParent() then
             tinsert(shownButtons, button)
         end
     end
