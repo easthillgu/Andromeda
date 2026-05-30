@@ -55,7 +55,7 @@ end
 local iconsPerRow = 5
 local rowMult = iconsPerRow / 2 - 1
 local currentIndex, pendingTime, timeThreshold = 0, 5, 12
-local buttons, numMinimapChildren = {}, 0
+local buttons = {}
 local removedTextures = {
     [136430] = true,
     [136467] = true,
@@ -128,24 +128,19 @@ local function KillAddOnIcon()
 end
 
 local function CollectRubbish()
-    local numChildren = _G.Minimap:GetNumChildren()
-    if numChildren ~= numMinimapChildren then
-        for i = 1, numChildren do
-            local child = select(i, _G.Minimap:GetChildren())
-            local name = child and child.GetName and child:GetName()
-            if name and not child.isExamed and not buttonBlackList[name] then
-                if (child:IsObjectType('Button') or strmatch(strupper(name), 'BUTTON')) and not IsButtonIgnored(name) then
-                    local ok = pcall(RestyleAddOnIcon, child, name)
-                    if ok then
-                        child.isExamed = true
-                    end
-                else
+    for i = 1, _G.Minimap:GetNumChildren() do
+        local child = select(i, _G.Minimap:GetChildren())
+        local name = child and child.GetName and child:GetName()
+        if name and not child.isExamed and not buttonBlackList[name] then
+            if (child:IsObjectType('Button') or strmatch(strupper(name), 'BUTTON')) and not IsButtonIgnored(name) then
+                local ok = pcall(RestyleAddOnIcon, child, name)
+                if ok then
                     child.isExamed = true
                 end
+            else
+                child.isExamed = true
             end
         end
-
-        numMinimapChildren = numChildren
     end
 
     KillAddOnIcon()
