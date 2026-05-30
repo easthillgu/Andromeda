@@ -63,8 +63,17 @@ local function RestyleAddOnIcon(child, name)
         local region = select(j, child:GetRegions())
         if region:IsObjectType('Texture') then
             local texture = region:GetTexture()
-            if texture and removedTextures[texture] then
-                region:SetTexture(nil)
+            if texture then
+                if removedTextures[texture] then
+                    region:SetTexture(nil)
+                elseif type(texture) == 'string' and (strfind(texture, 'Interface\\CharacterFrame') or strfind(texture, 'Interface\\Minimap')) then
+                    region:SetTexture(nil)
+                end
+            end
+
+            if not region.__ignored then
+                region:ClearAllPoints()
+                region:SetAllPoints()
             end
         end
     end
