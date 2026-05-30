@@ -125,7 +125,8 @@ C.Themes['Blizzard_AchievementUI'] = function()
     if _G.AchievementFrameAchievements then
         F.StripTextures(_G.AchievementFrameAchievements)
         F.ReskinTrimScroll(_G.AchievementFrameAchievements.ScrollBar)
-        select(3, _G.AchievementFrameAchievements:GetChildren()):Hide()
+        local thirdChild = select(3, _G.AchievementFrameAchievements:GetChildren())
+        if thirdChild then thirdChild:Hide() end
 
         local function updateAccountString(button)
             if button.DateCompleted:IsShown() then
@@ -273,7 +274,8 @@ C.Themes['Blizzard_AchievementUI'] = function()
 
     -- Summaries
     _G.AchievementFrameStatsBG:Hide()
-    select(3, _G.AchievementFrameStats:GetChildren()):Hide()
+    local statsChild = select(3, _G.AchievementFrameStats:GetChildren())
+    if statsChild then statsChild:Hide() end
     F.ReskinTrimScroll(_G.AchievementFrameStats.ScrollBar)
     hooksecurefunc(_G.AchievementFrameStats.ScrollBox, 'Update', function(self)
         for i = 1, self.ScrollTarget:GetNumChildren() do
@@ -312,7 +314,8 @@ C.Themes['Blizzard_AchievementUI'] = function()
     headerbg:SetPoint('BOTTOMRIGHT', -28, -5)
 
     F.StripTextures(_G.AchievementFrameComparison)
-    select(5, _G.AchievementFrameComparison:GetChildren()):Hide()
+    local compChild = select(5, _G.AchievementFrameComparison:GetChildren())
+    if compChild then compChild:Hide() end
     F.ReskinTrimScroll(_G.AchievementFrameComparison.AchievementContainer.ScrollBar)
 
     local function handleCompareSummary(frame)
