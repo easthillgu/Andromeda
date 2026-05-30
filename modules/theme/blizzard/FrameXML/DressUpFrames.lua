@@ -37,28 +37,22 @@ tinsert(C.BlizzThemes, function()
 
     if DressUpFrame.OutfitDetailsPanel then
         hooksecurefunc(DressUpFrame.OutfitDetailsPanel, 'Refresh', function(self)
-            if self.slotPool then
-                for slot in self.slotPool:EnumerateActive() do
-                    if not slot.bg then
-                        slot.bg = F.ReskinIcon(slot.Icon)
-                        F.ReskinIconBorder(slot.IconBorder, true, true)
-                    end
+        if self.slotPool then
+            for slot in self.slotPool:EnumerateActive() do
+                if not slot.bg then
+                    slot.bg = F.ReskinIcon(slot.Icon)
+                    F.ReskinIconBorder(slot.IconBorder, true, true)
                 end
             end
         end
     end)
     end
 
-    -- 3.80.1: DressUpFrameOutfitDropDown may not exist
     if _G.DressUpFrameOutfitDropDown then
         _G.DressUpFrameOutfitDropDown:SetHeight(32)
-        if _G.DressUpFrameOutfitDropDown.SaveButton then
-            _G.DressUpFrameOutfitDropDown.SaveButton:SetPoint('LEFT', _G.DressUpFrameOutfitDropDown, 'RIGHT', -13, 2)
-        end
+        _G.DressUpFrameOutfitDropDown.SaveButton:SetPoint('LEFT', _G.DressUpFrameOutfitDropDown, 'RIGHT', -13, 2)
     end
-    if _G.DressUpFrameResetButton and _G.DressUpFrameCancelButton then
-        _G.DressUpFrameResetButton:SetPoint('RIGHT', _G.DressUpFrameCancelButton, 'LEFT', -1, 0)
-    end
+    _G.DressUpFrameResetButton:SetPoint('RIGHT', _G.DressUpFrameCancelButton, 'LEFT', -1, 0)
 
     DressUpFrame.ModelBackground:Hide()
     F.CreateBDFrame(DressUpFrame.ModelScene)
@@ -98,8 +92,7 @@ tinsert(C.BlizzThemes, function()
                     button.styled = true
                 end
             end
-        end)
-    end
+    end)
 
     -- 3.80.1: WardrobeOutfitEditFrame Retail-only, nil guard
     if _G.WardrobeOutfitEditFrame then
@@ -112,5 +105,6 @@ tinsert(C.BlizzThemes, function()
         F.ReskinButton(_G.WardrobeOutfitEditFrame.AcceptButton)
         F.ReskinButton(_G.WardrobeOutfitEditFrame.CancelButton)
         F.ReskinButton(_G.WardrobeOutfitEditFrame.DeleteButton)
+    end
     end
 end)
