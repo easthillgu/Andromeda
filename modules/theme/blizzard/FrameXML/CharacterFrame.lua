@@ -179,29 +179,20 @@ tinsert(C.BlizzThemes, function()
                 end
 
                 if level and level > 1 and quality > 1 then
-                    if not slotFrame.iLvlText then
-                        slotFrame.iLvlText = F.CreateFS(slotFrame, C.Assets.Fonts.Bold, 11, nil, '', 'BOTTOMLEFT', 1, 1)
+                    if slotFrame.iLvlText then
+                        slotFrame.iLvlText:SetText(level)
+                        if color then
+                            slotFrame.iLvlText:SetTextColor(color.r, color.g, color.b)
+                        else
+                            slotFrame.iLvlText:SetTextColor(1, 1, 1)
+                        end
                     end
-                    slotFrame.iLvlText:SetText(level)
-                    if color then
-                        slotFrame.iLvlText:SetTextColor(color.r, color.g, color.b)
-                    else
-                        slotFrame.iLvlText:SetTextColor(1, 1, 1)
-                    end
-                elseif slotFrame.iLvlText then
-                    slotFrame.iLvlText:SetText('')
                 end
             else
                 slotFrame.bg:SetBackdropBorderColor(0, 0, 0)
-                if slotFrame.iLvlText then
-                    slotFrame.iLvlText:SetText('')
-                end
             end
         else
             slotFrame.bg:SetBackdropBorderColor(0, 0, 0)
-            if slotFrame.iLvlText then
-                slotFrame.iLvlText:SetText('')
-            end
         end
     end
 
@@ -254,7 +245,7 @@ tinsert(C.BlizzThemes, function()
         UpdateSlotQualityAndLevel(button)
     end)
 
-    hooksecurefunc('PaperDollFrame_Update', function()
+    hooksecurefunc('PaperDollFrame_UpdateStats', function()
         for i = 1, #slots do
             local slot = _G['Character' .. slots[i] .. 'Slot']
             if slot then
