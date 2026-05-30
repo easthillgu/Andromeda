@@ -10,14 +10,14 @@ tinsert(C.BlizzThemes, function()
         return
     end
 
-    _G.PetStableBottomInset:Hide()
-    _G.PetStableLeftInset:Hide()
-    _G.PetStableModelShadow:Hide()
-    _G.PetStableModelRotateLeftButton:Hide()
-    _G.PetStableModelRotateRightButton:Hide()
-    _G.PetStableFrameModelBg:Hide()
-    _G.PetStablePrevPageButtonIcon:SetTexture('')
-    _G.PetStableNextPageButtonIcon:SetTexture('')
+    if _G.PetStableBottomInset then _G.PetStableBottomInset:Hide() end
+    if _G.PetStableLeftInset then _G.PetStableLeftInset:Hide() end
+    if _G.PetStableModelShadow then _G.PetStableModelShadow:Hide() end
+    if _G.PetStableModelRotateLeftButton then _G.PetStableModelRotateLeftButton:Hide() end
+    if _G.PetStableModelRotateRightButton then _G.PetStableModelRotateRightButton:Hide() end
+    if _G.PetStableFrameModelBg then _G.PetStableFrameModelBg:Hide() end
+    if _G.PetStablePrevPageButtonIcon then _G.PetStablePrevPageButtonIcon:SetTexture('') end
+    if _G.PetStableNextPageButtonIcon then _G.PetStableNextPageButtonIcon:SetTexture('') end
 
     F.ReskinPortraitFrame(_G.PetStableFrame)
     F.ReskinArrow(_G.PetStablePrevPageButton, 'left')

@@ -43,7 +43,7 @@ tinsert(C.BlizzThemes, function()
         bu.icon:SetTexCoord(unpack(C.TEX_COORD))
         bu.icon:SetInside()
         bu.IconOverlay:SetInside()
-        bu.IconOverlay2:SetInside()
+        if bu.IconOverlay2 then bu.IconOverlay2:SetInside() end
         bu.bg = F.CreateBDFrame(bu.icon, 0.25)
         F.ReskinIconBorder(bu.IconBorder)
     end
