@@ -22,10 +22,6 @@ local ignoredButtons = {
     ['HandyNotes.-Pin'] = true,
 }
 
-local isGoodLookingIcon = {
-    ['Narci_MinimapButton'] = true,
-}
-
 local function UpdateCollectorTip(bu)
     bu.text = C.MOUSE_RIGHT_BUTTON
         .. L['Auto Hide']
@@ -77,10 +73,6 @@ local function RestyleAddOnIcon(child, name)
             if not region.__ignored then
                 region:ClearAllPoints()
                 region:SetAllPoints()
-            end
-
-            if not isGoodLookingIcon[name] and region:GetTexture() then
-                region:SetTexCoord(unpack(C.TEX_COORD))
             end
         end
     end
