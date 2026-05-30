@@ -149,6 +149,8 @@ local function CollectRubbish()
     currentIndex = currentIndex + 1
     if currentIndex < timeThreshold then
         F:Delay(pendingTime, CollectRubbish)
+    else
+        F:Delay(30, CollectRubbish) -- keep scanning for late-loading addons
     end
 end
 
