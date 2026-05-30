@@ -41,7 +41,6 @@ function MAP:RemoveBlizzStuff()
         'MinimapZoomIn',
         'MiniMapWorldMapButton',
         'MiniMapMailBorder',
-        'MiniMapTracking',
         'MiniMapInstanceDifficulty',
         'GuildInstanceDifficulty',
         'MiniMapChallengeMode',
@@ -57,12 +56,7 @@ function MAP:RemoveBlizzStuff()
         end
     end
 
-    -- 3.80.1: hide unnamed children (no Tracking/BorderTop in Cata)
-    for _, child in pairs({MinimapCluster:GetChildren()}) do
-        if child:GetName() == nil and child ~= Minimap then
-            child:SetAlpha(0)
-        end
-    end
+    -- 3.80.1: unnamed children include the tracking overlay — do NOT blind-hide them
 end
 
 -- Rectangular Minimap
@@ -670,6 +664,38 @@ function MAP:CreateHelpTip()
     end)
 end
 
+-- Tracking Button
+
+function MAP:ReskinTrackingButton()
+    local Minimap = _G.Minimap
+    local tracking = _G.MiniMapTracking
+    if not tracking then return end
+
+    tracking:SetScale(0.8)
+    tracking:ClearAllPoints()
+    tracking:SetPoint('BOTTOMRIGHT', Minimap, 2, Minimap.halfDiff - 4)
+    tracking:SetFrameLevel(999)
+
+    if _G.MiniMapTrackingBackground then
+        _G.MiniMapTrackingBackground:Hide()
+    end
+    if _G.MiniMapTrackingButtonBorder then
+        _G.MiniMapTrackingButtonBorder:Hide()
+    end
+    if _G.MiniMapTrackingIcon then
+        F.ReskinIcon(_G.MiniMapTrackingIcon)
+    end
+    if _G.MiniMapTrackingIconOverlay then
+        _G.MiniMapTrackingIconOverlay:SetAlpha(0)
+    end
+
+    local hl = _G.MiniMapTrackingButton:GetHighlightTexture()
+    if hl then
+        hl:SetColorTexture(1, 1, 1, 0.25)
+        hl:SetAllPoints(_G.MiniMapTrackingIcon)
+    end
+end
+
 --
 
 function MAP:SetupMinimap()
@@ -688,6 +714,7 @@ function MAP:SetupMinimap()
     MAP:CreateDifficultyFlag()
     MAP:CreateQueueStatusButton()
     MAP:AddOnIconCollector()
+    MAP:ReskinTrackingButton()
     MAP:WhoPings()
     MAP:BuildDropDown()
     MAP:SoundVolume()
