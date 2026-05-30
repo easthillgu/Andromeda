@@ -52,66 +52,67 @@ tinsert(C.BlizzThemes, function()
     end
 
     local r, g, b = C.r, C.g, C.b
+    local x1, x2, y1, y2 = unpack(C.TEX_COORD)
 
-    -- CharacterFrame portrait
-    if _G.CharacterFrame then
-        F.ReskinPortraitFrame(_G.CharacterFrame)
-    end
-    if _G.CharacterFrameInsetRight then
-        F.StripTextures(_G.CharacterFrameInsetRight)
-    end
+    F.ReskinPortraitFrame(_G.CharacterFrame)
+    F.StripTextures(_G.PaperDollFrame)
 
-    -- Tabs
-    for i = 1, 5 do
+    local CHARACTERFRAME_SUBFRAMES = type(_G.CHARACTERFRAME_SUBFRAMES) == 'number' and _G.CHARACTERFRAME_SUBFRAMES or 5
+
+    for i = 1, CHARACTERFRAME_SUBFRAMES do
         local tab = _G['CharacterFrameTab' .. i]
         if tab then
-            F.ReskinTab(tab)
-            if i ~= 1 then
-                local prev = _G['CharacterFrameTab' .. (i - 1)]
-                if prev then
-                    tab:ClearAllPoints()
-                    tab:SetPoint('TOPLEFT', prev, 'TOPRIGHT', -10, 0)
-                end
+            tab.bg = F.ReskinTab(tab)
+            if i == 1 then
+                tab:SetPoint('CENTER', _G.CharacterFrame, 'BOTTOMLEFT', 60, 59)
+            end
+            local hl = _G['CharacterFrameTab' .. i .. 'HighlightTexture']
+            if hl and tab.bg then
+                hl:SetPoint('TOPLEFT', tab.bg, C.MULT, -C.MULT)
+                hl:SetPoint('BOTTOMRIGHT', tab.bg, -C.MULT, C.MULT)
             end
         end
     end
 
-    -- Model Frame
     if _G.CharacterModelFrame then
         if F.ReskinRotationButtons then
             F.ReskinRotationButtons(_G.CharacterModelFrame)
         end
     end
 
-    -- 3.80.1: CharacterModelScene may not exist (Retail 3D model)
     if _G.CharacterModelScene then
         _G.CharacterModelScene:DisableDrawLayer('BACKGROUND')
         _G.CharacterModelScene:DisableDrawLayer('BORDER')
         _G.CharacterModelScene:DisableDrawLayer('OVERLAY')
     end
 
-    -- Dropdowns
     if _G.PlayerStatFrameLeftDropdown then F.ReskinDropdown(_G.PlayerStatFrameLeftDropdown) end
     if _G.PlayerStatFrameRightDropdown then F.ReskinDropdown(_G.PlayerStatFrameRightDropdown) end
     if _G.PlayerTitleDropdown then F.ReskinDropdown(_G.PlayerTitleDropdown) end
 
-    -- Attributes Frame
+    for _, direc in pairs({'Left', 'Right'}) do
+        for i = 1, 6 do
+            local frameName = 'PlayerStatFrame' .. direc .. i
+            local label = _G[frameName .. 'Label']
+            local text = _G[frameName .. 'StatText']
+            if label then
+                label:SetFontObject(Game13Font)
+            end
+            if text then
+                text:SetFontObject(Game13Font)
+            end
+        end
+    end
+
     if _G.CharacterAttributesFrame then
         F.StripTextures(_G.CharacterAttributesFrame)
         local bg = F.CreateBDFrame(_G.CharacterAttributesFrame, 0.25)
         bg:SetPoint('BOTTOMRIGHT', 0, -8)
     end
 
-    -- [[ Item buttons ]]
-
     local function colourPopout(self)
-        local aR, aG, aB = r, g, b
-        local glow = self:GetParent().IconBorder
-        if glow and glow:IsShown() then
-            aR, aG, aB = glow:GetVertexColor()
-        end
         if self.arrow then
-            self.arrow:SetVertexColor(aR, aG, aB)
+            self.arrow:SetVertexColor(0, 0.6, 1)
         end
     end
 
@@ -129,9 +130,79 @@ tinsert(C.BlizzThemes, function()
         end
     end
 
-    -- 3.80.1: UpdateCosmetic removed — IsCosmeticItem not available
-    local function UpdateCosmetic(self)
-        -- no-op in 3.80.1
+    local function updateCheckState(button, state)
+        if button.bg then
+            if state then
+                button.bg:SetBackdropBorderColor(0, 0.6, 1)
+            else
+                button.bg:SetBackdropBorderColor(0, 0, 0)
+            end
+        end
+    end
+
+    local itemSlotData = {
+        ['CharacterHeadSlot']          = 1,
+        ['CharacterNeckSlot']          = 2,
+        ['CharacterShoulderSlot']      = 3,
+        ['CharacterShirtSlot']         = 4,
+        ['CharacterChestSlot']          = 5,
+        ['CharacterWaistSlot']          = 6,
+        ['CharacterLegsSlot']           = 7,
+        ['CharacterFeetSlot']          = 8,
+        ['CharacterWristSlot']          = 9,
+        ['CharacterHandsSlot']          = 10,
+        ['CharacterFinger0Slot']       = 11,
+        ['CharacterFinger1Slot']       = 12,
+        ['CharacterTrinket0Slot']      = 13,
+        ['CharacterTrinket1Slot']      = 14,
+        ['CharacterBackSlot']           = 15,
+        ['CharacterMainHandSlot']      = 16,
+        ['CharacterSecondaryHandSlot']  = 17,
+        ['CharacterRangedSlot']         = 18,
+        ['CharacterTabardSlot']        = 19,
+    }
+
+    local function UpdateSlotQualityAndLevel(slotFrame)
+        local slotName = slotFrame:GetName()
+        local slotId = itemSlotData[slotName]
+        if not slotId then return end
+
+        local link = GetInventoryItemLink('player', slotId)
+        if link then
+            local quality, level = select(3, GetItemInfo(link))
+            if quality then
+                local color = C.QualityColors[quality]
+                if color then
+                    slotFrame.bg:SetBackdropBorderColor(color.r, color.g, color.b)
+                else
+                    slotFrame.bg:SetBackdropBorderColor(1, 1, 1)
+                end
+
+                if level and level > 1 and quality > 1 then
+                    if not slotFrame.iLvlText then
+                        slotFrame.iLvlText = F.CreateFS(slotFrame, C.Assets.Fonts.Bold, 11, nil, '', 'BOTTOMLEFT', 1, 1)
+                    end
+                    slotFrame.iLvlText:SetText(level)
+                    if color then
+                        slotFrame.iLvlText:SetTextColor(color.r, color.g, color.b)
+                    else
+                        slotFrame.iLvlText:SetTextColor(1, 1, 1)
+                    end
+                elseif slotFrame.iLvlText then
+                    slotFrame.iLvlText:SetText('')
+                end
+            else
+                slotFrame.bg:SetBackdropBorderColor(0, 0, 0)
+                if slotFrame.iLvlText then
+                    slotFrame.iLvlText:SetText('')
+                end
+            end
+        else
+            slotFrame.bg:SetBackdropBorderColor(0, 0, 0)
+            if slotFrame.iLvlText then
+                slotFrame.iLvlText:SetText('')
+            end
+        end
     end
 
     local slots = {
@@ -142,43 +213,16 @@ tinsert(C.BlizzThemes, function()
 
     for i = 1, #slots do
         local slot = _G['Character' .. slots[i] .. 'Slot']
-        if slot then  -- 3.80.1: skip nil slots, don't break
-            -- NDui-style slot stripping (3.80.1: SetNormalTexture(nil) ignored, use Hide)
-            local nt = slot:GetNormalTexture()
-            if nt then nt:Hide() end
-            local pt = slot:GetPushedTexture()
-            if pt then pt:Hide() end
-            local hl = slot:GetHighlightTexture()
-            if hl then
-                hl:SetColorTexture(1, 1, 1, 0.25)
-            end
-            -- Prevent Blizzard from restoring highlight texture
-            slot.SetHighlightTexture = function() end
-
+        if slot then
+            slot:SetNormalTexture(0)
+            slot:SetPushedTexture(0)
+            slot:GetHighlightTexture():SetColorTexture(1, 1, 1, 0.25)
+            slot.SetHighlightTexture = nop
             if slot.icon then
                 slot.icon:SetTexCoord(0.08, 0.92, 0.08, 0.92)
                 slot.icon:SetInside()
             end
-
-            -- bg surrounds the slot button (not just icon)
             slot.bg = F.CreateBDFrame(slot, 0.25)
-
-            local cooldown = _G['Character' .. slots[i] .. 'SlotCooldown']
-            if cooldown then
-                cooldown:SetInside()
-            end
-
-            if slot.ignoreTexture then
-                slot.ignoreTexture:SetTexture('Interface\\PaperDollInfoFrame\\UI-GearManager-LeaveItem-Transparent')
-            end
-
-            if slot.IconOverlay then
-                slot.IconOverlay:SetInside()
-            end
-
-            if slot.IconBorder then
-                F.ReskinIconBorder(slot.IconBorder)
-            end
 
             local popout = slot.popoutButton
             if popout then
@@ -196,67 +240,67 @@ tinsert(C.BlizzThemes, function()
                 end
                 popout.arrow = arrow
 
+                colourPopout(popout)
                 popout:HookScript('OnEnter', clearPopout)
                 popout:HookScript('OnLeave', colourPopout)
             end
-        end  -- if slot then
-    end
-
-    -- CharacterAmmoSlot (not in equipment slot loop)
-    local ammoSlot = _G.CharacterAmmoSlot
-    if ammoSlot then
-        local ant = ammoSlot:GetNormalTexture()
-        if ant then ant:Hide() end
-        local apt = ammoSlot:GetPushedTexture()
-        if apt then apt:Hide() end
-        local hl = ammoSlot:GetHighlightTexture()
-        if hl then hl:SetColorTexture(1, 1, 1, 0.25) end
-        ammoSlot.SetHighlightTexture = function() end
-        if _G.CharacterAmmoSlotIconTexture then
-            _G.CharacterAmmoSlotIconTexture:SetTexCoord(0.08, 0.92, 0.08, 0.92)
-            _G.CharacterAmmoSlotIconTexture:SetInside()
         end
-        F.CreateBDFrame(ammoSlot, 0.25)
     end
 
-    -- 3.80.1: slot textures re-created on frame show; hook OnShow to re-apply
-    local function stripSlotTextures()
+    hooksecurefunc('PaperDollItemSlotButton_Update', function(button)
+        if button.icon then
+            button.icon:SetShown(button.hasItem)
+        end
+        UpdateSlotQualityAndLevel(button)
+    end)
+
+    hooksecurefunc('PaperDollFrame_Update', function()
         for i = 1, #slots do
             local slot = _G['Character' .. slots[i] .. 'Slot']
             if slot then
-                local nt = slot:GetNormalTexture()
-                if nt then nt:Hide() end
-                local pt = slot:GetPushedTexture()
-                if pt then pt:Hide() end
+                UpdateSlotQualityAndLevel(slot)
+            end
+        end
+    end)
+
+    if _G.CharacterAmmoSlot then
+        F.StripTextures(_G.CharacterAmmoSlot)
+        if _G.CharacterAmmoSlotIconTexture then
+            _G.CharacterAmmoSlotIconTexture:SetTexCoord(0.08, 0.92, 0.08, 0.92)
+        end
+        _G.CharacterAmmoSlot:GetHighlightTexture():SetColorTexture(1, 1, 1, 0.25)
+        F.CreateBDFrame(_G.CharacterAmmoSlot, 0.25)
+    end
+
+    local newResIcons = {136116, 135826, 136074, 135843, 135945}
+    for i = 1, 5 do
+        local bu = _G['MagicResFrame' .. i]
+        if bu then
+            bu:SetSize(25, 25)
+            local icon = bu:GetRegions()
+            if icon then
+                F.ReskinIcon(icon)
+                icon:SetTexture(newResIcons[i])
+                icon:SetAlpha(0.5)
             end
         end
     end
-    _G.CharacterFrame:HookScript('OnShow', stripSlotTextures)
-    -- called for ALL inventory slots; button.icon nil on non-equip slots crashes.
-    -- Replaced with filtered + guarded version.
-    hooksecurefunc('PaperDollItemSlotButton_Update', function(button)
-        if not button or not button.popoutButton then return end
-        -- 3.80.1: re-hide normal/pushed textures
-        local nt = button:GetNormalTexture()
-        if nt then nt:Hide() end
-        if button.icon then
-            button.icon:SetShown(GetInventoryItemTexture('player', button:GetID()) ~= nil)
-        end
-        if button.popoutButton then
-            colourPopout(button.popoutButton)
-        end
-        UpdateCosmetic(button)
-        UpdateHighlight(button)
-    end)
 
-    -- [[ Stats pane ]]
+    for _, direc in pairs({'Left', 'Right'}) do
+        for i = 1, 6 do
+            local frameName = 'PlayerStatFrame' .. direc .. i
+            local label = _G[frameName .. 'Label']
+            local text = _G[frameName .. 'StatText']
+            if label then label:SetFontObject(Game13Font) end
+            if text then text:SetFontObject(Game13Font) end
+        end
+    end
 
     local pane = _G.CharacterStatsPane
     if pane then
         if pane.ClassBackground then
             pane.ClassBackground:Hide()
         end
-        -- 3.80.1: Corruption stat does not exist
         if pane.ItemLevelFrame and pane.ItemLevelFrame.Corruption then
             pane.ItemLevelFrame.Corruption:SetPoint('RIGHT', 22, -8)
         end
@@ -274,8 +318,6 @@ tinsert(C.BlizzThemes, function()
             end
         end
     end
-
-    -- [[ Sidebar tabs ]]
 
     if _G.PaperDollSidebarTabs then
         if _G.PaperDollSidebarTabs.DecorRight then
@@ -310,8 +352,6 @@ tinsert(C.BlizzThemes, function()
             end
         end
     end
-
-    -- [[ Equipment manager ]]
 
     if _G.PaperDollFrameEquipSet then F.ReskinButton(_G.PaperDollFrameEquipSet) end
     if _G.PaperDollFrameSaveSet then F.ReskinButton(_G.PaperDollFrameSaveSet) end
@@ -355,8 +395,6 @@ tinsert(C.BlizzThemes, function()
         F.ReskinIconSelector(_G.GearManagerPopupFrame)
     end
 
-    -- Title Pane
-
     if _G.PaperDollFrame and _G.PaperDollFrame.TitleManagerPane then
         if _G.PaperDollFrame.TitleManagerPane.ScrollBar then
             F.ReskinTrimScroll(_G.PaperDollFrame.TitleManagerPane.ScrollBar)
@@ -378,128 +416,132 @@ tinsert(C.BlizzThemes, function()
         end
     end
 
-    -- Reputation Frame
-
-    if _G.ReputationFrame then
-        if _G.ReputationDetailFrame then
-            _G.ReputationDetailFrame:SetPoint('TOPLEFT', _G.ReputationFrame, 'TOPRIGHT', 3, -28)
-        end
-
-        local function updateReputationBars(scrollBox)
-            for i = 1, scrollBox.ScrollTarget:GetNumChildren() do
-                local child = select(i, scrollBox.ScrollTarget:GetChildren())
-                local container = child and child.Container
-                if container and not container.styled then
-                    F.StripTextures(container)
-                    if container.ExpandOrCollapseButton then
-                        F.ReskinCollapse(container.ExpandOrCollapseButton)
-                        if container.ExpandOrCollapseButton.__texture then
-                            container.ExpandOrCollapseButton.__texture:DoCollapse(child.isCollapsed)
-                        end
-                    end
-                    if container.ReputationBar then
-                        F.StripTextures(container.ReputationBar)
-                        container.ReputationBar:SetStatusBarTexture(C.Assets.Textures.Backdrop)
-                        F.CreateBDFrame(container.ReputationBar, 0.25)
-                    end
-                    container.styled = true
-                end
-            end
-        end
-
-        if _G.ReputationFrame.ScrollBox then
-            hooksecurefunc(_G.ReputationFrame.ScrollBox, 'Update', updateReputationBars)
-        end
-
-        if _G.ReputationFrame.ScrollBar then
-            F.ReskinTrimScroll(_G.ReputationFrame.ScrollBar)
-        end
+    if _G.ReputationDetailCorner then _G.ReputationDetailCorner:Hide() end
+    if _G.ReputationDetailDivider then _G.ReputationDetailDivider:Hide() end
+    if _G.ReputationDetailFrame then
+        _G.ReputationDetailFrame:SetPoint('TOPLEFT', _G.ReputationFrame, 'TOPRIGHT', -32, -16)
     end
 
+    local function UpdateFactionSkins()
+        for i = 1, GetNumFactions() do
+            local statusbar = _G['ReputationBar' .. i .. 'ReputationBar']
+            if statusbar then
+                statusbar:SetStatusBarTexture(C.Assets.Textures.Backdrop)
+
+                if not statusbar.reskinned then
+                    F.CreateBDFrame(statusbar, 0.25)
+                    statusbar.reskinned = true
+                end
+
+                _G['ReputationBar' .. i .. 'Background']:SetTexture(nil)
+                _G['ReputationBar' .. i .. 'ReputationBarHighlight1']:SetTexture(nil)
+                _G['ReputationBar' .. i .. 'ReputationBarHighlight2']:SetTexture(nil)
+                _G['ReputationBar' .. i .. 'ReputationBarAtWarHighlight1']:SetTexture(nil)
+                _G['ReputationBar' .. i .. 'ReputationBarAtWarHighlight2']:SetTexture(nil)
+                _G['ReputationBar' .. i .. 'ReputationBarLeftTexture']:SetTexture(nil)
+                _G['ReputationBar' .. i .. 'ReputationBarRightTexture']:SetTexture(nil)
+            end
+        end
+    end
+    if _G.ReputationFrame then
+        _G.ReputationFrame:HookScript('OnShow', UpdateFactionSkins)
+        _G.ReputationFrame:HookScript('OnEvent', UpdateFactionSkins)
+    end
+
+    for i = 1, _G.NUM_FACTIONS_DISPLAYED do
+        local bu = _G['ReputationBar' .. i .. 'ExpandOrCollapseButton']
+        if bu then F.ReskinCollapse(bu) end
+    end
+
+    if _G.ReputationFrame then F.StripTextures(_G.ReputationFrame) end
     if _G.ReputationDetailFrame then
         F.StripTextures(_G.ReputationDetailFrame)
         F.SetBD(_G.ReputationDetailFrame)
     end
     if _G.ReputationDetailCloseButton then F.ReskinClose(_G.ReputationDetailCloseButton) end
-    if _G.ReputationDetailInactiveCheckBox then F.ReskinCheckbox(_G.ReputationDetailInactiveCheckBox) end
-    if _G.ReputationDetailMainScreenCheckBox then F.ReskinCheckbox(_G.ReputationDetailMainScreenCheckBox) end
-    -- 3.80.1: ViewRenownButton does not exist (Retail renown)
-    if _G.ReputationDetailViewRenownButton then F.ReskinButton(_G.ReputationDetailViewRenownButton) end
+    if _G.ReputationDetailInactiveCheckbox then F.ReskinCheckbox(_G.ReputationDetailInactiveCheckbox) end
+    if _G.ReputationDetailMainScreenCheckbox then F.ReskinCheckbox(_G.ReputationDetailMainScreenCheckbox) end
+    if _G.ReputationListScrollFrameScrollBar then F.ReskinScroll(_G.ReputationListScrollFrameScrollBar) end
+    select(3, _G.ReputationDetailFrame:GetRegions()):Hide()
 
-    if _G.ReputationDetailAtWarCheckBox then
-        local atWarCheck = _G.ReputationDetailAtWarCheckBox
+    if _G.ReputationDetailAtWarCheckbox then
+        local atWarCheck = _G.ReputationDetailAtWarCheckbox
         F.ReskinCheckbox(atWarCheck)
         local atWarCheckTex = atWarCheck:GetCheckedTexture()
-        if atWarCheckTex then
-            atWarCheckTex:ClearAllPoints()
-            atWarCheckTex:SetSize(26, 26)
-            atWarCheckTex:SetPoint('CENTER')
-        end
+        atWarCheckTex:ClearAllPoints()
+        atWarCheckTex:SetSize(26, 26)
+        atWarCheckTex:SetPoint('CENTER')
     end
 
-    -- Token frame
+    if _G.TokenFrame then
+        F.StripTextures(_G.TokenFrame)
+        if _G.TokenFrameCancelButton then F.ReskinButton(_G.TokenFrameCancelButton) end
+        local weirdCloseBtn = select(4, _G.TokenFrame:GetChildren())
+        if weirdCloseBtn then weirdCloseBtn:Hide() end
+    end
 
+    if _G.TokenFramePopupCorner then _G.TokenFramePopupCorner:Hide() end
     if _G.TokenFramePopup then
-        if _G.TokenFramePopup.CloseButton then
-            F.ReskinClose(_G.TokenFramePopup.CloseButton)
-        end
+        _G.TokenFramePopup:SetPoint('TOPLEFT', _G.TokenFrame, 'TOPRIGHT', 3, -28)
+        F.StripTextures(_G.TokenFramePopup)
+        F.SetBD(_G.TokenFramePopup)
+        if _G.TokenFramePopup.CloseButton then F.ReskinClose(_G.TokenFramePopup.CloseButton) end
         if _G.TokenFramePopup.InactiveCheckBox then F.ReskinCheckbox(_G.TokenFramePopup.InactiveCheckBox) end
         if _G.TokenFramePopup.BackpackCheckBox then F.ReskinCheckbox(_G.TokenFramePopup.BackpackCheckBox) end
     end
 
-    if _G.TokenFrame and _G.TokenFrame.ScrollBar then
-        F.ReskinTrimScroll(_G.TokenFrame.ScrollBar)
+    if _G.TokenFrameContainerScrollBar then
+        F.ReskinScroll(_G.TokenFrameContainerScrollBar)
     end
 
-    if _G.TokenFrame and _G.TokenFrame.ScrollBox then
-        hooksecurefunc(_G.TokenFrame.ScrollBox, 'Update', function(scrollBox)
-            for i = 1, scrollBox.ScrollTarget:GetNumChildren() do
-                local child = select(i, scrollBox.ScrollTarget:GetChildren())
-                if child and child.Highlight and not child.styled then
-                    if child.CategoryLeft then child.CategoryLeft:SetAlpha(0) end
-                    if child.CategoryRight then child.CategoryRight:SetAlpha(0) end
-                    if child.CategoryMiddle then child.CategoryMiddle:SetAlpha(0) end
+    local function updateTokenButtons()
+        local buttons = _G.TokenFrameContainer and _G.TokenFrameContainer.buttons
+        if not buttons then return end
 
-                    child.Highlight:SetInside()
-                    child.Highlight.SetPoint = nop
-                    child.Highlight:SetColorTexture(1, 1, 1, 0.25)
-                    child.Highlight.SetTexture = nop
+        for i = 1, #buttons do
+            local bu = buttons[i]
+            if not bu.styled then
+                bu.highlight:SetPoint('TOPLEFT', 1, 0)
+                bu.highlight:SetPoint('BOTTOMRIGHT', -1, 0)
+                bu.highlight.SetPoint = nop
+                bu.highlight:SetColorTexture(r, g, b, 0.2)
+                bu.highlight.SetTexture = nop
 
-                    if child.Icon then
-                        child.bg = F.ReskinIcon(child.Icon)
-                    end
+                if bu.categoryLeft then bu.categoryLeft:SetAlpha(0) end
+                if bu.categoryRight then bu.categoryRight:SetAlpha(0) end
+                if bu.categoryMiddle then bu.categoryMiddle:SetAlpha(0) end
 
-                    if child.ExpandIcon then
-                        child.expBg = F.CreateBDFrame(child.ExpandIcon, 0, true)
-                        if child.expBg then
-                            child.expBg:SetInside(child.ExpandIcon, 3, 3)
-                        end
-                    end
-
-                    if child.Check then
-                        child.Check:SetAtlas('checkmark-minimal')
-                    end
-
-                    child.styled = true
+                if bu.icon then
+                    bu.bg = F.ReskinIcon(bu.icon)
                 end
 
-                if child and child.isHeader then
-                    if child.bg then child.bg:Hide() end
-                    if child.expBg then child.expBg:Show() end
-                elseif child then
-                    if child.bg then child.bg:Show() end
-                    if child.expBg then child.expBg:Hide() end
+                if bu.expandIcon then
+                    bu.expBg = F.CreateBDFrame(bu.expandIcon, 0, true)
+                    bu.expBg:SetPoint('TOPLEFT', bu.expandIcon, -3, 3)
+                    bu.expBg:SetPoint('BOTTOMRIGHT', bu.expandIcon, 3, -3)
                 end
+
+                bu.styled = true
             end
-        end)
+
+            if bu.isHeader then
+                if bu.bg then bu.bg:Hide() end
+                if bu.expBg then bu.expBg:Show() end
+            else
+                if bu.bg then bu.bg:Show() end
+                if bu.expBg then bu.expBg:Hide() end
+            end
+        end
     end
 
-    if _G.TokenFramePopup then
-        F.StripTextures(_G.TokenFramePopup)
-        F.SetBD(_G.TokenFramePopup)
+    if _G.TokenFrame then
+        _G.TokenFrame:HookScript('OnShow', updateTokenButtons)
+    end
+    hooksecurefunc('TokenFrame_Update', updateTokenButtons)
+    if _G.TokenFrameContainer then
+        hooksecurefunc(_G.TokenFrameContainer, 'update', updateTokenButtons)
     end
 
-    -- Skill Frame
     if _G.SkillFrame then
         F.StripTextures(_G.SkillFrame)
         if _G.SkillListScrollFrameScrollBar then F.ReskinScroll(_G.SkillListScrollFrameScrollBar) end
@@ -507,13 +549,17 @@ tinsert(C.BlizzThemes, function()
         if _G.SkillFrameCollapseAllButton then F.ReskinCollapse(_G.SkillFrameCollapseAllButton) end
         if _G.SkillFrameExpandButtonFrame then F.StripTextures(_G.SkillFrameExpandButtonFrame) end
 
-        if _G.SkillDetailScrollFrame and _G.SkillDetailScrollFrame.ScrollBar then
-            F.ReskinScroll(_G.SkillDetailScrollFrame.ScrollBar)
+        if _G.SkillDetailScrollFrame then
+            if _G.SkillDetailScrollFrame.ScrollBar then
+                F.ReskinScroll(_G.SkillDetailScrollFrame.ScrollBar)
+            end
             F.CreateBDFrame(_G.SkillDetailScrollFrame, 0.25)
         end
 
         if _G.SkillDetailStatusBar then
-            _G.SkillDetailStatusBarBorder:SetAlpha(0)
+            if _G.SkillDetailStatusBarBorder then
+                _G.SkillDetailStatusBarBorder:SetAlpha(0)
+            end
             _G.SkillDetailStatusBar:SetStatusBarTexture(C.Assets.Textures.Backdrop)
             F.CreateBDFrame(_G.SkillDetailStatusBar, 0.25)
         end
@@ -539,9 +585,15 @@ tinsert(C.BlizzThemes, function()
             end
             if border then border:SetAlpha(0) end
         end
+
+        for i = 1, 12 do
+            local label = _G['SkillTypeLabel' .. i]
+            if label then
+                F.ReskinCollapse(label)
+            end
+        end
     end
 
-    -- Pet Frame
     if _G.PetPaperDollFrame then
         F.StripTextures(_G.PetPaperDollFrame)
         if _G.PetPaperDollCloseButton then _G.PetPaperDollCloseButton:Hide() end
@@ -567,9 +619,209 @@ tinsert(C.BlizzThemes, function()
             local tab = _G['PetPaperDollFrameTab'..i]
             if tab then F.ReskinTab(tab) end
         end
+
+        if _G.PetPaperDollFrameCompanionFrame then
+            F.StripTextures(_G.PetPaperDollFrameCompanionFrame)
+        end
+        if _G.CompanionSummonButton then
+            F.ReskinButton(_G.CompanionSummonButton)
+        end
+        if _G.CompanionModelFrame then
+            if F.ReskinRotationButtons then
+                F.ReskinRotationButtons(_G.CompanionModelFrame)
+            end
+        end
+        if _G.CompanionPrevPageButton then F.ReskinArrow(_G.CompanionPrevPageButton, 'left') end
+        if _G.CompanionNextPageButton then F.ReskinArrow(_G.CompanionNextPageButton, 'right') end
+
+        for i = 1, 12 do
+            local button = _G['CompanionButton' .. i]
+            if button then
+                button.bg = F.CreateBDFrame(button, 0.25)
+                button:SetCheckedTexture(0)
+                local activeTex = _G['CompanionButton' .. i .. 'ActiveTexture']
+                if activeTex then activeTex:SetAlpha(0) end
+
+                button:SetNormalTexture(136243)
+                local nt = button:GetNormalTexture()
+                if nt then
+                    nt:SetTexCoord(x1, x2, y1, y2)
+                    nt:SetInside(button.bg)
+                end
+
+                local dt = button:GetDisabledTexture()
+                if dt then
+                    dt:SetTexCoord(0.22, 0.75, 0.22, 0.75)
+                    dt:SetInside(button.bg)
+                end
+
+                local hl = button:GetHighlightTexture()
+                if hl then
+                    hl:SetColorTexture(1, 1, 1, 0.25)
+                    hl:SetInside(button.bg)
+                end
+
+                hooksecurefunc(button, 'SetChecked', updateCheckState)
+            end
+        end
+
+        for i = 1, 5 do
+            local bu = _G['PetMagicResFrame' .. i]
+            if bu then
+                bu:SetSize(25, 25)
+                local icon = bu:GetRegions()
+                if icon then
+                    local a, b, _, _, _, _, c, d = icon:GetTexCoord()
+                    icon:SetTexCoord(a + 0.2, c - 0.2, b + 0.018, d - 0.018)
+                end
+            end
+        end
+
+        if _G.PetPaperDollPetInfo then
+            local petInfo = _G.PetPaperDollPetInfo
+            petInfo:GetRegions():SetTexCoord(0.04, 0.15, 0.06, 0.3)
+            F.CreateBDFrame(petInfo)
+
+            local function updateHappiness()
+                local happiness = GetPetHappiness()
+                local _, isHunterPet = HasPetUI()
+                if not happiness or not isHunterPet then return end
+
+                local texture = petInfo:GetRegions()
+                if happiness == 1 then
+                    texture:SetTexCoord(0.41, 0.53, 0.06, 0.3)
+                elseif happiness == 2 then
+                    texture:SetTexCoord(0.22, 0.345, 0.06, 0.3)
+                elseif happiness == 3 then
+                    texture:SetTexCoord(0.04, 0.15, 0.06, 0.3)
+                end
+            end
+            petInfo:RegisterEvent('UNIT_HAPPINESS')
+            petInfo:SetScript('OnEvent', updateHappiness)
+            petInfo:SetScript('OnShow', updateHappiness)
+        end
     end
 
-    -- Quick Join (3.80.1: may not exist)
+    if not _G.PVPFrame.CloseButton then
+        _G.PVPFrame.CloseButton = _G.PVPParentFrameCloseButton
+    end
+    F.ReskinPortraitFrame(_G.PVPFrame)
+
+    if _G.PVPFrameToggleButton then F.ReskinArrow(_G.PVPFrameToggleButton, 'right') end
+
+    for i = 1, 2 do
+        local tab = _G['PVPParentFrameTab' .. i]
+        if tab then F.ReskinTab(tab) end
+    end
+
+    for i = 1, 3 do
+        local tName = 'PVPTeam' .. i
+        F.StripTextures(_G[tName])
+        F.CreateBDFrame(_G[tName .. 'Background'], 0.25)
+    end
+
+    F.ReskinPortraitFrame(_G.PVPTeamDetails)
+    if _G.PVPTeamDetailsAddTeamMember then F.ReskinButton(_G.PVPTeamDetailsAddTeamMember) end
+    if _G.PVPTeamDetailsToggleButton then F.ReskinArrow(_G.PVPTeamDetailsToggleButton, 'right') end
+
+    for i = 1, 5 do
+        F.StripTextures(_G['PVPTeamDetailsFrameColumnHeader' .. i])
+    end
+
+    local toggleButton = _G.GearManagerToggleButton
+    if toggleButton then
+        F.StripTextures(toggleButton)
+        local function setupTexture(tex)
+            tex:SetTexture('Interface\\PaperDollInfoFrame\\PaperDollSidebarTabs')
+            tex:SetTexCoord(0.01562500, 0.53125000, 0.46875000, 0.60546875)
+            tex:SetInside()
+        end
+        local icon = toggleButton:CreateTexture(nil, 'ARTWORK')
+        setupTexture(icon)
+        local hl = toggleButton:CreateTexture(nil, 'HIGHLIGHT')
+        setupTexture(hl)
+        hl:SetVertexColor(1, 0.8, 0)
+    end
+
+    if _G.GearManagerDialog then
+        F.StripTextures(_G.GearManagerDialog)
+        F.SetBD(_G.GearManagerDialog, nil, 5, -5, 0, 5)
+        if _G.GearManagerDialogClose then F.ReskinClose(_G.GearManagerDialogClose, nil, -6, -9) end
+        if _G.GearManagerDialogDeleteSet then F.ReskinButton(_G.GearManagerDialogDeleteSet) end
+        if _G.GearManagerDialogEquipSet then F.ReskinButton(_G.GearManagerDialogEquipSet) end
+        if _G.GearManagerDialogSaveSet then F.ReskinButton(_G.GearManagerDialogSaveSet) end
+
+        for i = 1, _G.MAX_EQUIPMENT_SETS_PER_PLAYER do
+            local button = _G['GearSetButton' .. i]
+            if button then
+                button.bg = F.CreateBDFrame(button, 0.25)
+                button:DisableDrawLayer('BACKGROUND')
+                button:SetCheckedTexture(0)
+                hooksecurefunc(button, 'SetChecked', updateCheckState)
+
+                local hl = button:GetHighlightTexture()
+                if hl then
+                    hl:SetColorTexture(1, 1, 1, 0.25)
+                    hl:SetInside(button.bg)
+                end
+
+                local icon = button.icon
+                if icon then
+                    icon:SetTexCoord(x1, x2, y1, y2)
+                    icon:SetInside(button.bg)
+                end
+
+                _G['GearSetButton' .. i .. 'Name']:SetFontObject(Game12Font)
+                _G['GearSetButton' .. i .. 'Name']:SetWidth(50)
+            end
+        end
+    end
+
+    hooksecurefunc('PaperDollFrameItemFlyout_CreateButton', function()
+        local button = _G.PaperDollFrameItemFlyout.buttons[#_G.PaperDollFrameItemFlyout.buttons]
+        if button.bg then return end
+
+        button:SetNormalTexture(0)
+        button:SetPushedTexture(0)
+        button:GetHighlightTexture():SetColorTexture(1, 1, 1, 0.25)
+        button.bg = F.ReskinIcon(button.icon)
+    end)
+
+    if _G.PaperDollFrameItemFlyoutButtons then
+        _G.PaperDollFrameItemFlyoutButtons.bg1:SetAlpha(0)
+        _G.PaperDollFrameItemFlyoutButtons:DisableDrawLayer('ARTWORK')
+        F.SetBD(_G.PaperDollFrameItemFlyoutButtons)
+        hooksecurefunc(_G.PaperDollFrameItemFlyoutButtons, 'SetWidth', function(self, width, force)
+            if force then return end
+            self:SetWidth(width + 3, true)
+        end)
+    end
+
+    if _G.GearManagerDialogPopup then
+        F.StripTextures(_G.GearManagerDialogPopup)
+        F.SetBD(_G.GearManagerDialogPopup, nil, 5, -6, 0, 5)
+        _G.GearManagerDialogPopup:SetHeight(525)
+        if _G.GearManagerDialogPopupScrollFrame then F.StripTextures(_G.GearManagerDialogPopupScrollFrame) end
+        if _G.GearManagerDialogPopupScrollFrame then F.CreateBDFrame(_G.GearManagerDialogPopupScrollFrame, 0.25) end
+        if _G.GearManagerDialogPopupScrollFrameScrollBar then F.ReskinScroll(_G.GearManagerDialogPopupScrollFrameScrollBar) end
+        if _G.GearManagerDialogPopupOkayButton then F.ReskinButton(_G.GearManagerDialogPopupOkayButton) end
+        if _G.GearManagerDialogPopupCancelButton then F.ReskinButton(_G.GearManagerDialogPopupCancelButton) end
+
+        for i = 1, _G.NUM_GEARSET_ICONS_SHOWN do
+            local bu = _G['GearManagerDialogPopupButton' .. i]
+            if bu then
+                bu:SetCheckedTexture(C.Assets.Textures.ButtonChecked)
+                select(2, bu:GetRegions()):Hide()
+                if bu.icon then bu.icon:SetInside() end
+                F.ReskinIcon(bu.icon)
+                local hl = bu:GetHighlightTexture()
+                if hl then
+                    hl:SetColorTexture(1, 1, 1, 0.25)
+                    hl:SetInside()
+                end
+            end
+        end
+    end
 
     if _G.QuickJoinFrame then
         if _G.QuickJoinFrame.ScrollBar then F.ReskinTrimScroll(_G.QuickJoinFrame.ScrollBar) end

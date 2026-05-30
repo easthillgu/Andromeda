@@ -142,30 +142,16 @@ end
 
 -- Mail Icon
 
-local function updateIndicatorFrameAnchor(frame, _, _, _, _, _, force)
-    if force then
-        return
-    end
-
-    frame:ClearAllPoints()
-    frame:SetPoint('BOTTOM', _G.Minimap, 'BOTTOM', 0, _G.Minimap.halfDiff + 10, true)
-end
-
 function MAP:CreateMailButton()
-    local icon = _G.MiniMapMailIcon
-    local indicatorFrame = _G.MinimapCluster.IndicatorFrame
+    local mailFrame = _G.MiniMapMailFrame
+    local mailIcon = _G.MiniMapMailIcon
 
-    if indicatorFrame then
-        updateIndicatorFrameAnchor(indicatorFrame)
-        hooksecurefunc(indicatorFrame, 'SetPoint', updateIndicatorFrameAnchor)
-        indicatorFrame:SetFrameLevel(11)
-        icon:SetTexture(C.Assets.Textures.MinimapMail)
-        icon:SetSize(21, 21)
-        icon:SetVertexColor(1, 1, 0)
-        icon:SetScale(1.2)
-        icon:SetPoint('CENTER', indicatorFrame)
-        F.ReskinIcon(icon)
-    end
+    mailFrame:ClearAllPoints()
+    mailFrame:SetPoint('TOPLEFT', _G.Minimap, 'TOPLEFT', -3, -_G.Minimap.halfDiff - 4)
+    mailIcon:SetTexture(C.Assets.Textures.MinimapMail)
+    mailIcon:SetSize(21, 21)
+    mailIcon:SetVertexColor(1, 1, 0)
+    F.ReskinIcon(mailIcon)
 end
 
 -- Calendar Invite
@@ -687,7 +673,9 @@ function MAP:ReskinTrackingButton()
         _G.MiniMapTrackingButtonBorder:Hide()
     end
     if _G.MiniMapTrackingIcon then
-        F.ReskinIcon(_G.MiniMapTrackingIcon)
+        local icon = _G.MiniMapTrackingIcon
+        F.ReskinIcon(icon)
+        icon:SetSize(20, 15)
     end
     if _G.MiniMapTrackingIconOverlay then
         _G.MiniMapTrackingIconOverlay:SetAlpha(0)
