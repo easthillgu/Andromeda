@@ -79,7 +79,7 @@ local function RestyleAddOnIcon(child, name)
                 region:SetAllPoints()
             end
 
-            if not isGoodLookingIcon[name] then
+            if not isGoodLookingIcon[name] and region:GetTexture() then
                 region:SetTexCoord(unpack(C.TEX_COORD))
             end
         end
