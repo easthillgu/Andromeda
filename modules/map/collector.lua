@@ -216,9 +216,9 @@ function MAP:AddOnIconCollector()
     UpdateCollectorTip(bu)
     _G.Minimap.AddOnCollector = bu
 
-    local tray = CreateFrame('Frame', C.ADDON_TITLE .. 'MinimapAddOnIconCollectorTray', _G.Minimap)
-    tray:SetPoint('BOTTOMRIGHT', _G.Minimap, 'TOPRIGHT', 0, -_G.Minimap.halfDiff)
-    tray:SetSize(_G.Minimap:GetWidth(), 24)
+    local tray = CreateFrame('Frame', C.ADDON_TITLE .. 'MinimapAddOnIconCollectorTray', _G.UIParent)
+    tray:SetPoint('BOTTOMRIGHT', bu, 'BOTTOMLEFT', -3, 10)
+    tray:SetSize(220, 40)
     tray:Hide()
     _G.Minimap.AddOnCollectorTray = tray
 
