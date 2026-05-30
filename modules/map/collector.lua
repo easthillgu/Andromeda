@@ -53,7 +53,21 @@ local rowMult = iconsPerRow / 2 - 1
 local currentIndex, pendingTime, timeThreshold = 0, 5, 12
 local buttons = {}
 
+local removedTextures = {
+    [136430] = true,  -- Blizzard minimap border
+    [136467] = true,  -- Blizzard minimap background
+}
+
 local function RestyleAddOnIcon(child, name)
+    for j = 1, child:GetNumRegions() do
+        local region = select(j, child:GetRegions())
+        if region:IsObjectType('Texture') then
+            local texture = region:GetTexture()
+            if texture and removedTextures[texture] then
+                region:SetTexture(nil)
+            end
+        end
+    end
     child:SetSize(24, 24)
     child.bg = F.CreateBDFrame(child, 1)
     child.bg:SetBackdropBorderColor(0, 0, 0)
