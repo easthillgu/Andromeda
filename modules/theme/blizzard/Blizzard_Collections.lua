@@ -395,7 +395,6 @@ C.Themes['Blizzard_Collections'] = function()
             F.ReskinIcon(bu.icon)
         end
     end
-    end -- 3.80.1: closes if MountJournal then
     end -- 3.80.1: if PetJournal or MountJournal
 
     -- [[ Toy box ]] (3.80.1: Retail-only, nil guard)
@@ -768,4 +767,4 @@ C.Themes['Blizzard_Collections'] = function()
             reskinHPet = true
         end
     end)
-end)
+end
