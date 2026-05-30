@@ -135,7 +135,7 @@ local function CollectRubbish()
             local name = child and child.GetName and child:GetName()
             if name and not child.isExamed and not buttonBlackList[name] then
                 if (child:IsObjectType('Button') or strmatch(strupper(name), 'BUTTON')) and not IsButtonIgnored(name) then
-                    RestyleAddOnIcon(child, name)
+                    pcall(RestyleAddOnIcon, child, name)
                 end
                 child.isExamed = true
             end
