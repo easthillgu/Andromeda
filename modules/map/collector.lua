@@ -54,20 +54,6 @@ local currentIndex, pendingTime, timeThreshold = 0, 5, 12
 local buttons = {}
 
 local function RestyleAddOnIcon(child, name)
-    for j = 1, child:GetNumRegions() do
-        local region = select(j, child:GetRegions())
-        if region:IsObjectType('Texture') then
-            local texture = region:GetTexture()
-            if texture and type(texture) == 'string' and (strfind(texture, 'Interface\\CharacterFrame') or strfind(texture, 'Interface\\Minimap')) then
-                region:SetTexture(nil)
-            end
-
-            if not region.__ignored then
-                region:ClearAllPoints()
-                region:SetAllPoints()
-            end
-        end
-    end
     child:SetSize(24, 24)
     child.bg = F.CreateBDFrame(child, 1)
     child.bg:SetBackdropBorderColor(0, 0, 0)
