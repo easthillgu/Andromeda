@@ -83,17 +83,23 @@ tinsert(C.BlizzThemes, function()
     _G.SpellBookFrameTabButton1:ClearAllPoints()
     _G.SpellBookFrameTabButton1:SetPoint('TOPLEFT', _G.SpellBookFrame, 'BOTTOMLEFT', 0, 0)
 
-    for i = 1, 5 do
+    for i = 1, 3 do
         local tab = _G['SpellBookFrameTabButton' .. i]
         if tab then
-            F.ReskinTab(tab)
+            F.StripTextures(tab)
+            local bg = F.CreateBDFrame(tab)
+            bg:SetPoint('TOPLEFT', 12, -15)
+            bg:SetPoint('BOTTOMRIGHT', -12, 20)
+            if i == 1 then
+                tab:SetPoint('CENTER', _G.SpellBookFrame, 'BOTTOMLEFT', 79, 54)
+            end
         end
     end
 
     -- 3.80.1: SpellBookFrame_Update may not exist
     if _G.SpellBookFrame_Update then
         hooksecurefunc('SpellBookFrame_Update', function()
-            for i = 2, 5 do
+            for i = 2, 3 do
                 local tab = _G['SpellBookFrameTabButton' .. i]
                 if tab then
                     tab:ClearAllPoints()
