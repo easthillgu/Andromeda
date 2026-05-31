@@ -296,7 +296,8 @@ function AURA:CreateAuraIcon(button)
         end
         
         -- 检查按钮名称是否符合我们的模板模式
-        if not (strfind(buttonName, '^AndromedaUI') or strfind(buttonName, C.ADDON_TITLE)) then
+        local isAndromedaAura = strfind(buttonName, '^Andromeda') or strfind(buttonName, C.ADDON_TITLE)
+        if not isAndromedaAura then
             return  -- 跳过非 Andromeda 创建的图标
         end
         
@@ -349,18 +350,27 @@ function AURA:CreateAuraIcon(button)
             F.CreateSD(button)
         end
 
+        -- 安全注册点击
         if button.RegisterForClicks then
-            pcall(function() button:RegisterForClicks('RightButtonUp') end)
+            local clickSuccess, clickErr = pcall(function()
+                button:RegisterForClicks('RightButtonUp')
+            end)
+            if not clickSuccess then
+                -- 注册失败没关系，继续执行
+            end
         end
         
-        if button.SetScript and AURA.OnAttributeChanged then
-            button:SetScript('OnAttributeChanged', AURA.OnAttributeChanged)
-        end
-        if button.SetScript and AURA.Button_OnEnter then
-            button:SetScript('OnEnter', AURA.Button_OnEnter)
-        end
-        if button.SetScript and F.HideTooltip then
-            button:SetScript('OnLeave', F.HideTooltip)
+        -- 安全设置脚本
+        if button.SetScript then
+            if AURA.OnAttributeChanged then
+                pcall(function() button:SetScript('OnAttributeChanged', AURA.OnAttributeChanged) end)
+            end
+            if AURA.Button_OnEnter then
+                pcall(function() button:SetScript('OnEnter', AURA.Button_OnEnter) end)
+            end
+            if F.HideTooltip then
+                pcall(function() button:SetScript('OnLeave', F.HideTooltip) end)
+            end
         end
     end)
     

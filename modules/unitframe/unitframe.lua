@@ -218,14 +218,19 @@ end
 -- Remove blizz raid frame
 
 function UNITFRAME:RemoveBlizzRaidFrame()
-    if _G.CompactPartyFrame then
-        _G.CompactPartyFrame:UnregisterAllEvents()
+    -- 确保 F.HiddenFrame 存在
+    if not F.HiddenFrame then
+        F.HiddenFrame = CreateFrame('Frame')
+        F.HiddenFrame:Hide()
     end
 
-    CompactRaidFrameManager_SetSetting('IsShown', '0')
-    _G.UIParent:UnregisterEvent('GROUP_ROSTER_UPDATE')
-    _G.CompactRaidFrameManager:UnregisterAllEvents()
-    _G.CompactRaidFrameManager:SetParent(F.HiddenFrame)
+    -- 只隐藏 CompactPartyFrame（如果存在）
+    if _G.CompactPartyFrame then
+        _G.CompactPartyFrame:SetParent(F.HiddenFrame)
+    end
+
+    -- 不再处理 CompactRaidFrameManager 和 CompactRaidGroup 相关框架
+    -- 让它们保持原样，避免触发 Blizzard 的安全检查
 end
 
 -- Make sure the state of each element is reliable #TODO

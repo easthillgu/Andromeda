@@ -22,37 +22,34 @@ C.Themes['Blizzard_ItemSocketingUI'] = function()
         local socket = _G['ItemSocketingSocket' .. i]
         local shine = _G['ItemSocketingSocket' .. i .. 'Shine']
 
-        -- 添加安全检查
-        if not socket then
-            break
-        end
-        
-        F.StripTextures(socket)
-        if socket.SetPushedTexture then
-            socket:SetPushedTexture(0)
-        end
-        if socket.GetHighlightTexture then
-            local highlight = socket:GetHighlightTexture()
-            if highlight then
-                highlight:SetColorTexture(1, 1, 1, 0.25)
+        if socket then
+            F.StripTextures(socket)
+            if socket.SetPushedTexture then
+                socket:SetPushedTexture(0)
             end
-        end
-        if socket.icon and socket.icon.SetTexCoord then
-            socket.icon:SetTexCoord(unpack(C.TEX_COORD))
-            socket.bg = F.ReskinIcon(socket.icon)
-        end
+            if socket.GetHighlightTexture then
+                local highlight = socket:GetHighlightTexture()
+                if highlight then
+                    highlight:SetColorTexture(1, 1, 1, 0.25)
+                end
+            end
+            if socket.icon and socket.icon.SetTexCoord then
+                socket.icon:SetTexCoord(unpack(C.TEX_COORD))
+                socket.bg = F.ReskinIcon(socket.icon)
+            end
 
-        if shine then
-            shine:ClearAllPoints()
-            if shine.SetOutside then
-                shine:SetOutside()
+            if shine then
+                shine:ClearAllPoints()
+                if shine.SetOutside then
+                    shine:SetOutside()
+                end
             end
-        end
-        if socket.BracketFrame then
-            socket.BracketFrame:Hide()
-        end
-        if socket.Background then
-            socket.Background:SetAlpha(0)
+            if socket.BracketFrame then
+                socket.BracketFrame:Hide()
+            end
+            if socket.Background then
+                socket.Background:SetAlpha(0)
+            end
         end
     end
 
