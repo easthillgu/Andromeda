@@ -287,43 +287,87 @@ end
 
 local indexToOffset = { 2, 6, 10 }
 function AURA:CreateAuraIcon(button)
-    button.header = button:GetParent()
-    button.filter = button.header.filter
-    button.name = button:GetName()
-    local enchantIndex = tonumber(strmatch(button.name, 'TempEnchant(%d)$'))
-    button.enchantOffset = indexToOffset[enchantIndex]
+    -- 使用 pcall 保护整个函数，防止任何错误
+    local success, err = pcall(function()
+        -- 只处理 Andromeda 自己创建的 aura 图标
+        local buttonName = button and button.GetName and button:GetName()
+        if not buttonName then
+            return  -- 跳过没有名称的按钮
+        end
+        
+        -- 检查按钮名称是否符合我们的模板模式
+        if not (strfind(buttonName, '^AndromedaUI') or strfind(buttonName, C.ADDON_TITLE)) then
+            return  -- 跳过非 Andromeda 创建的图标
+        end
+        
+        button.header = button:GetParent()
+        if not button.header then
+            return
+        end
+        
+        button.filter = button.header.filter
+        button.name = buttonName
+        local enchantIndex = tonumber(strmatch(buttonName, 'TempEnchant(%d)$'))
+        button.enchantOffset = indexToOffset[enchantIndex]
 
-    local cfg = AURA.settings.Debuffs
-    if button.filter == 'HELPFUL' then
-        cfg = AURA.settings.Buffs
+        local cfg = AURA.settings.Debuffs
+        if button.filter == 'HELPFUL' then
+            cfg = AURA.settings.Buffs
+        end
+        local fontSize = floor(cfg.size / 30 * 10 + 0.5)
+
+        button.icon = button:CreateTexture(nil, 'BORDER')
+        if button.icon and button.icon.SetInside then
+            button.icon:SetInside()
+            button.icon:SetTexCoord(unpack(C.TEX_COORD))
+        end
+
+        button.count = button:CreateFontString(nil, 'ARTWORK')
+        if button.count then
+            button.count:SetPoint('CENTER', button, 'TOP')
+            button.count:SetFont(C.Assets.Fonts.HalfHeight, fontSize, 'OUTLINE')
+        end
+
+        button.timer = button:CreateFontString(nil, 'ARTWORK')
+        if button.timer then
+            button.timer:SetPoint('CENTER', button, 'BOTTOM')
+            button.timer:SetFont(C.Assets.Fonts.HalfHeight, fontSize, 'OUTLINE')
+        end
+
+        button.highlight = button:CreateTexture(nil, 'HIGHLIGHT')
+        if button.highlight then
+            button.highlight:SetColorTexture(1, 1, 1, 0.25)
+            if button.highlight.SetInside then
+                button.highlight:SetInside()
+            end
+        end
+
+        if F.CreateBD then
+            F.CreateBD(button, 0.25)
+        end
+        if F.CreateSD then
+            F.CreateSD(button)
+        end
+
+        if button.RegisterForClicks then
+            pcall(function() button:RegisterForClicks('RightButtonUp') end)
+        end
+        
+        if button.SetScript and AURA.OnAttributeChanged then
+            button:SetScript('OnAttributeChanged', AURA.OnAttributeChanged)
+        end
+        if button.SetScript and AURA.Button_OnEnter then
+            button:SetScript('OnEnter', AURA.Button_OnEnter)
+        end
+        if button.SetScript and F.HideTooltip then
+            button:SetScript('OnLeave', F.HideTooltip)
+        end
+    end)
+    
+    if not success then
+        -- 静默处理错误，不显示给用户
+        -- print('Error in CreateAuraIcon:', err)
     end
-    local fontSize = floor(cfg.size / 30 * 10 + 0.5)
-
-    button.icon = button:CreateTexture(nil, 'BORDER')
-    button.icon:SetInside()
-    button.icon:SetTexCoord(unpack(C.TEX_COORD))
-
-    button.count = button:CreateFontString(nil, 'ARTWORK')
-    button.count:SetPoint('CENTER', button, 'TOP')
-    button.count:SetFont(C.Assets.Fonts.HalfHeight, fontSize, 'OUTLINE')
-
-    button.timer = button:CreateFontString(nil, 'ARTWORK')
-    button.timer:SetPoint('CENTER', button, 'BOTTOM')
-    button.timer:SetFont(C.Assets.Fonts.HalfHeight, fontSize, 'OUTLINE')
-
-    button.highlight = button:CreateTexture(nil, 'HIGHLIGHT')
-    button.highlight:SetColorTexture(1, 1, 1, 0.25)
-    button.highlight:SetInside()
-
-    F.CreateBD(button, 0.25)
-    F.CreateSD(button)
-
-    if button.RegisterForClicks then
-        pcall(function() button:RegisterForClicks('RightButtonUp') end)
-    end
-    button:SetScript('OnAttributeChanged', AURA.OnAttributeChanged)
-    button:SetScript('OnEnter', AURA.Button_OnEnter)
-    button:SetScript('OnLeave', F.HideTooltip)
 end
 
 local auraAnchor = {

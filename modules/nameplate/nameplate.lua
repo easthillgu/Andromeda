@@ -410,6 +410,14 @@ end
 -- Major spells glow
 NAMEPLATE.MajorSpellsList = {}
 function NAMEPLATE:RefreshMajorSpellsFilter()
+    -- 确保 ADB 中的表存在
+    if not _G.ANDROMEDA_ADB then
+        _G.ANDROMEDA_ADB = {}
+    end
+    if not _G.ANDROMEDA_ADB['MajorSpellsList'] then
+        _G.ANDROMEDA_ADB['MajorSpellsList'] = {}
+    end
+
     wipe(NAMEPLATE.MajorSpellsList)
 
     for spellID in pairs(C.MajorSpellsList) do
@@ -815,6 +823,14 @@ function NAMEPLATE:PostUpdatePlates(event, unit)
 end
 
 local function RefreshNameplateAuraFilter(list, key)
+    -- 确保 ADB 中的表存在
+    if not _G.ANDROMEDA_ADB then
+        _G.ANDROMEDA_ADB = {}
+    end
+    if not _G.ANDROMEDA_ADB[key] then
+        _G.ANDROMEDA_ADB[key] = {}
+    end
+
     wipe(NAMEPLATE[key])
 
     for spellID in pairs(list) do
