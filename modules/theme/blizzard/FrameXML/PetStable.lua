@@ -24,7 +24,8 @@ tinsert(C.BlizzThemes, function()
     F.ReskinArrow(_G.PetStableNextPageButton, 'right')
     F.ReskinIcon(_G.PetStableSelectedPetIcon)
 
-    for i = 1, _G.NUM_PET_ACTIVE_SLOTS do
+    local numActive = _G.NUM_PET_ACTIVE_SLOTS
+    if numActive then for i = 1, numActive do
         local bu = _G['PetStableActivePet' .. i]
         bu.Background:Hide()
         bu.Border:Hide()
@@ -35,9 +36,10 @@ tinsert(C.BlizzThemes, function()
 
         _G['PetStableActivePet' .. i .. 'IconTexture']:SetTexCoord(unpack(C.TEX_COORD))
         F.CreateBDFrame(bu, 0.25)
-    end
+    end end
 
-    for i = 1, _G.NUM_PET_STABLE_SLOTS do
+    local numStable = _G.NUM_PET_STABLE_SLOTS
+    if numStable then for i = 1, numStable do
         local bu = _G['PetStableStabledPet' .. i]
         bu:SetNormalTexture(0)
         bu:SetPushedTexture(0)
@@ -47,5 +49,5 @@ tinsert(C.BlizzThemes, function()
 
         _G['PetStableStabledPet' .. i .. 'IconTexture']:SetTexCoord(unpack(C.TEX_COORD))
         F.CreateBDFrame(bu, 0.25)
-    end
+    end end
 end)
