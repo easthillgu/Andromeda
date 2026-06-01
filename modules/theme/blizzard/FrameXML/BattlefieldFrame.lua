@@ -17,7 +17,7 @@ do
             else
                 local ok = pcall(orig, self, r, g or 1)
                 if not ok and type(r) == 'table' and r.r then
-                    orig(self, r.r, r.g, r.b, g or 1)
+                    orig(self, r.r, r.g, r.b, a or 1)
                 end
             end
         end

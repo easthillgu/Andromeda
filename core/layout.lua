@@ -500,7 +500,7 @@ local ignoredFrames = {
     ['TargetFrame'] = isUnitFrameEnable,
     ['BossTargetFrameContainer'] = isUnitFrameEnable,
     ['PartyFrame'] = isPartyEnable,
-    ['CompactRaidFrameContainer'] = isRaidEnable,
+    -- ['CompactRaidFrameContainer'] = isRaidEnable,  -- 移除，避免干扰 Blizzard 的 CompactRaid 系统
     ['ArenaEnemyFramesContainer'] = isArenaEnable,
     -- Misc
     ['MinimapCluster'] = function()
@@ -545,10 +545,10 @@ function M:DisableBlizzardMover()
     if isBuffEnable() then
         mixin.RefreshAuraFrame = nop
     end
-    if isRaidEnable() then
-        mixin.ResetRaidFrames = nop
-        mixin.RefreshRaidFrames = nop
-    end
+    -- if isRaidEnable() then
+    --     mixin.ResetRaidFrames = nop
+    --     mixin.RefreshRaidFrames = nop
+    -- end
     if isArenaEnable() then
         mixin.RefreshArenaFrames = nop
     end

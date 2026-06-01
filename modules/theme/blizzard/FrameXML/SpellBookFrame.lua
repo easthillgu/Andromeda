@@ -130,26 +130,25 @@ tinsert(C.BlizzThemes, function()
 
     _G.SpellBookSkillLineTab1:SetPoint('TOPLEFT', _G.SpellBookSideTabsFrame, 'TOPRIGHT', 2, -36)
 
-    -- 3.80.1: SpellBookFrame_UpdateSkillLineTabs may not exist
-    if _G.SpellBookFrame_UpdateSkillLineTabs then
-        hooksecurefunc('SpellBookFrame_UpdateSkillLineTabs', function()
-            for i = 1, GetNumSpellTabs() do
-                local tab = _G['SpellBookSkillLineTab' .. i]
-                local nt = tab:GetNormalTexture()
-                if nt then
-                    nt:SetTexCoord(unpack(C.TEX_COORD))
-                end
-
-                if not tab.styled then
-                    tab:GetRegions():Hide()
-                    tab:SetCheckedTexture(C.Assets.Textures.ButtonChecked)
-                    tab:GetHighlightTexture():SetColorTexture(1, 1, 1, 0.25)
-                    F.CreateBDFrame(tab, 0.25)
-
-                    tab.styled = true
-                end
+    for i = 1, 8 do
+        local tab = _G['SpellBookSkillLineTab' .. i]
+        if tab then
+            F.CreateBDFrame(tab)
+            tab:DisableDrawLayer('BACKGROUND')
+            local nt = tab:GetNormalTexture()
+            if nt then
+                nt:SetTexCoord(unpack(C.TEX_COORD))
             end
-        end)
+            local ct = tab:GetCheckedTexture()
+            if ct then
+                ct:SetTexture(C.Assets.Textures.ButtonChecked)
+            end
+            local hl = tab:GetHighlightTexture()
+            if hl then
+                hl:SetColorTexture(1, 1, 1, 0.25)
+                hl:SetAllPoints()
+            end
+        end
     end
 
     -- 3.80.1: SpellBookFrameTutorialButton may not exist

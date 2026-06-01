@@ -80,14 +80,11 @@ do
             button.Icon:SetTexCoord(0.1, 0.9, 0.22, 0.78) -- precise texcoord for rectangular icons
         end
 
-        -- hooksecurefunc(button, "SetSize", UNITFRAME.UpdateIconTexCoord)
-
         button.HL = button:CreateTexture(nil, 'HIGHLIGHT')
         button.HL:SetColorTexture(1, 1, 1, 0.25)
         button.HL:SetAllPoints()
 
         local outline = _G.ANDROMEDA_ADB.FontOutline
-        --local font = C.Assets.Fonts.HalfHeight
         local font = C.Assets.Fonts.Pixel
         local fontSize = max((element.width or element.size) * 0.4, 12)
         button.Count = F.CreateFS(button, font, fontSize, 'OUTLINEMONOCHROME')
@@ -115,7 +112,16 @@ do
 
     local dispellType = {
         ['Magic'] = true,
+        ['Curse'] = true,
+        ['Disease'] = true,
+        ['Poison'] = true,
         [''] = true,
+    }
+
+    local isCasterPlayer = {
+        ['player'] = true,
+        ['pet'] = true,
+        ['vehicle'] = true,
     }
 
     -- 3.80.1 compat: ElvUI oUF calls as element:PostUpdateButton(unit, button, index, position, ...)
@@ -143,13 +149,6 @@ do
         local isGroup = style == 'party' or style == 'raid'
         local isNP = style == 'nameplate'
         button:SetSize(element.size, (isGroup and element.size) or (isNP and element.size * 0.6) or element.size * 0.7)
-
-        --[[ local squareness = .6
-        element.icon_height = element.size * squareness
-        element.icon_ratio = (1 - (element.icon_height / element.size)) / 2.5
-        element.tex_coord = {.1,.9,.1+element.icon_ratio,.9-element.icon_ratio}
-        print('element.icon_height', element.icon_height)
-        print('element.icon_ratio', element.icon_ratio) ]]
 
         if element.desaturateDebuff and button.isHarmful and filteredUnits[style] and not data.isPlayerAura then
             button.Icon:SetDesaturated(true)
@@ -338,16 +337,6 @@ do
         UNITFRAME:ConfigureAuras(element)
         UNITFRAME:UpdateAuraContainer(frame, element, element.numBuffs + element.numDebuffs)
 
-        -- if element.iconsPerRow > 0 then
-        --     if not frame:IsElementEnabled('Auras') then
-        --         frame:EnableElement('Auras')
-        --     end
-        -- else
-        --     if frame:IsElementEnabled('Auras') then
-        --         frame:DisableElement('Auras')
-        --     end
-        -- end
-
         element:ForceUpdate()
     end
 
@@ -387,7 +376,6 @@ do
         UNITFRAME:ToggleAuras(_G.oUF_Target)
         UNITFRAME:ToggleAuras(_G.oUF_TargetTarget)
         UNITFRAME:ToggleAuras(_G.oUF_Focus)
-        UNITFRAME:ToggleAuras(_G.oUF_FocusTarget)
     end
 
     local function UpdatePlayerAuraPosition(self)
@@ -495,7 +483,7 @@ do
         nameplateShowPersonal, spellId, canApplyAura, isBossAura, isFromPlayerOrPlayerPet,
         nameplateShowAll, timeMod)
 
-        local isPlayerAura = isFromPlayerOrPlayerPet
+        local isPlayerAura = isCasterPlayer[sourceUnit] or isFromPlayerOrPlayerPet
         local isHarmful = button.isDebuff
 
         if name and spellId == 209859 then -- pass all bolster
@@ -562,8 +550,6 @@ do
         self.Auras = bu
     end
 end
-
-
 
 
 -- Debuffs on party/raid frames

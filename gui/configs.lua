@@ -337,7 +337,7 @@ C.CharacterSettings = {
         ArenaAuraPerRow = 6,
     },
     Nameplate = {
-        Enable = false,
+        Enable = true,
         Width = 120,
         Height = 4,
         ClickableWidth = 120,

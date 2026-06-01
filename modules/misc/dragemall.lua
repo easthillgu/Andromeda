@@ -131,7 +131,11 @@ local function HookScript(frame, script, handler)
     if oldHandler then
         frame:SetScript(script, function(...)
             handler(...)
-            oldHandler(...)
+            -- 安全调用旧处理函数，使用 pcall 保护
+            local success, err = pcall(oldHandler, ...)
+            if not success then
+                -- 静默处理错误
+            end
         end)
     else
         frame:SetScript(script, handler)

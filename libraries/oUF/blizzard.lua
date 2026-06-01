@@ -62,16 +62,31 @@ local function handleFrame(baseName, doNotReparent, isNamePlate)
 		if(isNamePlate) then
 			-- TODO: remove this once we can adjust hitrects for nameplates
 			frame:SetAlpha(0)
-		else
-			frame:Hide()
+		end
+		
+		-- 为框架添加安全的空方法，避免 Blizzard 的代码调用时出错
+		if not frame.UpdateHeight then
+			frame.UpdateHeight = function() end
+		end
+		if not frame.UpdateWidth then
+			frame.UpdateWidth = function() end
+		end
+		if not frame.UpdateSize then
+			frame.UpdateSize = function() end
 		end
 
 		if(not doNotReparent) then
-			frame:SetParent(hiddenParent)
-
+			-- 不使用 SetParent，而是直接隐藏并禁用框架
+			-- 使用 hooksecurefunc 阻止 Show 方法
+			hooksecurefunc(frame, 'Show', function()
+				frame:SetAlpha(0)
+			end)
+			
+			-- 直接设置透明度为0
+			pcall(function() frame:SetAlpha(0) end)
+			
+			-- 不再使用 SetParent，避免触发 UpdateHeight 错误
 			if(not hookedFrames[frame]) then
-				hooksecurefunc(frame, 'SetParent', resetParent)
-
 				hookedFrames[frame] = true
 			end
 		end
