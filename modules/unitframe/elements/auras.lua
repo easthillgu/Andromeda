@@ -415,6 +415,8 @@ do
             bu.__value = 'Player'
             UNITFRAME:ConfigureAuras(bu)
         elseif style == 'pet' then
+            bu.numBuffs = 0
+            bu.numDebuffs = 0
             bu.initialAnchor = 'TOPLEFT'
             bu:SetPoint('TOP', self.Power, 'BOTTOM', 0, -4)
             bu['growth-x'] = 'RIGHT'
