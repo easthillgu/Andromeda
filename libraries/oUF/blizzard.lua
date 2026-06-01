@@ -204,18 +204,6 @@ function oUF:DisableBlizzard(unit)
 	end
 end
 
-function oUF:DisableBlizzardRaid()
-	-- 参考 NDui 和 ElvUI 的实现，使用官方 API 隐藏 Raid 框架
-	if CompactRaidFrameManager_SetSetting then
-		CompactRaidFrameManager_SetSetting('IsShown', '0')
-	end
-
-	if _G.CompactRaidFrameManager then
-		_G.CompactRaidFrameManager:UnregisterAllEvents()
-		_G.CompactRaidFrameManager:SetParent(hiddenParent)
-	end
-end
-
 -- 使用官方 API 隐藏 Raid 框架
 -- 参考 NDui 和 ElvUI 的实现
 function oUF:DisableBlizzardRaid()
