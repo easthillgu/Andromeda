@@ -429,6 +429,8 @@ do
             bu.__value = 'Target'
             UNITFRAME:ConfigureAuras(bu)
         elseif style == 'targettarget' then
+            bu.numBuffs = 0
+            bu.numDebuffs = 0
             bu.initialAnchor = 'TOPLEFT'
             bu:SetPoint('TOP', self.Power, 'BOTTOM', 0, -4)
             bu['growth-x'] = 'RIGHT'
