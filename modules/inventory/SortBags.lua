@@ -138,6 +138,21 @@ local function GetItems(containers)
     return items
 end
 
+-- 辅助：实时扫描找到匹配物品的当前位置
+local function FindItemSlot(containers, itemID, skipBag, skipSlot)
+    for _, bagID in ipairs(containers) do
+        local numSlots = GetContainerNumSlots(bagID)
+        for slotID = 1, numSlots do
+            if bagID ~= skipBag or slotID ~= skipSlot then
+                local info = GetContainerItemInfo(bagID, slotID)
+                if info and info.itemID and info.itemID == itemID then
+                    return bagID, slotID
+                end
+            end
+        end
+    end
+end
+
 local function DoSort(containers)
     local items = GetItems(containers)
     table.sort(items, CompareItems)
@@ -146,14 +161,21 @@ local function DoSort(containers)
     for _, bagID in ipairs(containers) do
         local numSlots = GetContainerNumSlots(bagID)
         for slotID = 1, numSlots do
-            if slotIndex <= #items then
-                local item = items[slotIndex]
-                if item.bagID ~= bagID or item.slotID ~= slotID then
-                    PickupContainerItem(item.bagID, item.slotID)
+            if slotIndex > #items then return end
+
+            local curInfo = GetContainerItemInfo(bagID, slotID)
+            local targetItem = items[slotIndex]
+
+            -- 目标位已有正确类型的物品，跳过
+            if not (curInfo and curInfo.itemID == targetItem.itemID) then
+                -- 实时扫描找到目标物品的当前位置
+                local srcBag, srcSlot = FindItemSlot(containers, targetItem.itemID, bagID, slotID)
+                if srcBag then
+                    PickupContainerItem(srcBag, srcSlot)
                     PickupContainerItem(bagID, slotID)
                 end
-                slotIndex = slotIndex + 1
             end
+            slotIndex = slotIndex + 1
         end
     end
 end
