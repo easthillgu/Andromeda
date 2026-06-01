@@ -485,6 +485,7 @@ do
         nameplateShowPersonal, spellId, canApplyAura, isBossAura, isFromPlayerOrPlayerPet,
         nameplateShowAll, timeMod)
 
+        local isMyAura = isCasterPlayer[sourceUnit]
         local isHarmful = button.isDebuff
 
         if name and spellId == 209859 then -- pass all bolster
@@ -511,7 +512,7 @@ do
         if auraFilter == 1 then
             return false
         elseif auraFilter == 2 then
-            return (button.isPlayer or isFromPlayerOrPlayerPet) and isHarmful
+            return isMyAura and isHarmful
         else  -- mode 3: show all debuffs
             return isHarmful
         end
