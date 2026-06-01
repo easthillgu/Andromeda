@@ -58,9 +58,9 @@ local function FormatTimer(seconds)
 end
 
 local function OnUpdate(self)
-    if afkStart then
+    if afkStart and self.timer then
         local timeStr = FormatTimer(GetServerTime() - afkStart)
-        self.timer:SetText(timeStr)
+        local success = pcall(self.timer.SetText, self.timer, timeStr)
     end
 end
 
@@ -92,7 +92,7 @@ local function ConstructTextString(f)
     )
     f.timer = F.CreateFS(
         f,
-        C.ASSET_PATH .. 'fonts\\suez-one.ttf',
+        C.Assets.Fonts.Bold,
         56,
         outline or nil,
         'timer',

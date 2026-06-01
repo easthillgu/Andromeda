@@ -270,6 +270,9 @@ function UNITFRAME:OnLogin()
     hideComboFrame('TargetFrameComboFrame')
     hideComboFrame('PlayerFrameComboFrame')
 
+    -- 使用官方 API 隐藏 Raid 框架（参考 NDui 和 ElvUI）
+    F.Libs.oUF:DisableBlizzardRaid()
+
     UNITFRAME:InitFilters()
     UNITFRAME:SpawnUnits()
     UNITFRAME:UpdateAllElements()

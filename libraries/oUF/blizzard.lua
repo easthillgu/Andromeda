@@ -13,6 +13,9 @@ local MAX_BOSS_FRAMES = 5 -- blizzard can spawn more than the default 5 apparent
 -- sourced from Blizzard_FrameXMLBase/Shared/Constants.lua
 local MEMBERS_PER_RAID_GROUP = MEMBERS_PER_RAID_GROUP or 5
 
+-- sourced from Blizzard_CompactRaidFrames/CompactRaidFrameManager.lua
+local CompactRaidFrameManager_SetSetting = CompactRaidFrameManager_SetSetting
+
 local hookedFrames = {}
 local hookedNameplates = {}
 local isArenaHooked = false
@@ -76,17 +79,18 @@ local function handleFrame(baseName, doNotReparent, isNamePlate)
 		end
 
 		if(not doNotReparent) then
-			-- 不使用 SetParent，而是直接隐藏并禁用框架
-			-- 使用 hooksecurefunc 阻止 Show 方法
-			hooksecurefunc(frame, 'Show', function()
-				frame:SetAlpha(0)
+			-- 使用 pcall 安全设置父框架
+			local success, err = pcall(function()
+				frame:SetParent(hiddenParent)
 			end)
-			
-			-- 直接设置透明度为0
-			pcall(function() frame:SetAlpha(0) end)
-			
-			-- 不再使用 SetParent，避免触发 UpdateHeight 错误
+			if not success then
+				-- 如果失败，尝试设置为不可见
+				pcall(function() frame:SetAlpha(0) end)
+			end
+
 			if(not hookedFrames[frame]) then
+				hooksecurefunc(frame, 'SetParent', resetParent)
+
 				hookedFrames[frame] = true
 			end
 		end
@@ -183,9 +187,7 @@ function oUF:DisableBlizzard(unit)
 				handleFrame(frame, true)
 			end
 
-			for i = 1, MEMBERS_PER_RAID_GROUP do
-				handleFrame('CompactPartyFrameMember' .. i)
-			end
+			-- 不直接处理 CompactPartyFrameMember，让它们通过 CompactRaidFrameManager 管理
 		end
 	elseif(unit:match('arena%d?$')) then
 		if(not isArenaHooked) then
@@ -199,6 +201,35 @@ function oUF:DisableBlizzard(unit)
 				end
 			end
 		end
+	end
+end
+
+function oUF:DisableBlizzardRaid()
+	-- 参考 NDui 和 ElvUI 的实现，使用官方 API 隐藏 Raid 框架
+	if CompactRaidFrameManager_SetSetting then
+		CompactRaidFrameManager_SetSetting('IsShown', '0')
+	end
+
+	if _G.CompactRaidFrameManager then
+		_G.CompactRaidFrameManager:UnregisterAllEvents()
+		_G.CompactRaidFrameManager:SetParent(hiddenParent)
+	end
+end
+
+-- 使用官方 API 隐藏 Raid 框架
+-- 参考 NDui 和 ElvUI 的实现
+function oUF:DisableBlizzardRaid()
+	-- 使用官方 API 隐藏 Raid 框架
+	if CompactRaidFrameManager_SetSetting then
+		CompactRaidFrameManager_SetSetting('IsShown', '0')
+	end
+
+	-- 只对 CompactRaidFrameManager 进行操作
+	if _G.CompactRaidFrameManager then
+		_G.CompactRaidFrameManager:UnregisterAllEvents()
+		pcall(function()
+			_G.CompactRaidFrameManager:SetParent(hiddenParent)
+		end)
 	end
 end
 
