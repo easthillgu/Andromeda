@@ -2,10 +2,34 @@ local F, C, L = unpack(select(2, ...))
 local INVENTORY = F:GetModule('Inventory')
 
 -- 3.80.1: C_Container API with global fallback
+-- C_Container.GetContainerItemInfo 返回 table {itemID, quality, hyperlink, ...}
+-- _G.GetContainerItemInfo 返回裸数字 (texture fileID)
 local GetContainerNumSlots = C_Container.GetContainerNumSlots or _G.GetContainerNumSlots
 local GetContainerItemInfo = C_Container.GetContainerItemInfo or _G.GetContainerItemInfo
 local GetContainerItemLink = C_Container.GetContainerItemLink or _G.GetContainerItemLink
 local PickupContainerItem = C_Container.PickupContainerItem or _G.PickupContainerItem
+local IS_CONTAINER_TABLE = C_Container ~= nil  -- table 返回标记
+
+-- 统一取 itemID（兼容 table 和裸数字）
+local function GetSlotItemID(bagID, slotID)
+    local result = GetContainerItemInfo(bagID, slotID)
+    if not result then return end
+    if IS_CONTAINER_TABLE then
+        return result.itemID
+    else
+        return result  -- 裸数字 (可能为 0 表示空)
+    end
+end
+
+-- 统一取 itemLink（兼容 table.hyperlink 和独立 API）
+local function GetSlotItemLink(bagID, slotID)
+    if IS_CONTAINER_TABLE then
+        local result = GetContainerItemInfo(bagID, slotID)
+        return result and result.hyperlink
+    else
+        return GetContainerItemLink(bagID, slotID)
+    end
+end
 
 CreateFrame('GameTooltip', 'AndromedaSortBagsTooltip', nil, 'GameTooltipTemplate')
 
@@ -76,9 +100,9 @@ local function GetItemCategory(classID, subclassID, equipLoc)
 end
 
 local function GetItemInfo(bagID, slotID)
-    local itemID = GetContainerItemInfo(bagID, slotID)  -- 裸数字，不是table
+    local itemID = GetSlotItemID(bagID, slotID)
     if not itemID or itemID == 0 then return end
-    local itemLink = GetContainerItemLink(bagID, slotID)
+    local itemLink = GetSlotItemLink(bagID, slotID)
     if not itemLink then return end
     local _, _, quality, itemLevel, _, _, _, _, _, _, _, classID, subclassID, _, equipLoc = _G.GetItemInfo(itemLink)
     return {
@@ -144,7 +168,7 @@ local function FindItemSlot(containers, itemID, skipBag, skipSlot)
         local numSlots = GetContainerNumSlots(bagID)
         for slotID = 1, numSlots do
             if bagID ~= skipBag or slotID ~= skipSlot then
-                local curID = GetContainerItemInfo(bagID, slotID)  -- 裸数字
+                local curID = GetSlotItemID(bagID, slotID)
                 if curID and curID == itemID then
                     return bagID, slotID
                 end
@@ -163,7 +187,7 @@ local function DoSort(containers)
         for slotID = 1, numSlots do
             if slotIndex > #items then return end
 
-            local curID = GetContainerItemInfo(bagID, slotID)  -- 裸数字
+            local curID = GetSlotItemID(bagID, slotID)
             local targetItem = items[slotIndex]
 
             -- 目标位已有正确类型的物品，跳过
