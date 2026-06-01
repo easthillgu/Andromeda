@@ -512,7 +512,7 @@ do
         if auraFilter == 1 then
             return false
         elseif auraFilter == 2 then
-            return isMyAura and isHarmful
+            return (isMyAura and isHarmful) or false
         else  -- mode 3: show all debuffs
             return isHarmful
         end
