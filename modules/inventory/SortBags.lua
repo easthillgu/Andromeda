@@ -76,15 +76,15 @@ local function GetItemCategory(classID, subclassID, equipLoc)
 end
 
 local function GetItemInfo(bagID, slotID)
-    local itemInfo = GetContainerItemInfo(bagID, slotID)
-    if not itemInfo then return end
+    local itemID = GetContainerItemInfo(bagID, slotID)  -- 裸数字，不是table
+    if not itemID or itemID == 0 then return end
     local itemLink = GetContainerItemLink(bagID, slotID)
     if not itemLink then return end
     local _, _, quality, itemLevel, _, _, _, _, _, _, _, classID, subclassID, _, equipLoc = _G.GetItemInfo(itemLink)
     return {
         bagID = bagID,
         slotID = slotID,
-        itemID = itemInfo.itemID,
+        itemID = itemID,
         quality = quality,
         itemLevel = itemLevel,
         classID = classID,
@@ -144,8 +144,8 @@ local function FindItemSlot(containers, itemID, skipBag, skipSlot)
         local numSlots = GetContainerNumSlots(bagID)
         for slotID = 1, numSlots do
             if bagID ~= skipBag or slotID ~= skipSlot then
-                local info = GetContainerItemInfo(bagID, slotID)
-                if info and info.itemID and info.itemID == itemID then
+                local curID = GetContainerItemInfo(bagID, slotID)  -- 裸数字
+                if curID and curID == itemID then
                     return bagID, slotID
                 end
             end
@@ -163,11 +163,11 @@ local function DoSort(containers)
         for slotID = 1, numSlots do
             if slotIndex > #items then return end
 
-            local curInfo = GetContainerItemInfo(bagID, slotID)
+            local curID = GetContainerItemInfo(bagID, slotID)  -- 裸数字
             local targetItem = items[slotIndex]
 
             -- 目标位已有正确类型的物品，跳过
-            if not (curInfo and curInfo.itemID == targetItem.itemID) then
+            if not (curID and curID == targetItem.itemID) then
                 -- 实时扫描找到目标物品的当前位置
                 local srcBag, srcSlot = FindItemSlot(containers, targetItem.itemID, bagID, slotID)
                 if srcBag then
