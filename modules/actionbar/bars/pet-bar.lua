@@ -99,7 +99,10 @@ function ACTIONBAR:CreatePetBar()
     local margin = C.DB['Actionbar']['ButtonMargin']
     local padding = C.DB['Actionbar']['BarPadding']
     local buttonList = {}
-    local frame = CreateFrame('Frame', C.ADDON_TITLE .. 'ActionBarPet', _G.UIParent, 'SecureHandlerStateTemplate')
+    local success, frame = pcall(CreateFrame, 'Frame', C.ADDON_TITLE .. 'ActionBarPet', _G.UIParent, 'SecureHandlerStateTemplate')
+    if not success then
+        frame = CreateFrame('Frame', C.ADDON_TITLE .. 'ActionBarPet', _G.UIParent)
+    end
     
     if C.DB['UIAnchor']['PetBar'] then
         C.DB['UIAnchor']['PetBar'] = nil

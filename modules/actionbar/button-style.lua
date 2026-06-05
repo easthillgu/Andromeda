@@ -152,7 +152,9 @@ function ACTIONBAR:HandleButton(btn)
     end
 
     if icon then
-        icon:SetInside()
+        if icon.SetInside then
+            icon:SetInside()
+        end
         if not icon.__lockdown then
             icon:SetTexCoord(unpack(C.TEX_COORD))
         end
@@ -169,17 +171,23 @@ function ACTIONBAR:HandleButton(btn)
     end
 
     if pushed then
-        pushed:SetInside()
+        if pushed.SetInside then
+            pushed:SetInside()
+        end
         pushed:SetTexture(C.Assets.Textures.ButtonPushed)
     end
 
     if checked then
-        checked:SetInside()
+        if checked.SetInside then
+            checked:SetInside()
+        end
         checked:SetColorTexture(1, 0.8, 0, 0.35)
     end
 
     if highlight then
-        highlight:SetInside()
+        if highlight.SetInside then
+            highlight:SetInside()
+        end
         highlight:SetColorTexture(1, 1, 1, 0.25)
     end
 

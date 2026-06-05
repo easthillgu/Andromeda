@@ -9,8 +9,8 @@ local function reskinOptionCheck(button)
 end
 
 tinsert(C.BlizzThemes, function()
+    if not C.HAS_EDIT_MODE then return end
     local frame = EditModeManagerFrame
-    if not frame then return end  -- 3.80.1: frame may not exist
 
     F.StripTextures(frame)
     F.SetBD(frame)

@@ -7,7 +7,10 @@ function ACTIONBAR:CreateExtraBar()
     local size = C.DB['Actionbar']['BarExtraButtonSize']
 
     -- ExtraActionButton
-    local frame = CreateFrame('Frame', C.ADDON_TITLE .. 'ActionBarExtra', _G.UIParent, 'SecureHandlerStateTemplate')
+    local success, frame = pcall(CreateFrame, 'Frame', C.ADDON_TITLE .. 'ActionBarExtra', _G.UIParent, 'SecureHandlerStateTemplate')
+    if not success then
+        frame = CreateFrame('Frame', C.ADDON_TITLE .. 'ActionBarExtra', _G.UIParent)
+    end
     frame:SetWidth(size + 2 * padding)
     frame:SetHeight(size + 2 * padding)
     frame.mover = F.Mover(frame, L['ExtraButton'], 'ExtraButton', { 'CENTER', _G.UIParent, 'CENTER', 0, 250 })

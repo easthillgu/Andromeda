@@ -521,8 +521,8 @@ local shutdownMode = {
 }
 
 function M:DisableBlizzardMover()
+    if not C.HAS_EDIT_MODE then return end
     local editMode = _G.EditModeManagerFrame
-    if not editMode then return end  -- 3.80.1: EditModeManagerFrame doesn't exist
 
     -- remove the initial registers
     local registered = editMode.registeredSystemFrames

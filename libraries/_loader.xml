@@ -12,9 +12,9 @@
     <Script file='LibBase64-1.0\LibBase64-1.0.lua'/>
     <Script file='LibRangeCheck-3.0\LibRangeCheck-3.0.lua'/>
     <Script file='LibSharedMedia-3.0\LibSharedMedia-3.0.lua'/>
-    <!-- oUF from ElvUI_Libraries (Mists version = closest to 3.80.1) -->
+    <!-- oUF from ElvUI_Libraries -->
     <Script file='LibDispel\LibDispel.lua'/>
-    <Include file='oUF\oUF_Mists.xml'/>
+    <Include file='oUF\oUF_Mainline.xml'/>
     <!-- cargBags from NDui (Classic-compatible) -->
     <Include file='cargBags\\cargBags.xml'/>
     <Include file='UTF8\\utf8.xml'/>

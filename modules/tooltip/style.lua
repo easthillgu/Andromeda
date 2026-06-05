@@ -16,7 +16,9 @@ function TOOLTIP:ReskinTooltip()
     self:SetScale(C.DB.Tooltip.Scale)
 
     if not self.tipStyled then
-        self:HideBackdrop()
+        if self.HideBackdrop then
+            self:HideBackdrop()
+        end
         self:DisableDrawLayer('BACKGROUND')
         self.bg = F.SetBD(self)
         self.bg:SetInside(self)

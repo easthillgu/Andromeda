@@ -879,13 +879,13 @@ function INVENTORY:OnLogin()
         self:GetHighlightTexture():SetInside()
         self:SetSize(iconSize, iconSize)
 
-        self.Icon:SetInside()
+        if self.Icon.SetInside then self.Icon:SetInside() end
         self.Icon:SetTexCoord(unpack(C.TEX_COORD))
         local outline = _G.ANDROMEDA_ADB.FontOutline
         F.SetFS(self.Count, C.Assets.Fonts.Bold, 11, outline or nil, '', nil, outline and 'NONE' or 'THICK', 'BOTTOMRIGHT', -2, 2)
-        self.Cooldown:SetInside()
-        self.IconOverlay:SetInside()
-        if self.IconOverlay2 then self.IconOverlay2:SetInside() end
+        if self.Cooldown.SetInside then self.Cooldown:SetInside() end
+        if self.IconOverlay.SetInside then self.IconOverlay:SetInside() end
+        if self.IconOverlay2 and self.IconOverlay2.SetInside then self.IconOverlay2:SetInside() end
 
         F.CreateBD(self, 0.25)
         self:SetBackdropColor(0, 0, 0, 0.25)

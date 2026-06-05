@@ -43,6 +43,10 @@ do
 
             local frame = (_G.SELECTED_CHAT_FRAME or _G.DEFAULT_CHAT_FRAME)
             frame:AddMessage(table.concat(tmp, ' ', 1, n))
+
+            for i = n + 1, #tmp do
+                tmp[i] = nil
+            end
         end
 
         function F:Print(...)
@@ -227,9 +231,31 @@ end
 
 do
     local iLvlDB = {}
+    local iLvlDBOrder = {}
+    local iLvlDBMaxSize = 5000
     local slotData = { gems = {}, gemsColor = {} }
     local ilvlStr = '^' .. gsub(_G.ITEM_LEVEL, '%%d', '')
     local enchantStr = gsub(_G.ENCHANTED_TOOLTIP_LINE, '%%s', '(.+)')
+
+    local function cleanupILvlDB()
+        local count = #iLvlDBOrder
+        if count > iLvlDBMaxSize then
+            local removeCount = math.floor(count * 0.2)
+            for i = 1, removeCount do
+                local key = table.remove(iLvlDBOrder, 1)
+                iLvlDB[key] = nil
+            end
+        end
+    end
+
+    local function addToILvlDB(key, value)
+        if not iLvlDB[key] then
+            tinsert(iLvlDBOrder, key)
+        end
+        iLvlDB[key] = value
+        cleanupILvlDB()
+    end
+
     function F.GetItemLevel(link, arg1, arg2, fullScan)
         if fullScan then
             local data = C_TooltipInfo and C_TooltipInfo.GetInventoryItem and C_TooltipInfo.GetInventoryItem(arg1, arg2)
@@ -242,11 +268,12 @@ do
             slotData.iLvl = nil
             slotData.enchantText = nil
 
-            local isHoA = C.IS_NEW_PATCH_10_1 and data.id == 158075 or data.args and data.args[2] and data.args[2].intVal == 158075
+            local isNewTooltipFormat = lineData and lineData.leftText ~= nil
+            local isHoA = (isNewTooltipFormat and data.id == 158075) or (data.args and data.args[2] and data.args[2].intVal == 158075)
             local num = 0
             for i = 2, #data.lines do
                 local lineData = data.lines[i]
-                if C.IS_NEW_PATCH_10_1 then
+                if isNewTooltipFormat then
                     if not slotData.iLvl then
                         local text = lineData.leftText
                         local found = text and strfind(text, ilvlStr)
@@ -313,7 +340,7 @@ do
             -- 3.80.1: use native GetDetailedItemLevelInfo instead of C_TooltipInfo (Retail API)
             local level = GetDetailedItemLevelInfo and GetDetailedItemLevelInfo(link)
             if level then
-                iLvlDB[link] = level
+                addToILvlDB(link, level)
             end
 
             return iLvlDB[link]
@@ -321,36 +348,66 @@ do
     end
 
     local pendingNPCs, nameCache, callbacks = {}, {}, {}
+    local nameCacheOrder = {}
+    local nameCacheMaxSize = 2000
     local loadingStr = '...'
-    local pendingFrame = CreateFrame('Frame')
-    pendingFrame:Hide()
-    pendingFrame:SetScript('OnUpdate', function(self, elapsed)
-        self.elapsed = (self.elapsed or 0) + elapsed
-        if self.elapsed > 1 then
-            if next(pendingNPCs) then
-                for npcID, count in pairs(pendingNPCs) do
-                    if count > 2 then
-                        nameCache[npcID] = _G.UNKNOWN
-                        if callbacks[npcID] then
-                            callbacks[npcID](_G.UNKNOWN)
-                        end
-                        pendingNPCs[npcID] = nil
-                    else
-                        local name = F.GetNpcName(npcID, callbacks[npcID])
-                        if name and name ~= loadingStr then
-                            pendingNPCs[npcID] = nil
-                        else
-                            pendingNPCs[npcID] = pendingNPCs[npcID] + 1
-                        end
-                    end
-                end
-            else
-                self:Hide()
-            end
+    local pendingTimer = nil
 
-            self.elapsed = 0
+    local function cleanupNameCache()
+        local count = #nameCacheOrder
+        if count > nameCacheMaxSize then
+            local removeCount = math.floor(count * 0.2)
+            for i = 1, removeCount do
+                local key = table.remove(nameCacheOrder, 1)
+                nameCache[key] = nil
+            end
         end
-    end)
+    end
+
+    local function addToNameCache(key, value)
+        if not nameCache[key] then
+            tinsert(nameCacheOrder, key)
+        end
+        nameCache[key] = value
+        cleanupNameCache()
+    end
+
+    local function processPendingNPCs()
+        if not next(pendingNPCs) then
+            pendingTimer = nil
+            return
+        end
+
+        for npcID, count in pairs(pendingNPCs) do
+            if count > 2 then
+                addToNameCache(npcID, _G.UNKNOWN)
+                if callbacks[npcID] then
+                    callbacks[npcID](_G.UNKNOWN)
+                end
+                pendingNPCs[npcID] = nil
+            else
+                local name = F.GetNpcName(npcID, callbacks[npcID])
+                if name and name ~= loadingStr then
+                    pendingNPCs[npcID] = nil
+                else
+                    pendingNPCs[npcID] = pendingNPCs[npcID] + 1
+                end
+            end
+        end
+
+        if next(pendingNPCs) then
+            pendingTimer = C_Timer.After(1, processPendingNPCs)
+        else
+            pendingTimer = nil
+        end
+    end
+
+    local function schedulePendingNPCs()
+        if pendingTimer then
+            return
+        end
+        pendingTimer = C_Timer.After(0.1, processPendingNPCs)
+    end
 
     --
 
@@ -362,10 +419,11 @@ do
             local data = C_TooltipInfo and C_TooltipInfo.GetHyperlink and C_TooltipInfo.GetHyperlink(format('unit:Creature-0-0-0-0-%d', npcID))
             local lineData = data and data.lines
             if lineData then
-                if C.IS_NEW_PATCH_10_1 then
-                    name = lineData[1] and lineData[1].leftText
+                local firstLine = lineData[1]
+                if firstLine and firstLine.leftText ~= nil then
+                    name = firstLine.leftText
                 else
-                    local argVal = lineData[1] and lineData[1].args
+                    local argVal = firstLine and firstLine.args
                     if argVal then
                         name = argVal[2] and argVal[2].stringVal
                     end
@@ -374,10 +432,10 @@ do
             if name == loadingStr then
                 if not pendingNPCs[npcID] then
                     pendingNPCs[npcID] = 1
-                    pendingFrame:Show()
+                    schedulePendingNPCs()
                 end
             else
-                nameCache[npcID] = name
+                addToNameCache(npcID, name)
             end
         end
 
@@ -406,16 +464,15 @@ do
             end
 
             for i = #lineData, 1, -1 do
-                if C.IS_NEW_PATCH_10_1 then
-                    local line = lineData[i]
-
+                local line = lineData[i]
+                if line and line.leftText ~= nil then
                     if line.price then
                         return false
                     end
 
                     return line.leftText and unknownStr[line.leftText]
                 else
-                    local argVal = lineData[i] and lineData[i].args
+                    local argVal = line and line.args
                     if argVal then
                         if argVal[4] and argVal[4].field == 'price' then
                             return false

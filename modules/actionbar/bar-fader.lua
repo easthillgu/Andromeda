@@ -195,7 +195,12 @@ function ACTIONBAR:BarFader()
         return
     end
 
-    ACTIONBAR.fadeParent = CreateFrame('Frame', C.ADDON_TITLE .. 'ActionbarFadeParent', _G.UIParent, 'SecureHandlerStateTemplate')
+    local success, frame = pcall(CreateFrame, 'Frame', C.ADDON_TITLE .. 'ActionbarFadeParent', _G.UIParent, 'SecureHandlerStateTemplate')
+    if success then
+        ACTIONBAR.fadeParent = frame
+    else
+        ACTIONBAR.fadeParent = CreateFrame('Frame', C.ADDON_TITLE .. 'ActionbarFadeParent', _G.UIParent)
+    end
     ACTIONBAR.fadeParent:SetAlpha(C.DB.Actionbar.FadeOutAlpha)
     ACTIONBAR.fadeParent:RegisterEvent('ACTIONBAR_SHOWGRID')
     ACTIONBAR.fadeParent:RegisterEvent('ACTIONBAR_HIDEGRID')

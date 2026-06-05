@@ -260,8 +260,13 @@ function ACTIONBAR:CreateBars()
     ACTIONBAR.headers = {}
 
     for index = 1, 8 do
-        ACTIONBAR.headers[index] = CreateFrame('Frame', C.ADDON_TITLE .. 'ActionBar' .. index, _G.UIParent,
+        local success, frame = pcall(CreateFrame, 'Frame', C.ADDON_TITLE .. 'ActionBar' .. index, _G.UIParent,
             'SecureHandlerStateTemplate')
+        if success then
+            ACTIONBAR.headers[index] = frame
+        else
+            ACTIONBAR.headers[index] = CreateFrame('Frame', C.ADDON_TITLE .. 'ActionBar' .. index, _G.UIParent)
+        end
     end
 
     local margin = C.DB['Actionbar']['ButtonMargin']

@@ -23,10 +23,16 @@ function ACTIONBAR:CreateVehicleBar()
     local padding = C.DB['Actionbar']['BarPadding']
     local buttonList = {}
 
-    local frame = CreateFrame('Frame', C.ADDON_TITLE .. 'ActionBarExit', _G.UIParent, 'SecureHandlerStateTemplate')
+    local success, frame = pcall(CreateFrame, 'Frame', C.ADDON_TITLE .. 'ActionBarExit', _G.UIParent, 'SecureHandlerStateTemplate')
+    if not success then
+        frame = CreateFrame('Frame', C.ADDON_TITLE .. 'ActionBarExit', _G.UIParent)
+    end
     frame.mover = F.Mover(frame, L['LeaveVehicleButton'], 'LeaveVehicleButton', { 'CENTER', _G.UIParent, 'CENTER', 0, 300 })
 
-    local button = CreateFrame('CheckButton', C.ADDON_TITLE .. 'LeaveVehicleButton', frame, 'ActionButtonTemplate, SecureHandlerClickTemplate')
+    local btnSuccess, button = pcall(CreateFrame, 'CheckButton', C.ADDON_TITLE .. 'LeaveVehicleButton', frame, 'ActionButtonTemplate, SecureHandlerClickTemplate')
+    if not btnSuccess then
+        button = CreateFrame('CheckButton', C.ADDON_TITLE .. 'LeaveVehicleButton', frame, 'ActionButtonTemplate')
+    end
     tinsert(buttonList, button)
     button:SetPoint('BOTTOMLEFT', frame, padding, padding)
     button:RegisterForClicks('AnyUp')

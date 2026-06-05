@@ -1,8 +1,20 @@
 local F, C, L = unpack(select(2, ...))
 
 do
-    C.IS_NEW_PATCH = select(4, GetBuildInfo()) >= 100007 -- 10.0.7
-    C.IS_NEW_PATCH_10_1 = select(4, GetBuildInfo()) >= 100100 -- 10.1.0
+    local buildVersion = select(4, GetBuildInfo())
+    
+    C.IS_RETAIL = WOW_PROJECT_ID == WOW_PROJECT_MAINLINE
+    C.IS_CLASSIC = WOW_PROJECT_ID == WOW_PROJECT_CLASSIC
+    C.IS_TBC = WOW_PROJECT_ID == WOW_PROJECT_BURNING_CRUSADE_CLASSIC
+    C.IS_WRATH = WOW_PROJECT_ID == WOW_PROJECT_WRATH_CLASSIC
+    
+    C.IS_NEW_PATCH = C.IS_RETAIL and buildVersion >= 100007
+    C.IS_NEW_PATCH_10_1 = C.IS_RETAIL and buildVersion >= 100100
+    
+    C.HAS_TOOLTIP_INFO = C_TooltipInfo and C_TooltipInfo.GetInventoryItem and true or false
+    C.HAS_EDIT_MODE = _G.EditModeManagerFrame and true or false
+    C.HAS_COMMUNITIES = _G.CommunitiesFrame and true or false
+    
     C.MY_REALM = GetRealmName()
     C.MY_CLASS = select(2, UnitClass('player'))
     C.MY_NAME = UnitName('player')
