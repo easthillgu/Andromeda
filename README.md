@@ -1,4 +1,4 @@
-# Andromeda (Renewit)
+# Andromeda Renew
 
 从底层修复 Andromeda 的函数，以便在Classic 3.80.1使用其正式服的插件文件。
 
