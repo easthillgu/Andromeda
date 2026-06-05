@@ -331,6 +331,9 @@ do
                 end
             end
 
+            if slotData.iLvl then
+                addToILvlDB(link, slotData.iLvl)
+            end
             return slotData
         else
             if iLvlDB[link] then
