@@ -947,6 +947,11 @@ do
 
         function F.CreateBDFrame(parent, a, gradient)
             if not parent then return end
+            
+            if parent.__bg then
+                return parent.__bg
+            end
+            
             local frame = parent
             local ok, isTexture = pcall(parent.IsObjectType, parent, 'Texture')
             if ok and isTexture then

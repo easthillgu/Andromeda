@@ -21,17 +21,23 @@ end
 local function AddHoverEffects(frame)
     if not frame or not frame.SetScript then return end
     
-    local highlight = frame:CreateTexture(nil, 'HIGHLIGHT')
-    highlight:SetColorTexture(C.r, C.g, C.b, 0.2)
-    highlight:SetAllPoints()
+    if not frame.__highlight then
+        frame.__highlight = frame:CreateTexture(nil, 'HIGHLIGHT')
+        frame.__highlight:SetColorTexture(C.r, C.g, C.b, 0.2)
+        frame.__highlight:SetAllPoints()
+    end
     
-    local pushed = frame:CreateTexture(nil, 'PUSHED')
-    pushed:SetColorTexture(0, 0, 0, 0.3)
-    pushed:SetAllPoints()
+    if not frame.__pushed then
+        frame.__pushed = frame:CreateTexture(nil, 'PUSHED')
+        frame.__pushed:SetColorTexture(0, 0, 0, 0.3)
+        frame.__pushed:SetAllPoints()
+    end
 end
 
 local function ReskinButtonDirectly(button)
     if not button then return end
+    
+    if button.__reskinned then return end
     
     HideAllTextures(button)
     
@@ -58,6 +64,8 @@ local function ReskinButtonDirectly(button)
     end
     
     AddHoverEffects(button)
+    
+    button.__reskinned = true
 end
 
 local function IsButtonLike(frame)
