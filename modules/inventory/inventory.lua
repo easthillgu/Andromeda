@@ -740,6 +740,14 @@ end
 
 function INVENTORY:ButtonOnClick(btn)
     if btn ~= 'LeftButton' then
+        if btn == 'RightButton' then
+            if favouriteEnable or customJunkEnable then
+                favouriteOnClick(self)
+                customJunkOnClick(self)
+            else
+                INVENTORY:ShowContextMenu(btn, self.bagId, self.slotId)
+            end
+        end
         return
     end
 

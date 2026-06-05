@@ -4,4 +4,5 @@
     <Script file="SortBags.lua"/>
     <Script file="repair.lua"/>
     <Script file="sell.lua"/>
+    <Script file="contextMenu.lua"/>
 </Ui>

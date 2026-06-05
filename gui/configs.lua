@@ -168,6 +168,8 @@ C.CharacterSettings = {
         FilterStone = true,
         AutoSellJunk = true,
         AutoRepair = true,
+        ShowQuickBar = false,
+        EnhancedContextMenu = true,
     },
     Unitframe = {
         Enable = true,
