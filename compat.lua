@@ -124,32 +124,7 @@ _G.Enum.RafLinkType = _G.Enum.RafLinkType or {
     Both = 3,
 }
 
----------------------------------------------------------------------------
--- CreateFromHex (正式服 10.1+)
----------------------------------------------------------------------------
-if not _G.CreateFromHex then
-    _G.CreateFromHex = function(hex)
-        local r, g, b = 1, 1, 1
-        if hex then
-            local h = hex:gsub("#", "")
-            if #h == 6 then
-                r = tonumber(h:sub(1, 2), 16) / 255
-                g = tonumber(h:sub(3, 4), 16) / 255
-                b = tonumber(h:sub(5, 6), 16) / 255
-            end
-        end
-        return _G.CreateColor(r, g, b)
-    end
-end
 
----------------------------------------------------------------------------
--- BackdropTemplateMixin (正式服 backdrop 系统, 仅定义 mixin 不包装全局函数)
----------------------------------------------------------------------------
-if not _G.BackdropTemplateMixin then
-    _G.BackdropTemplateMixin = {}
-    function _G.BackdropTemplateMixin:OnBackdropLoaded() end
-    function _G.BackdropTemplateMixin:OnBackdropSizeChanged() end
-end
 
 ---------------------------------------------------------------------------
 -- C_NamePlate stub (3.80.1 可能不存在部分方法)
@@ -201,9 +176,6 @@ end
 ---------------------------------------------------------------------------
 if not _G.UnitNameplateShowsWidgetsOnly then
     _G.UnitNameplateShowsWidgetsOnly = function(unit) return false end
-end
-if not _G.IsCosmeticItem then
-    _G.IsCosmeticItem = function(link) return false end
 end
 
 ---------------------------------------------------------------------------
@@ -261,17 +233,7 @@ if not _G.TooltipDataProcessor.AddLinePreCall then
     _G.TooltipDataProcessor.AddLinePreCall = function(dataLineType, func) end
 end
 
----------------------------------------------------------------------------
--- C_Container stub（3.80.1 大部分已存在，仅补缺失方法）
----------------------------------------------------------------------------
-if not _G.C_Container then
-    _G.C_Container = {}
-end
-if not _G.C_Container.GetContainerItemEquipmentSetInfo then
-    _G.C_Container.GetContainerItemEquipmentSetInfo = function(bagID, slotID)
-        return false, nil
-    end
-end
+
 
 ---------------------------------------------------------------------------
 -- C_Texture (正式服纹理 API)
@@ -520,18 +482,7 @@ if not _G.IsConsumableAction then
     _G.IsConsumableAction = function(slot) return false end
 end
 
----------------------------------------------------------------------------
--- C_Garrison stub (6.0+, not in 3.80.1; Map minimap 用到)
----------------------------------------------------------------------------
-if not _G.C_Garrison then
-    _G.C_Garrison = {}
-end
-if not _G.C_Garrison.HasGarrison then
-    _G.C_Garrison.HasGarrison = function() return false end
-end
-if not _G.C_Garrison.IsOnGarrisonMap then
-    _G.C_Garrison.IsOnGarrisonMap = function() return false end
-end
+
 
 ---------------------------------------------------------------------------
 -- C_QuestLog stubs (Retail quest API, 3.80.1 uses global equivalents)
