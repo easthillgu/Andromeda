@@ -565,7 +565,9 @@ function INVENTORY:SelectToggleButton(id)
     end
 end
 
-local favouriteEnable
+-- 收藏模式和自定义垃圾模式的启用状态
+local favouriteEnable = false
+local customJunkEnable = false
 
 function INVENTORY.GetCustomGroupTitle(index)
     return C.DB['Inventory']['CustomNamesList'][index] or (_G.PREFERENCES .. ' ' .. index)
@@ -678,7 +680,6 @@ local function favouriteOnClick(self)
     end
 end
 
-local customJunkEnable
 function INVENTORY:CreateCustomJunkButton()
     local enabledText =
         L["Click to tag item as junk.|nIf 'Auto sell junk' enabled, these items would be sold as well.|nThe list is saved account-wide, and won't be in the export data.|nYou can hold CTRL + ALT and click to wipe the custom junk list."]
