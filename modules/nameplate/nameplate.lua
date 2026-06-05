@@ -371,41 +371,7 @@ function NAMEPLATE:UpdateFocusColor()
     end
 end
 
--- Scale plates for explosives
-local hasExplosives
-local explosiveID = 120651
-function NAMEPLATE:UpdateExplosives(event, unit)
-    if not hasExplosives or unit ~= self.unit then
-        return
-    end
 
-    local scale = _G.UIParent:GetScale()
-    local npcID = self.npcID
-    if event == 'NAME_PLATE_UNIT_ADDED' and npcID == explosiveID then
-        self:SetScale(scale * 2)
-    elseif event == 'NAME_PLATE_UNIT_REMOVED' then
-        self:SetScale(scale)
-    end
-end
-
-local function CheckAffixes()
-    local _, affixes = C_ChallengeMode.GetActiveKeystoneInfo()
-    if affixes[3] and affixes[3] == 13 then
-        hasExplosives = true
-    else
-        hasExplosives = false
-    end
-end
-
-function NAMEPLATE:CheckExplosives()
-    if not C.DB.Nameplate.ExplosiveIndicator then
-        return
-    end
-
-    CheckAffixes()
-    F:RegisterEvent('ZONE_CHANGED_NEW_AREA', CheckAffixes)
-    F:RegisterEvent('CHALLENGE_MODE_START', CheckAffixes)
-end
 
 -- Major spells glow
 NAMEPLATE.MajorSpellsList = {}
@@ -437,27 +403,7 @@ function NAMEPLATE:RefreshMajorSpellsFilter()
     end
 end
 
--- Spiteful indicator
-function NAMEPLATE:CreateSpitefulIndicator(self)
-    local font = C.Assets.Fonts.Condensed
-    local outline = _G.ANDROMEDA_ADB.FontOutline
 
-    local tarName = F.CreateFS(self, font, 12, outline or nil, nil, nil, outline and 'NONE' or 'THICK')
-    tarName:ClearAllPoints()
-    tarName:SetPoint('TOP', self, 'BOTTOM', 0, -10)
-    tarName:Hide()
-
-    self:Tag(tarName, '[andromeda:tarname]')
-    self.tarName = tarName
-end
-
-function NAMEPLATE:UpdateSpitefulIndicator()
-    if not C.DB.Nameplate.SpitefulIndicator then
-        return
-    end
-
-    self.tarName:SetShown(C.NameplateShowTargetNPCsList[self.npcID])
-end
 
 -- Overlay
 function NAMEPLATE:UpdateOverlayVisibility(self, unit)
@@ -517,7 +463,6 @@ function NAMEPLATE:CreateNameplateStyle()
     NAMEPLATE:CreateCastBar(self)
     NAMEPLATE:CreateRaidTargetIndicator(self)
     NAMEPLATE:CreateAuras(self)
-    NAMEPLATE:CreateSpitefulIndicator(self)
 
     self:RegisterEvent('PLAYER_FOCUS_CHANGED', NAMEPLATE.UpdateFocusColor, true)
 
@@ -815,10 +760,8 @@ function NAMEPLATE:PostUpdatePlates(event, unit)
             end
         end
 
-        NAMEPLATE.UpdateSpitefulIndicator(self)
     end
 
-    NAMEPLATE.UpdateExplosives(self, event, unit)
     NAMEPLATE.UpdateTotemIcon(self, event, unit)
 end
 
@@ -870,7 +813,6 @@ function NAMEPLATE:OnLogin()
 
     NAMEPLATE:UpdateNameplateCVars()
     NAMEPLATE:BlockAddons()
-    NAMEPLATE:CheckExplosives()
     NAMEPLATE:UpdateGroupRoles()
     NAMEPLATE:RefreshPlateByEvents()
     NAMEPLATE:RefreshMajorSpellsFilter()
