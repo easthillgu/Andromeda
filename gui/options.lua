@@ -553,6 +553,28 @@ GUI.OptionsList = {
         },
         {
             1,
+            'Misc',
+            'FastLoot',
+            L['Fast Loot'],
+            nil,
+            nil,
+            function()
+                F:InitFastLoot()
+            end,
+            L['Automatically loot items when the loot window opens.|nSkip items that cannot be picked up due to full bags.'],
+        },
+        {
+            1,
+            'Misc',
+            'StatExpand',
+            L['Stat Panel Expand'],
+            nil,
+            nil,
+            nil,
+            L['Expand the character stat panel to the right side.|nIncludes average item level display and customizable stat categories.'],
+        },
+        {
+            1,
             'General',
             'EnhancedMailBox',
             L['Enhanced Mailbox'],

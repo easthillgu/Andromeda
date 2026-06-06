@@ -638,6 +638,11 @@ C.CharacterSettings = {
         WowheadLink = false,
         IgnoreQuestNPC = {},
     },
+    Misc = {
+        FastLoot = false,
+        StatExpand = true,
+        StatOrder = '12345',
+    },
 }
 
 C.AccountSettings = {

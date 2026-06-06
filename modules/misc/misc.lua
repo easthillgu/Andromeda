@@ -460,4 +460,7 @@ function M:OnLogin()
     M:WeeklyLottery()
     M:UpdateActionCamera()
     M:BlockStrangerInvite()
+    F:InitFastLoot()
+    F:InitIColor()
+    F:InitCharacterStatPanel()
 end
