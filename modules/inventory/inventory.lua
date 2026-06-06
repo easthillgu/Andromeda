@@ -913,7 +913,7 @@ function INVENTORY:OnLogin()
         self.Quest:SetSize(24, 24)
         self.Quest:SetPoint('TOPLEFT', -2, -2)
 
-        self.iLvl = F.CreateFS(self, C.Assets.Fonts.Bold, 11, outline or nil, '', nil, outline and 'NONE' or 'THICK', 'BOTTOMRIGHT', -2, 2)
+        self.iLvl = F.CreateFS(self, C.Assets.Fonts.Bold, 11, outline or nil, '', nil, outline and 'NONE' or 'THICK', 'BOTTOMLEFT', 2, 2)
         self.BindType = F.CreateFS(self, C.Assets.Fonts.Condensed, 11, outline or nil, '', nil, outline and 'NONE' or 'THICK', 'TOPLEFT', 2, -2)
 
         local flash = self:CreateTexture(nil, 'ARTWORK')
