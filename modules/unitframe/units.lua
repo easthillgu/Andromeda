@@ -649,14 +649,14 @@ function UNITFRAME:SpawnUnits()
             UNITFRAME:SpawnRaid()
         end
 
-        if C.DB.Unitframe.PartyFrame then
-            UNITFRAME:SyncWithZenTracker()
-            UNITFRAME:UpdatePartyWatcherSpellsList()
-
-            UNITFRAME:SpawnParty()
-        end
-
         UNITFRAME:UpdateRaidHealthMethod()
         UNITFRAME:SetGroupFramePos()
+    end
+
+    if C.DB.Unitframe.PartyFrame then
+        UNITFRAME:SyncWithZenTracker()
+        UNITFRAME:UpdatePartyWatcherSpellsList()
+
+        UNITFRAME:SpawnParty()
     end
 end

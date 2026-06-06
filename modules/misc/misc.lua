@@ -462,5 +462,5 @@ function M:OnLogin()
     M:BlockStrangerInvite()
     F:InitFastLoot()
     F:InitIColor()
-    F:InitCharacterStatPanel()
+    -- F:InitCharacterStatPanel()
 end

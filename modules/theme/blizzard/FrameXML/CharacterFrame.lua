@@ -1,4 +1,7 @@
 local F, C = unpack(select(2, ...))
+local r, g, b = C.r or 1, C.g or 1, C.b or 1
+
+local function nop() end
 
 function F:ReskinIconSelector()
     if not self then return end
@@ -63,9 +66,6 @@ tinsert(C.BlizzThemes, function()
         local tab = _G['CharacterFrameTab' .. i]
         if tab then
             tab.bg = F.ReskinTab(tab)
-            if i == 1 then
-                tab:SetPoint('CENTER', _G.CharacterFrame, 'BOTTOMLEFT', 60, 59)
-            end
             local hl = _G['CharacterFrameTab' .. i .. 'HighlightTexture']
             if hl and tab.bg then
                 hl:SetPoint('TOPLEFT', tab.bg, C.MULT, -C.MULT)
@@ -75,9 +75,15 @@ tinsert(C.BlizzThemes, function()
     end
 
     if _G.CharacterModelFrame then
+        local bg = F.CreateBDFrame(_G.CharacterModelFrame, 0.25)
+        bg:SetPoint('TOPLEFT', -2, 4)
+        bg:SetPoint('BOTTOMRIGHT', _G.CharacterAttributesFrame, 2, -10)
+
         if F.ReskinRotationButtons then
             F.ReskinRotationButtons(_G.CharacterModelFrame)
         end
+        _G.CharacterModelFrameRotateLeftButton:SetPoint('TOPLEFT', 3, -3)
+        _G.CharacterModelFrameRotateRightButton:SetPoint('TOPLEFT', _G.CharacterModelFrameRotateLeftButton, 'TOPRIGHT', 3, 0)
     end
 
     if _G.CharacterModelScene then
@@ -86,8 +92,8 @@ tinsert(C.BlizzThemes, function()
         _G.CharacterModelScene:DisableDrawLayer('OVERLAY')
     end
 
-    if _G.PlayerStatFrameLeftDropdown then F.ReskinDropdown(_G.PlayerStatFrameLeftDropdown) end
-    if _G.PlayerStatFrameRightDropdown then F.ReskinDropdown(_G.PlayerStatFrameRightDropdown) end
+    if _G.PlayerStatFrameLeftDropdown then F.ReskinDropdown(_G.PlayerStatFrameLeftDropdown, 110) end
+    if _G.PlayerStatFrameRightDropdown then F.ReskinDropdown(_G.PlayerStatFrameRightDropdown, 110) end
     if _G.PlayerTitleDropdown then F.ReskinDropdown(_G.PlayerTitleDropdown) end
 
     for _, direc in pairs({'Left', 'Right'}) do
@@ -112,7 +118,7 @@ tinsert(C.BlizzThemes, function()
 
     local function colourPopout(self)
         if self.arrow then
-            self.arrow:SetVertexColor(0, 0.6, 1)
+            self.arrow:SetVertexColor(r, g, b)
         end
     end
 
@@ -133,7 +139,7 @@ tinsert(C.BlizzThemes, function()
     local function updateCheckState(button, state)
         if button.bg then
             if state then
-                button.bg:SetBackdropBorderColor(0, 0.6, 1)
+                button.bg:SetBackdropBorderColor(r, g, b)
             else
                 button.bg:SetBackdropBorderColor(0, 0, 0)
             end
@@ -167,32 +173,14 @@ tinsert(C.BlizzThemes, function()
         local slotId = itemSlotData[slotName]
         if not slotId then return end
 
-        local link = GetInventoryItemLink('player', slotId)
-        if link then
-            local quality, level = select(3, GetItemInfo(link))
-            if quality then
-                local color = C.QualityColors[quality]
-                if color then
-                    slotFrame.bg:SetBackdropBorderColor(color.r, color.g, color.b)
-                else
-                    slotFrame.bg:SetBackdropBorderColor(1, 1, 1)
-                end
+        if not slotFrame.SetBackdropBorderColor then return end
 
-                if level and level > 1 and quality > 1 then
-                    if slotFrame.iLvlText then
-                        slotFrame.iLvlText:SetText(level)
-                        if color then
-                            slotFrame.iLvlText:SetTextColor(color.r, color.g, color.b)
-                        else
-                            slotFrame.iLvlText:SetTextColor(1, 1, 1)
-                        end
-                    end
-                end
-            else
-                slotFrame.bg:SetBackdropBorderColor(0, 0, 0)
-            end
+        local rarity = GetInventoryItemQuality('player', slotId)
+        if rarity and rarity > 1 then
+            local color = GetItemQualityColor(rarity)
+            slotFrame:SetBackdropBorderColor(color.r, color.g, color.b)
         else
-            slotFrame.bg:SetBackdropBorderColor(0, 0, 0)
+            slotFrame:SetBackdropBorderColor(0, 0, 0)
         end
     end
 
@@ -264,15 +252,31 @@ tinsert(C.BlizzThemes, function()
     end
 
     local newResIcons = {136116, 135826, 136074, 135843, 135945}
+
+    -- 抗性图标定位坐标（参考ElvUI）
+    local ResistanceCoords = {
+        {0.21875, 0.8125, 0.25, 0.32421875},        -- 奥术
+        {0.21875, 0.8125, 0.0234375, 0.09765625},  -- 火焰
+        {0.21875, 0.8125, 0.13671875, 0.2109375},  -- 自然
+        {0.21875, 0.8125, 0.36328125, 0.4375},     -- 冰霜
+        {0.21875, 0.8125, 0.4765625, 0.55078125},  -- 暗影
+    }
+
     for i = 1, 5 do
         local bu = _G['MagicResFrame' .. i]
         if bu then
-            bu:SetSize(25, 25)
+            bu:SetSize(24, 24)
+
+            if i ~= 1 then
+                bu:ClearAllPoints()
+                bu:SetPoint('TOP', _G['MagicResFrame' .. (i - 1)], 'BOTTOM', 0, -1)
+            end
+
             local icon = bu:GetRegions()
             if icon then
-                F.ReskinIcon(icon)
-                icon:SetTexture(newResIcons[i])
-                icon:SetAlpha(0.5)
+                icon:SetInside()
+                icon:SetTexCoord(unpack(ResistanceCoords[i]))
+                icon:SetDrawLayer('ARTWORK')
             end
         end
     end
@@ -292,20 +296,19 @@ tinsert(C.BlizzThemes, function()
         if pane.ClassBackground then
             pane.ClassBackground:Hide()
         end
-        if pane.ItemLevelFrame and pane.ItemLevelFrame.Corruption then
-            pane.ItemLevelFrame.Corruption:SetPoint('RIGHT', 22, -8)
-        end
 
-        local categories = { pane.ItemLevelCategory, pane.AttributesCategory, pane.EnhancementsCategory }
+        local categories = {pane.ItemLevelCategory, pane.AttributesCategory, pane.EnhancementsCategory}
         for _, category in pairs(categories) do
-            if category and category.Background then
-                category.Background:SetTexture('Interface\\LFGFrame\\UI-LFG-SEPARATOR')
-                category.Background:SetTexCoord(0, 0.66, 0, 0.31)
-                category.Background:SetVertexColor(r, g, b, 0.8)
-                category.Background:SetPoint('BOTTOMLEFT', -30, -4)
-            end
-            if category and category.Title then
-                category.Title:SetTextColor(r, g, b)
+            if category then
+                if category.Background then
+                    category.Background:SetTexture('Interface\\LFGFrame\\UI-LFG-SEPARATOR')
+                    category.Background:SetTexCoord(0, 0.66, 0, 0.31)
+                    category.Background:SetVertexColor(r, g, b, 0.8)
+                    category.Background:SetPoint('BOTTOMLEFT', -30, -4)
+                end
+                if category.Title then
+                    category.Title:SetTextColor(r, g, b)
+                end
             end
         end
     end
@@ -410,34 +413,37 @@ tinsert(C.BlizzThemes, function()
     if _G.ReputationDetailCorner then _G.ReputationDetailCorner:Hide() end
     if _G.ReputationDetailDivider then _G.ReputationDetailDivider:Hide() end
     if _G.ReputationDetailFrame then
-        _G.ReputationDetailFrame:SetPoint('TOPLEFT', _G.ReputationFrame, 'TOPRIGHT', -32, -16)
+        _G.ReputationDetailFrame:SetPoint('TOPLEFT', _G.ReputationFrame, 'TOPRIGHT', -31, -12)
     end
 
     local function UpdateFactionSkins()
         for i = 1, GetNumFactions() do
-            local statusbar = _G['ReputationBar' .. i .. 'ReputationBar']
-            if statusbar then
+            local statusbar = _G['ReputationBar' .. i]
+            if statusbar and statusbar.SetStatusBarTexture then
+                F.StripTextures(statusbar)
+                statusbar:SetSize(108, 13)
                 statusbar:SetStatusBarTexture(C.Assets.Textures.Backdrop)
 
-                if not statusbar.reskinned then
-                    F.CreateBDFrame(statusbar, 0.25)
-                    statusbar.reskinned = true
+                local factionName = _G['ReputationBar' .. i .. 'FactionName']
+                if factionName then
+                    factionName:SetWidth(140)
+                    factionName:SetPoint('LEFT', statusbar, 'LEFT', -150, 0)
+                    factionName.SetWidth = nop
                 end
 
-                _G['ReputationBar' .. i .. 'Background']:SetTexture(nil)
-                _G['ReputationBar' .. i .. 'ReputationBarHighlight1']:SetTexture(nil)
-                _G['ReputationBar' .. i .. 'ReputationBarHighlight2']:SetTexture(nil)
-                _G['ReputationBar' .. i .. 'ReputationBarAtWarHighlight1']:SetTexture(nil)
-                _G['ReputationBar' .. i .. 'ReputationBarAtWarHighlight2']:SetTexture(nil)
-                _G['ReputationBar' .. i .. 'ReputationBarLeftTexture']:SetTexture(nil)
-                _G['ReputationBar' .. i .. 'ReputationBarRightTexture']:SetTexture(nil)
+                local factionHeader = _G['ReputationHeader' .. i]
+                if factionHeader then
+                    factionHeader:GetNormalTexture():SetSize(14, 14)
+                    factionHeader:SetHighlightTexture('')
+                    factionHeader:SetPoint('TOPLEFT', statusbar, 'TOPLEFT', -175, 0)
+                end
             end
         end
     end
     if _G.ReputationFrame then
         _G.ReputationFrame:HookScript('OnShow', UpdateFactionSkins)
-        _G.ReputationFrame:HookScript('OnEvent', UpdateFactionSkins)
     end
+    hooksecurefunc('ReputationFrame_Update', UpdateFactionSkins)
 
     for i = 1, _G.NUM_FACTIONS_DISPLAYED do
         local bu = _G['ReputationBar' .. i .. 'ExpandOrCollapseButton']
@@ -599,6 +605,10 @@ tinsert(C.BlizzThemes, function()
             if F.ReskinRotationButtons then
                 F.ReskinRotationButtons(_G.PetModelFrame)
             end
+            _G.PetModelFrameRotateLeftButton:ClearAllPoints()
+            _G.PetModelFrameRotateLeftButton:SetPoint('TOPLEFT', 3, -3)
+            _G.PetModelFrameRotateRightButton:ClearAllPoints()
+            _G.PetModelFrameRotateRightButton:SetPoint('TOPLEFT', _G.PetModelFrameRotateLeftButton, 'TOPRIGHT', 3, 0)
         end
 
         if _G.PetAttributesFrame then
@@ -670,8 +680,10 @@ tinsert(C.BlizzThemes, function()
 
         if _G.PetPaperDollPetInfo then
             local petInfo = _G.PetPaperDollPetInfo
-            petInfo:GetRegions():SetTexCoord(0.04, 0.15, 0.06, 0.3)
-            F.CreateBDFrame(petInfo)
+            petInfo:SetPoint('TOPLEFT', _G.PetModelFrameRotateLeftButton, 'BOTTOMLEFT', 9, -3)
+            petInfo:GetRegions():SetTexCoord(0.04, 0.15, 0.06, 0.30)
+            petInfo:SetFrameLevel(petInfo:GetFrameLevel() + 2)
+            petInfo:SetSize(24, 24)
 
             local function updateHappiness()
                 local happiness = GetPetHappiness()

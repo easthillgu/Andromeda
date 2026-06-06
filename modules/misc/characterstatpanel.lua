@@ -3,7 +3,7 @@ local F, C, L = unpack(select(2, ...))
 -- Character Stats Panel Module
 -- 角色属性面板增强，显示平均物品等级和自定义属性分类
 
-local cr, cg, cb = C.r, C.g, C.b
+local cr, cg, cb = C.r or 1, C.g or 1, C.b or 1
 
 -- 修复 Blizz 某些语言版本的本地化问题
 local function FixBlizzLocale()
@@ -254,7 +254,8 @@ local function UpdateUnitILvl(unit, text)
 
     local average = F:Round(total / 16, 1)
     text:SetText(average)
-    text:SetTextColor(GetILvlTextColor(average))
+    local r, g, b = GetILvlTextColor(average)
+    text:SetTextColor(r, g, b)
 end
 
 local function UpdatePlayerILvl()

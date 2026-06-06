@@ -287,6 +287,11 @@ end
 
 local indexToOffset = { 2, 6, 10 }
 function AURA:CreateAuraIcon(button)
+    -- 在战斗中跳过，避免受保护框架的问题
+    if InCombatLockdown() then
+        return
+    end
+    
     -- 使用 pcall 保护整个函数，防止任何错误
     local success, err = pcall(function()
         -- 只处理 Andromeda 自己创建的 aura 图标
@@ -350,14 +355,11 @@ function AURA:CreateAuraIcon(button)
             F.CreateSD(button)
         end
 
-        -- 安全注册点击
-        if button.RegisterForClicks then
-            local clickSuccess, clickErr = pcall(function()
+        -- 安全注册点击（仅在非战斗状态）
+        if button.RegisterForClicks and not InCombatLockdown() then
+            pcall(function()
                 button:RegisterForClicks('RightButtonUp')
             end)
-            if not clickSuccess then
-                -- 注册失败没关系，继续执行
-            end
         end
         
         -- 安全设置脚本

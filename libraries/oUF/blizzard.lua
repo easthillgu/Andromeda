@@ -61,6 +61,12 @@ local function handleFrame(baseName, doNotReparent, isNamePlate)
 	end
 
 	if(frame) then
+		-- 跳过所有 CompactRaid 和 CompactParty 框架，避免干扰其正常工作
+		local frameName = frame.GetName and frame:GetName()
+		if frameName and (frameName:find('CompactRaid') or frameName:find('CompactParty')) then
+			return
+		end
+
 		frame:UnregisterAllEvents()
 		if(isNamePlate) then
 			-- TODO: remove this once we can adjust hitrects for nameplates
@@ -204,21 +210,18 @@ function oUF:DisableBlizzard(unit)
 	end
 end
 
--- 使用官方 API 隐藏 Raid 框架
--- 参考 NDui 和 ElvUI 的实现
+-- 参考 NDui 的实现方式来隐藏 Blizzard Raid 框架
 function oUF:DisableBlizzardRaid()
-	-- 使用官方 API 隐藏 Raid 框架
-	if CompactRaidFrameManager_SetSetting then
-		CompactRaidFrameManager_SetSetting('IsShown', '0')
-	end
-
-	-- 只对 CompactRaidFrameManager 进行操作
-	if _G.CompactRaidFrameManager then
-		_G.CompactRaidFrameManager:UnregisterAllEvents()
-		pcall(function()
-			_G.CompactRaidFrameManager:SetParent(hiddenParent)
-		end)
-	end
+    -- 使用官方 API 隐藏管理器
+    if CompactRaidFrameManager_SetSetting then
+        CompactRaidFrameManager_SetSetting("IsShown", "0")
+        UIParent:UnregisterEvent("GROUP_ROSTER_UPDATE")
+        
+        if _G.CompactRaidFrameManager then
+            _G.CompactRaidFrameManager:UnregisterAllEvents()
+            _G.CompactRaidFrameManager:SetParent(hiddenParent)
+        end
+    end
 end
 
 function oUF:DisableBlizzardNamePlate(frame)
