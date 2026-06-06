@@ -71,13 +71,16 @@ MAP.MenuList = {
             if _G.GameTimeFrame then _G.GameTimeFrame:Click() end
         end,
     },
-    {
-        text = _G.BLIZZARD_STORE,
-        notCheckable = true,
-        func = function()
-            _G.StoreMicroButton:Click()
-        end,
-    },
+    -- 3.80.1: 商店功能不可用，避免触发安全错误
+    --{
+    --    text = _G.BLIZZARD_STORE,
+    --    notCheckable = true,
+    --    func = function()
+    --        if _G.StoreMicroButton then
+    --            _G.StoreMicroButton:Click()
+    --        end
+    --    end,
+    --},
     -- 3.80.1: Garrison Landing Page not available
     --{
     --    text = _G.GARRISON_TYPE_8_0_LANDING_PAGE_TITLE,
