@@ -150,8 +150,6 @@ C.CharacterSettings = {
         CombineFreeSlots = false,
         AutoDeposit = false,
         SpecialBagsColor = true,
-        CustomItemsList = {},
-        CustomNamesList = {},
         ItemFilter = true,
         FilterEquipSet = true,
         FilterTradeGoods = true,
@@ -162,7 +160,6 @@ C.CharacterSettings = {
         FilterConsumable = true,
         FilterLegendary = true,
         FilterCollection = true,
-        FilterFavourite = true,
         FilterAnima = false,  -- 3.80.1: not available
         FilterRelic = false,  -- 3.80.1: not available
         FilterStone = true,
@@ -303,7 +300,7 @@ C.CharacterSettings = {
         PartyWatcherSize = 26,
 
 
-        RaidFrame = false,
+        RaidFrame = true,
         RaidHealthColorStyle = 2,
         TeamIndex = false,
         RaidDirec = 2,
@@ -690,7 +687,6 @@ C.AccountSettings = {
     ChatFilterBlackList = '',
     ChatFilterWhiteList = '',
     RepairType = 1,
-    CustomJunkList = {},
     -- NameplateAuraFilterList = { [1] = {}, [2] = {} },
 
 

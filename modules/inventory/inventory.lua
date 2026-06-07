@@ -556,204 +556,14 @@ function INVENTORY:CreateFreeSlots()
     self.freeSlot = slot
 end
 
-local toggleButtons = {}
-function INVENTORY:SelectToggleButton(id)
-    for index, button in pairs(toggleButtons) do
-        if index ~= id then
-            button.__turnOff()
-        end
-    end
-end
-
--- 收藏模式和自定义垃圾模式的启用状态
-local favouriteEnable = false
-local customJunkEnable = false
-
-function INVENTORY.GetCustomGroupTitle(index)
-    return C.DB['Inventory']['CustomNamesList'][index] or (_G.PREFERENCES .. ' ' .. index)
-end
-
-function INVENTORY:RenameCustomGroup(index)
-    INVENTORY.selectGroupIndex = index
-    StaticPopup_Show('ANDROMEDA_INVENTORY_RENAME_CUSTOM_GROUP')
-end
-
-function INVENTORY:MoveItemToCustomBag(index)
-    local itemID = INVENTORY.selectItemID
-    if index == 0 then
-        if C.DB['Inventory']['CustomItemsList'][itemID] then
-            C.DB['Inventory']['CustomItemsList'][itemID] = nil
-        end
-    else
-        C.DB['Inventory']['CustomItemsList'][itemID] = index
-    end
-    INVENTORY:UpdateAllBags()
-end
-
-function INVENTORY:IsItemInCustomBag()
-    local index = self.arg1
-    local itemID = INVENTORY.selectItemID
-    return (index == 0 and not C.DB['Inventory']['CustomItemsList'][itemID]) or (C.DB['Inventory']['CustomItemsList'][itemID] == index)
-end
-
-local menuList = {
-    {
-        text = '',
-        icon = 134400,
-        isTitle = true,
-        notCheckable = true,
-        tCoordLeft = 0.08,
-        tCoordRight = 0.92,
-        tCoordTop = 0.08,
-        tCoordBottom = 0.92,
-    },
-    {
-        text = _G.NONE,
-        arg1 = 0,
-        func = INVENTORY.MoveItemToCustomBag,
-        checked = INVENTORY.IsItemInCustomBag,
-    },
-}
-
-function INVENTORY:CreateFavouriteButton()
-    for i = 1, 5 do
-        tinsert(menuList, {
-            text = INVENTORY.GetCustomGroupTitle(i),
-            arg1 = i,
-            func = INVENTORY.MoveItemToCustomBag,
-            checked = INVENTORY.IsItemInCustomBag,
-            hasArrow = true,
-            menuList = { { text = _G.BATTLE_PET_RENAME, arg1 = i, func = INVENTORY.RenameCustomGroup } },
-        })
-    end
-    INVENTORY.CustomMenu = menuList
-
-    local enabledText = L["You can now star items.|nIf 'Item Filter' enabled, the item you starred will add to Preferences filter slots.|nThis is not available to junk."]
-
-    local bu = F.CreateButton(self, 16, 16, true, iconsList.BagFavourite)
-    bu.Icon:SetVertexColor(unpack(iconColor))
-
-    bu.__turnOff = function()
-        bu.Icon:SetVertexColor(unpack(iconColor))
-        bu.text = nil
-        favouriteEnable = nil
-    end
-
-    bu:SetScript('OnClick', function(self)
-        INVENTORY:SelectToggleButton(2)
-        favouriteEnable = not favouriteEnable
-        if favouriteEnable then
-            self.Icon:SetVertexColor(C.r, C.g, C.b)
-            self.text = enabledText
-        else
-            self.__turnOff()
-        end
-        self:GetScript('OnEnter')(self)
-    end)
-
-    bu:SetScript('OnHide', bu.__turnOff)
-    bu.tipHeader = L['Mark Favourite']
-    F.AddTooltip(bu, 'ANCHOR_TOP', bu.text, 'BLUE')
-
-    toggleButtons[2] = bu
-
-    return bu
-end
-
-local function favouriteOnClick(self)
-    if not favouriteEnable then
-        return
-    end
-
-    local info = C_Container.GetContainerItemInfo(self.bagId, self.slotId)
-    local texture = info and info.iconFileID
-    local quality = info and info.quality
-    local link = info and info.hyperlink
-    local itemID = info and info.itemID
-
-    if texture and quality > Enum.ItemQuality.Poor then
-        ClearCursor()
-        INVENTORY.selectItemID = itemID
-        INVENTORY.CustomMenu[1].text = link
-        INVENTORY.CustomMenu[1].icon = texture
-        EasyMenu(INVENTORY.CustomMenu, F.EasyMenu, self, 0, 0, 'MENU')
-    end
-end
-
-function INVENTORY:CreateCustomJunkButton()
-    local enabledText =
-        L["Click to tag item as junk.|nIf 'Auto sell junk' enabled, these items would be sold as well.|nThe list is saved account-wide, and won't be in the export data.|nYou can hold CTRL + ALT and click to wipe the custom junk list."]
-
-    local bu = F.CreateButton(self, 16, 16, true, iconsList.BagJunk)
-    bu.Icon:SetVertexColor(unpack(iconColor))
-    bu.__turnOff = function()
-        bu.Icon:SetVertexColor(unpack(iconColor))
-        bu.text = nil
-        customJunkEnable = nil
-    end
-    bu:SetScript('OnClick', function(self)
-        if IsAltKeyDown() and IsControlKeyDown() then
-            _G.StaticPopup_Show('ANDROMEDA_INVENTORY_RESET_JUNK_LIST')
-            return
-        end
-
-        INVENTORY:SelectToggleButton(3)
-        customJunkEnable = not customJunkEnable
-        if customJunkEnable then
-            self.Icon:SetVertexColor(C.r, C.g, C.b)
-            self.text = enabledText
-        else
-            bu.__turnOff()
-        end
-        INVENTORY:UpdateAllBags()
-        self:GetScript('OnEnter')(self)
-    end)
-
-    bu:SetScript('OnHide', bu.__turnOff)
-    bu.tipHeader = L['Mark Junk']
-    F.AddTooltip(bu, 'ANCHOR_TOP', bu.text, 'BLUE')
-
-    toggleButtons[3] = bu
-
-    return bu
-end
-
-local function customJunkOnClick(self)
-    if not customJunkEnable then
-        return
-    end
-
-    local info = C_Container.GetContainerItemInfo(self.bagId, self.slotId)
-    local texture = info and info.iconFileID
-    local itemID = info and info.itemID
-
-    local price = select(11, GetItemInfo(itemID))
-    if texture and price > 0 then
-        if _G.ANDROMEDA_ADB['CustomJunkList'][itemID] then
-            _G.ANDROMEDA_ADB['CustomJunkList'][itemID] = nil
-        else
-            _G.ANDROMEDA_ADB['CustomJunkList'][itemID] = true
-        end
-        ClearCursor()
-        INVENTORY:UpdateAllBags()
-    end
-end
+-- 移除收藏模式和自定义垃圾模式相关功能，避免与使用物品功能冲突
 
 function INVENTORY:ButtonOnClick(btn)
-    if btn ~= 'LeftButton' then
-        if btn == 'RightButton' then
-            if favouriteEnable or customJunkEnable then
-                favouriteOnClick(self)
-                customJunkOnClick(self)
-            else
-                INVENTORY:ShowContextMenu(btn, self.bagId, self.slotId)
-            end
-        end
-        return
+    -- 移除右键加入收藏功能，避免与使用物品功能冲突
+    -- 右键点击始终显示默认上下文菜单
+    if btn == 'RightButton' then
+        return -- 交给原生处理
     end
-
-    favouriteOnClick(self)
-    customJunkOnClick(self)
 end
 
 function INVENTORY:UpdateAllBags()
@@ -811,34 +621,28 @@ function INVENTORY:OnLogin()
 
     function Backpack:OnInit()
         AddNewContainer('Bag', 1, 'Junk', filters.bagsJunk)
-        for i = 1, 5 do
-            AddNewContainer('Bag', i + 1, 'BagCustom' .. i, filters['bagCustom' .. i])
-        end
-        AddNewContainer('Bag', 7, 'BagReagent', filters.onlyBagReagent)
-        AddNewContainer('Bag', 8, 'Equipment', filters.bagEquipment)
-        AddNewContainer('Bag', 9, 'EquipSet', filters.bagEquipSet)
-        AddNewContainer('Bag', 10, 'BagBOE', filters.bagBOE)
-        AddNewContainer('Bag', 11, 'BagCollection', filters.bagCollection)
-        AddNewContainer('Bag', 12, 'Consumable', filters.bagConsumable)
-        AddNewContainer('Bag', 13, 'BagGoods', filters.bagGoods)
-        AddNewContainer('Bag', 14, 'BagQuest', filters.bagQuest)
+        AddNewContainer('Bag', 2, 'BagReagent', filters.onlyBagReagent)
+        AddNewContainer('Bag', 3, 'Equipment', filters.bagEquipment)
+        AddNewContainer('Bag', 4, 'EquipSet', filters.bagEquipSet)
+        AddNewContainer('Bag', 5, 'BagBOE', filters.bagBOE)
+        AddNewContainer('Bag', 6, 'BagCollection', filters.bagCollection)
+        AddNewContainer('Bag', 7, 'Consumable', filters.bagConsumable)
+        AddNewContainer('Bag', 8, 'BagGoods', filters.bagGoods)
+        AddNewContainer('Bag', 9, 'BagQuest', filters.bagQuest)
 
         f.main = MyContainer:New('Bag', { Bags = 'bags', BagType = 'Bag' })
         f.main.__anchor = { 'BOTTOMRIGHT', -C.UI_GAP, C.UI_GAP }
         f.main:SetPoint(unpack(f.main.__anchor))
         f.main:SetFilter(filters.onlyBags, true)
 
-        for i = 1, 5 do
-            AddNewContainer('Bank', i, 'BankCustom' .. i, filters['bankCustom' .. i])
-        end
-        AddNewContainer('Bank', 6, 'BankEquipment', filters.bankEquipment)
-        AddNewContainer('Bank', 7, 'BankEquipSet', filters.bankEquipSet)
-        AddNewContainer('Bank', 8, 'BankBOE', filters.bankBOE)
-        AddNewContainer('Bank', 9, 'BankLegendary', filters.bankLegendary)
-        AddNewContainer('Bank', 10, 'BankCollection', filters.bankCollection)
-        AddNewContainer('Bank', 11, 'BankConsumable', filters.bankConsumable)
-        AddNewContainer('Bank', 12, 'BankGoods', filters.bankGoods)
-        AddNewContainer('Bank', 13, 'BankQuest', filters.bankQuest)
+        AddNewContainer('Bank', 1, 'BankEquipment', filters.bankEquipment)
+        AddNewContainer('Bank', 2, 'BankEquipSet', filters.bankEquipSet)
+        AddNewContainer('Bank', 3, 'BankBOE', filters.bankBOE)
+        AddNewContainer('Bank', 4, 'BankLegendary', filters.bankLegendary)
+        AddNewContainer('Bank', 5, 'BankCollection', filters.bankCollection)
+        AddNewContainer('Bank', 6, 'BankConsumable', filters.bankConsumable)
+        AddNewContainer('Bank', 7, 'BankGoods', filters.bankGoods)
+        AddNewContainer('Bank', 8, 'BankQuest', filters.bankQuest)
 
         f.bank = MyContainer:New('Bank', { Bags = 'bank', BagType = 'Bank' })
         f.bank.__anchor = { 'BOTTOMLEFT', C.UI_GAP, C.UI_GAP }
@@ -902,11 +706,6 @@ function INVENTORY:OnLogin()
         local parentFrame = CreateFrame('Frame', nil, self)
         parentFrame:SetAllPoints()
         parentFrame:SetFrameLevel(5)
-
-        self.Favourite = parentFrame:CreateTexture(nil, 'ARTWORK')
-        self.Favourite:SetTexture('')
-        self.Favourite:SetSize(16, 16)
-        self.Favourite:SetPoint('TOPLEFT')
 
         self.Quest = parentFrame:CreateTexture(nil, 'ARTWORK')
         self.Quest:SetTexture('Interface\\Buttons\\AdventureGuideMicrobuttonAlert')
@@ -1010,7 +809,7 @@ function INVENTORY:OnLogin()
 
     function MyButton:OnUpdateButton(item)
         if self.JunkIcon then
-            if (_G.MerchantFrame:IsShown() or customJunkEnable) and (item.quality == Enum.ItemQuality.Poor or _G.ANDROMEDA_ADB['CustomJunkList'][item.id]) and item.hasPrice then
+            if _G.MerchantFrame:IsShown() and item.quality == Enum.ItemQuality.Poor and item.hasPrice then
                 self.JunkIcon:Show()
             else
                 self.JunkIcon:Hide()
@@ -1039,12 +838,6 @@ function INVENTORY:OnLogin()
             if SetItemCraftingQualityOverlay then
                 SetItemCraftingQualityOverlay(self, item.link)
             end
-        end
-
-        if C.DB['Inventory']['CustomItemsList'][item.id] and not C.DB.Inventory.ItemFilter then
-            self.Favourite:Show()
-        else
-            self.Favourite:Hide()
         end
 
         if self.ShowNewItems then
@@ -1219,8 +1012,6 @@ function INVENTORY:OnLogin()
             label = _G.POWER_TYPE_ANIMA
         elseif name == 'BagRelic' then
             label = L['Korthia Relics']
-        elseif strmatch(name, 'Custom%d') then
-            label = INVENTORY.GetCustomGroupTitle(settings.Index)
         elseif name == 'BagReagent' then
             label = L['Reagent Bag']
         elseif name == 'BagStone' then
@@ -1245,9 +1036,7 @@ function INVENTORY:OnLogin()
             buttons[3] = INVENTORY.CreateBagToggle(self)
             buttons[4] = INVENTORY.CreateRepairButton(self)
             buttons[5] = INVENTORY.CreateSellButton(self)
-            buttons[6] = INVENTORY.CreateFavouriteButton(self)
-            buttons[7] = INVENTORY.CreateCustomJunkButton(self)
-            buttons[8] = INVENTORY.CreateSearchButton(self)
+            buttons[6] = INVENTORY.CreateSearchButton(self)
         elseif name == 'Bank' then
             INVENTORY.CreateBagBar(self, settings, 7)
             buttons[3] = INVENTORY.CreateBagToggle(self)

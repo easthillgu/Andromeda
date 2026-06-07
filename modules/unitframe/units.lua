@@ -484,7 +484,6 @@ function UNITFRAME:CreateAndUpdateRaidHeader(direction)
             group.index = i
             group.groupType = 'raid'
             tinsert(UNITFRAME.headers, group)
-            RegisterStateDriver(group, 'visibility', 'show')
             RegisterStateDriver(group, 'visibility', GetRaidVisibility())
             CreateTeamIndex(group)
 

@@ -187,13 +187,17 @@ function oUF:DisableBlizzard(unit)
 		if(not isPartyHooked) then
 			isPartyHooked = true
 
-			handleFrame(_G.PartyFrame)
+			-- 在 WoW Wrath Classic 中，_G.PartyFrame 可能不存在
+			-- 团队框架由 CompactRaidFrameManager 管理
+			if _G.PartyFrame then
+				handleFrame(_G.PartyFrame)
 
-			for frame in _G.PartyFrame.PartyMemberFramePool:EnumerateActive() do
-				handleFrame(frame, true)
+				for frame in _G.PartyFrame.PartyMemberFramePool:EnumerateActive() do
+					handleFrame(frame, true)
+				end
 			end
 
-			-- 不直接处理 CompactPartyFrameMember，让它们通过 CompactRaidFrameManager 管理
+			-- CompactPartyFrame 由 DisableBlizzardRaid() 统一处理
 		end
 	elseif(unit:match('arena%d?$')) then
 		if(not isArenaHooked) then
@@ -215,12 +219,27 @@ function oUF:DisableBlizzardRaid()
     -- 使用官方 API 隐藏管理器
     if CompactRaidFrameManager_SetSetting then
         CompactRaidFrameManager_SetSetting("IsShown", "0")
-        UIParent:UnregisterEvent("GROUP_ROSTER_UPDATE")
-        
-        if _G.CompactRaidFrameManager then
-            _G.CompactRaidFrameManager:UnregisterAllEvents()
-            _G.CompactRaidFrameManager:SetParent(hiddenParent)
-        end
+    end
+    
+    -- 隐藏 CompactRaidFrameManager
+    if _G.CompactRaidFrameManager then
+        _G.CompactRaidFrameManager:UnregisterAllEvents()
+        _G.CompactRaidFrameManager:Hide()
+        _G.CompactRaidFrameManager.Show = function() end
+    end
+    
+    -- 隐藏 CompactRaidFrames
+    if _G.CompactRaidFrameContainer then
+        _G.CompactRaidFrameContainer:UnregisterAllEvents()
+        _G.CompactRaidFrameContainer:Hide()
+        _G.CompactRaidFrameContainer.Show = function() end
+    end
+    
+    -- 隐藏 CompactPartyFrame
+    if _G.CompactPartyFrame then
+        _G.CompactPartyFrame:UnregisterAllEvents()
+        _G.CompactPartyFrame:Hide()
+        _G.CompactPartyFrame.Show = function() end
     end
 end
 

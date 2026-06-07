@@ -42,7 +42,7 @@ local function isItemJunk(item)
         return
     end
 
-    return item.quality and item.quality == Enum.ItemQuality.Poor or _G.ANDROMEDA_ADB['CustomJunkList'][item.id] and item.hasPrice and not INVENTORY:IsPetTrashCurrency(item.id)
+    return item.quality and item.quality == Enum.ItemQuality.Poor and item.hasPrice and not INVENTORY:IsPetTrashCurrency(item.id)
 end
 
 local function isItemEquipSet(item)
@@ -157,19 +157,6 @@ local function isItemCollection(item)
     end
 
     return item.id and C_ToyBox and C_ToyBox.GetToyInfo(item.id) or isMountOrPet(item)
-end
-
-local function isItemCustom(item, index)
-    if not C.DB.Inventory.ItemFilter then
-        return
-    end
-
-    if not C.DB.Inventory.FilterFavourite then
-        return
-    end
-
-    local customIndex = item.id and C.DB['Inventory']['CustomItemsList'][item.id]
-    return customIndex and customIndex == index
 end
 
 local emptyBags = { [0] = true, [11] = true }
@@ -384,15 +371,6 @@ function INVENTORY:GetFilters()
 
     filters.bagStone = function(item)
         return isItemInBag(item) and isPrimordialStone(item)
-    end
-
-    for i = 1, 5 do
-        filters['bagCustom' .. i] = function(item)
-            return (isItemInBag(item) or isItemInBagReagent(item)) and isItemCustom(item, i)
-        end
-        filters['bankCustom' .. i] = function(item)
-            return isItemInBank(item) and isItemCustom(item, i)
-        end
     end
 
     return filters
