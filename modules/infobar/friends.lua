@@ -294,7 +294,7 @@ local function buttonOnClick(self, btn)
 
                 EasyMenu(menuList, F.EasyMenu, self, 0, 0, 'MENU', 1)
             else
-                C_PartyInfo.InviteUnit(self.data[1])
+                InviteUnit(self.data[1])
             end
         elseif IsShiftKeyDown() then
             local name = self.isBNet and self.data[3] or self.data[1]

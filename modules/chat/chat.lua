@@ -477,7 +477,7 @@ function CHAT.OnChatWhisper(event, ...)
                 end
             else
                 if not C.DB.Chat.GuildOnly or IsGuildMember(guid) then
-                    C_PartyInfo.InviteUnit(author)
+                    InviteUnit(author)
                 end
             end
         end
@@ -542,7 +542,7 @@ function CHAT:AltClickToInvite(link)
         local player = link:match('^player:([^:]+)')
         local bplayer = link:match('^BNplayer:([^:]+)')
         if player then
-            C_PartyInfo.InviteUnit(player)
+            InviteUnit(player)
         elseif bplayer then
             local _, value = strmatch(link, '(%a+):(.+)')
             local _, bnID = strmatch(value, '([^:]*):([^:]*):')

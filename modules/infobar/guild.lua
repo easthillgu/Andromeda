@@ -9,7 +9,7 @@ local function rosterButtonOnClick(self, btn)
     local name = INFOBAR.GuildTable[self.index][3]
     if btn == 'LeftButton' then
         if IsAltKeyDown() then
-            C_PartyInfo.InviteUnit(name)
+            InviteUnit(name)
         elseif IsShiftKeyDown() then
             if _G.MailFrame:IsShown() then
                 _G.MailFrameTab_OnClick(nil, 2)

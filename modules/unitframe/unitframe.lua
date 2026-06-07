@@ -218,9 +218,42 @@ end
 -- Remove blizz raid frame
 
 function UNITFRAME:RemoveBlizzRaidFrame()
-    -- 不再处理任何 Compact 相关框架
-    -- 让它们保持原样，避免触发 Blizzard 的安全检查
-    -- 隐藏 CompactPartyFrame 或 CompactRaidFrameManager 会干扰整个 CompactRaid 系统
+    local function HideFrame(frameName)
+        local frame = _G[frameName]
+        if frame then
+            frame:Hide()
+            frame:UnregisterAllEvents()
+            frame.Show = function() end
+        end
+    end
+
+    HideFrame('RaidGroup1')
+    HideFrame('RaidGroup2')
+    HideFrame('RaidGroup3')
+    HideFrame('RaidGroup4')
+    HideFrame('RaidGroup5')
+    HideFrame('RaidGroup6')
+    HideFrame('RaidGroup7')
+    HideFrame('RaidGroup8')
+    HideFrame('PartyMemberFrame1')
+    HideFrame('PartyMemberFrame2')
+    HideFrame('PartyMemberFrame3')
+    HideFrame('PartyMemberFrame4')
+    HideFrame('PartyMemberFrame5')
+    HideFrame('PartyMemberFrame1PetFrame')
+    HideFrame('PartyMemberFrame2PetFrame')
+    HideFrame('PartyMemberFrame3PetFrame')
+    HideFrame('PartyMemberFrame4PetFrame')
+    HideFrame('PartyMemberFrame5PetFrame')
+    HideFrame('PartyFrame')
+    HideFrame('RaidFrame')
+
+    if CompactRaidFrameManager then
+        CompactRaidFrameManager:UnregisterAllEvents()
+        CompactRaidFrameManager:SetParent(UIParent)
+        CompactRaidFrameManager:Hide()
+        CompactRaidFrameManager.Show = function() end
+    end
 end
 
 -- Make sure the state of each element is reliable #TODO
@@ -235,6 +268,8 @@ function UNITFRAME:UpdateAllElements()
 end
 
 function UNITFRAME:OnLogin()
+    print("[Andromeda] Unitframe module loading...")
+    
     -- 3.80.1: EditModeManagerFrame doesn't exist, manually hide Blizzard castbars
     if _G.PlayerCastingBarFrame then
         _G.PlayerCastingBarFrame:Hide()
@@ -263,7 +298,13 @@ function UNITFRAME:OnLogin()
     -- 使用官方 API 隐藏 Raid 框架（参考 NDui 和 ElvUI）
     F.Libs.oUF:DisableBlizzardRaid()
 
+    -- Initialize ClickCast defaults
+    UNITFRAME:InitDefaultClickSets()
+    UNITFRAME:AddClickSetsListener()
+
     UNITFRAME:InitFilters()
     UNITFRAME:SpawnUnits()
     UNITFRAME:UpdateAllElements()
+    
+    print("[Andromeda] Unitframe module loaded")
 end

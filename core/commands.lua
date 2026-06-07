@@ -33,7 +33,7 @@ end)
 
 -- Leave group
 F:RegisterSlashCommand('/lg', function()
-    C_PartyInfo.LeaveParty()
+    LeaveParty()
 end)
 
 --	Disband party or raid
@@ -45,9 +45,9 @@ end)
 F:RegisterSlashCommand('/convert', function()
     if GetNumGroupMembers() > 0 then
         if UnitInRaid('player') and (UnitIsGroupLeader('player')) then
-            C_PartyInfo.ConvertToParty()
+            ConvertToParty()
         elseif UnitInParty('player') and (UnitIsGroupLeader('player')) then
-            C_PartyInfo.ConvertToRaid()
+            ConvertToRaid()
         end
     else
         F:Print('|cffff2020' .. _G.ERR_NOT_IN_GROUP .. '|r')

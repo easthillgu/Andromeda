@@ -320,6 +320,8 @@ C.CharacterSettings = {
         SmartRaid = true,
         PositionBySpec = false,
 
+        ClickCast = false,
+
 
         Boss = false,
         BossWidth = 100,
@@ -705,6 +707,7 @@ C.AccountSettings = {
     MajorSpellsList = {},
     PartySpellsList = {},
     AnnounceableSpellsList = {},
+    ClickSets = {},
 
     CooldownPulseIgnoredSpellsList = {},
 

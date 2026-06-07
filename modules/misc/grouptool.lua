@@ -79,7 +79,7 @@ function GT:RaidTool_Header()
     end)
     frame:SetScript('OnDoubleClick', function(_, btn)
         if btn == 'RightButton' and (IsPartyLFG() and IsLFGComplete() or not IsInInstance()) then
-            C_PartyInfo.LeaveParty()
+            LeaveParty()
         end
     end)
     -- frame:SetScript('OnHide', function(self)
@@ -513,9 +513,9 @@ function GT:RaidTool_CreateMenu(parent)
             function()
                 if UnitIsGroupLeader('player') and not HasLFGRestrictions() and GetNumGroupMembers() <= 5 then
                     if IsInRaid() then
-                        C_PartyInfo.ConvertToParty()
+                        ConvertToParty()
                     else
-                        C_PartyInfo.ConvertToRaid()
+                        ConvertToRaid()
                     end
                     frame:Hide()
                     frame:SetScript('OnUpdate', nil)

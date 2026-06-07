@@ -22,7 +22,7 @@ local function GetPartyVisibility()
     local visibility = '[group:party,nogroup:raid] show;hide'
 
     if C.DB.Unitframe.SmartRaid then
-        visibility = '[@raid6,noexists,group] show;hide'
+        visibility = '[group:party] show;hide'
     end
 
     if C.DB.Unitframe.ShowSolo then
@@ -37,7 +37,7 @@ local function GetRaidVisibility()
 
     if C.DB.Unitframe.PartyFrame then
         if C.DB.Unitframe.SmartRaid then
-            visibility = '[@raid6,exists] show;hide'
+            visibility = '[group:raid] show;hide'
         else
             visibility = '[group:raid] show;hide'
         end
@@ -112,6 +112,7 @@ local function CreatePartyStyle(self)
     UNITFRAME:CreateRangeCheck(self)
     UNITFRAME:CreatePartyWatcher(self)
     UNITFRAME:CreateRaidAuras(self)
+    UNITFRAME:CreateClickSets(self)
 end
 
 UNITFRAME.PartyDirections = {
@@ -301,6 +302,7 @@ local function CreateSimpleRaidStyle(self)
     UNITFRAME:CreatePowerBar(self)
     UNITFRAME:CreateGroupNameTag(self)
     UNITFRAME:CreateRangeCheck(self)
+    UNITFRAME:CreateClickSets(self)
 end
 
 local groupByTypes = {
@@ -392,6 +394,7 @@ local function CreateRaidStyle(self)
     UNITFRAME:CreateThreatBorder(self)
     UNITFRAME:CreateRangeCheck(self)
     UNITFRAME:CreateRaidAuras(self)
+    UNITFRAME:CreateClickSets(self)
 end
 
 local teamIndexes = {}
