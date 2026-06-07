@@ -168,19 +168,89 @@ tinsert(C.BlizzThemes, function()
         ['CharacterTabardSlot']        = 19,
     }
 
+    local function GetQualityColor(rarity)
+        local r, g, b = GetItemQualityColor(rarity)
+        if type(r) == 'table' then
+            return r.r, r.g, r.b
+        end
+        return r, g, b
+    end
+
     local function UpdateSlotQualityAndLevel(slotFrame)
         local slotName = slotFrame:GetName()
         local slotId = itemSlotData[slotName]
         if not slotId then return end
 
-        if not slotFrame.SetBackdropBorderColor then return end
+        -- 获取装备槽尺寸用于计算字体大小
+        local slotWidth, slotHeight = slotFrame:GetSize()
+        local fontSize = math.floor(math.min(slotWidth, slotHeight) * 0.32)
+        fontSize = math.max(fontSize, 10)
+        fontSize = math.min(fontSize, 14)
+        local outline = _G.ANDROMEDA_ADB.FontOutline
+        local fontFlag = outline and 'NONE' or 'THICK'
+        local offset = math.floor(fontSize * 0.3)
+        local innerOffset = math.floor(fontSize * 0.15)
 
         local rarity = GetInventoryItemQuality('player', slotId)
-        if rarity and rarity > 1 then
-            local color = GetItemQualityColor(rarity)
-            slotFrame:SetBackdropBorderColor(color.r, color.g, color.b)
-        else
-            slotFrame:SetBackdropBorderColor(0, 0, 0)
+        if slotFrame.bg then
+            if rarity and rarity > 1 then
+                local cr, cg, cb = GetQualityColor(rarity)
+                slotFrame.bg:SetBackdropBorderColor(cr, cg, cb)
+            else
+                slotFrame.bg:SetBackdropBorderColor(0, 0, 0)
+            end
+        end
+
+        -- 清除所有文本
+        if slotFrame.iLvl then
+            slotFrame.iLvl:SetText('')
+        end
+        if slotFrame.durability then
+            slotFrame.durability:SetText('')
+        end
+
+        local link = GetInventoryItemLink('player', slotId)
+        if link then
+            local _, _, _, itemLevel = GetItemInfo(link)
+
+            -- 左下：装备等级
+            if itemLevel and itemLevel > 0 and not (slotId == 4 or slotId == 19) then
+                if not slotFrame.iLvl then
+                    slotFrame.iLvl = F.CreateFS(slotFrame, C.Assets.Fonts.Bold, fontSize, outline or nil, '', nil, fontFlag, 'BOTTOMLEFT', innerOffset, innerOffset)
+                end
+                if slotFrame.iLvl then
+                    slotFrame.iLvl:SetFont(C.Assets.Fonts.Bold, fontSize, outline and 'OUTLINE' or '')
+                    slotFrame.iLvl:SetText(itemLevel)
+                    if rarity and rarity > 1 then
+                        local ir, ig, ib = GetQualityColor(rarity)
+                        slotFrame.iLvl:SetTextColor(ir, ig, ib)
+                    else
+                        slotFrame.iLvl:SetTextColor(1, 1, 1)
+                    end
+                end
+            end
+
+            -- 左上：耐久度
+            if slotId ~= 2 and slotId ~= 11 and slotId ~= 12 and slotId ~= 13 and slotId ~= 14 then
+                local current, max = GetInventoryItemDurability(slotId)
+                if current and max and max > 0 then
+                    if not slotFrame.durability then
+                        slotFrame.durability = F.CreateFS(slotFrame, C.Assets.Fonts.Bold, fontSize, outline or nil, '', nil, fontFlag, 'TOPLEFT', innerOffset, -innerOffset)
+                    end
+                    if slotFrame.durability then
+                        slotFrame.durability:SetFont(C.Assets.Fonts.Bold, fontSize, outline and 'OUTLINE' or '')
+                        local percent = math.floor(current / max * 100)
+                        slotFrame.durability:SetText(percent .. '%')
+                        if percent < 50 then
+                            slotFrame.durability:SetTextColor(1, 0.82, 0)
+                        elseif percent < 25 then
+                            slotFrame.durability:SetTextColor(1, 0, 0)
+                        else
+                            slotFrame.durability:SetTextColor(0, 1, 0)
+                        end
+                    end
+                end
+            end
         end
     end
 
@@ -190,9 +260,12 @@ tinsert(C.BlizzThemes, function()
         'Back', 'MainHand', 'SecondaryHand', 'Tabard', 'Ranged',
     }
 
+    local slotSize = 39
+
     for i = 1, #slots do
         local slot = _G['Character' .. slots[i] .. 'Slot']
         if slot then
+            slot:SetSize(slotSize, slotSize)
             slot:SetNormalTexture(0)
             slot:SetPushedTexture(0)
             slot:GetHighlightTexture():SetColorTexture(1, 1, 1, 0.25)
@@ -202,6 +275,21 @@ tinsert(C.BlizzThemes, function()
                 slot.icon:SetInside()
             end
             slot.bg = F.CreateBDFrame(slot, 0.25)
+
+            -- 设置数量位置：右下
+            if slot.Count then
+                local outline = _G.ANDROMEDA_ADB.FontOutline
+                local fontSize = math.floor(slotSize * 0.28)
+                fontSize = math.max(fontSize, 10)
+                F.SetFS(slot.Count, C.Assets.Fonts.Bold, fontSize, outline or nil, '', nil, outline and 'NONE' or 'THICK', 'BOTTOMRIGHT', -2, 2)
+            end
+
+            -- 设置冷却时间覆盖整个图标
+            if slot.Cooldown then
+                slot.Cooldown:ClearAllPoints()
+                slot.Cooldown:SetPoint('TOPLEFT', slot.icon, 'TOPLEFT')
+                slot.Cooldown:SetPoint('BOTTOMRIGHT', slot.icon, 'BOTTOMRIGHT')
+            end
 
             local popout = slot.popoutButton
             if popout then
@@ -242,6 +330,19 @@ tinsert(C.BlizzThemes, function()
         end
     end)
 
+    local durabilityFrame = CreateFrame('Frame')
+    durabilityFrame:RegisterEvent('UPDATE_INVENTORY_DURABILITY')
+    durabilityFrame:SetScript('OnEvent', function()
+        if PaperDollFrame:IsVisible() then
+            for i = 1, #slots do
+                local slot = _G['Character' .. slots[i] .. 'Slot']
+                if slot then
+                    UpdateSlotQualityAndLevel(slot)
+                end
+            end
+        end
+    end)
+
     if _G.CharacterAmmoSlot then
         F.StripTextures(_G.CharacterAmmoSlot)
         if _G.CharacterAmmoSlotIconTexture then
@@ -253,13 +354,12 @@ tinsert(C.BlizzThemes, function()
 
     local newResIcons = {136116, 135826, 136074, 135843, 135945}
 
-    -- 抗性图标定位坐标（参考ElvUI）
     local ResistanceCoords = {
-        {0.21875, 0.8125, 0.25, 0.32421875},        -- 奥术
-        {0.21875, 0.8125, 0.0234375, 0.09765625},  -- 火焰
-        {0.21875, 0.8125, 0.13671875, 0.2109375},  -- 自然
-        {0.21875, 0.8125, 0.36328125, 0.4375},     -- 冰霜
-        {0.21875, 0.8125, 0.4765625, 0.55078125},  -- 暗影
+        {0.21875, 0.8125, 0.25, 0.32421875},
+        {0.21875, 0.8125, 0.0234375, 0.09765625},
+        {0.21875, 0.8125, 0.13671875, 0.2109375},
+        {0.21875, 0.8125, 0.36328125, 0.4375},
+        {0.21875, 0.8125, 0.4765625, 0.55078125},
     }
 
     for i = 1, 5 do
@@ -419,23 +519,25 @@ tinsert(C.BlizzThemes, function()
     local function UpdateFactionSkins()
         for i = 1, GetNumFactions() do
             local statusbar = _G['ReputationBar' .. i]
-            if statusbar and statusbar.SetStatusBarTexture then
-                F.StripTextures(statusbar)
-                statusbar:SetSize(108, 13)
-                statusbar:SetStatusBarTexture(C.Assets.Textures.Backdrop)
+            if statusbar then
+                if statusbar.SetStatusBarTexture then
+                    F.StripTextures(statusbar)
+                    statusbar:SetSize(108, 13)
+                    statusbar:SetStatusBarTexture(C.Assets.Textures.Backdrop)
 
-                local factionName = _G['ReputationBar' .. i .. 'FactionName']
-                if factionName then
-                    factionName:SetWidth(140)
-                    factionName:SetPoint('LEFT', statusbar, 'LEFT', -150, 0)
-                    factionName.SetWidth = nop
-                end
+                    local factionName = _G['ReputationBar' .. i .. 'FactionName']
+                    if factionName then
+                        factionName:SetWidth(140)
+                        factionName:SetPoint('LEFT', statusbar, 'LEFT', -150, 0)
+                        factionName.SetWidth = nop
+                    end
 
-                local factionHeader = _G['ReputationHeader' .. i]
-                if factionHeader then
-                    factionHeader:GetNormalTexture():SetSize(14, 14)
-                    factionHeader:SetHighlightTexture('')
-                    factionHeader:SetPoint('TOPLEFT', statusbar, 'TOPLEFT', -175, 0)
+                    local factionHeader = _G['ReputationHeader' .. i]
+                    if factionHeader then
+                        factionHeader:GetNormalTexture():SetSize(14, 14)
+                        factionHeader:SetHighlightTexture('')
+                        factionHeader:SetPoint('TOPLEFT', statusbar, 'TOPLEFT', -175, 0)
+                    end
                 end
             end
         end
