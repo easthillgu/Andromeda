@@ -11,7 +11,7 @@ local function onEvent(_, isLogin, isReload)
 end
 
 function AURA:HideBlizzFrame()
-    if not C.DB.Aura.Enable and not C.DB.Auras.HideBlizzFrame then
+    if not C.DB.Aura.Enable and not C.DB.Aura.HideBlizzFrame then
         return
     end
 
@@ -199,7 +199,7 @@ function AURA:UpdateHeader(header)
         header:SetAttribute('weaponTemplate', format(C.ADDON_TITLE .. 'AuraTemplate%d', cfg.size))
         header:SetAttribute('separateOwn', 0) -- buff不使用separateOwn，显示所有buff
     else
-        header:SetAttribute('separateOwn', C.DB.Auras.OnlyShowPlayer and 1 or 0) -- debuff使用配置
+        header:SetAttribute('separateOwn', C.DB.Aura.OnlyShowPlayer and 1 or 0) -- debuff使用配置
     end
 
     header:SetAttribute('sortMethod', 'INDEX')

@@ -17,6 +17,21 @@ local cacheMsg = C.RED_COLOR
     .. L['Max Reputation - Receive Reward.']
     .. ')|r'
 
+-- ElvUI 风格的声望颜色表
+local FACTION_BAR_COLORS = {
+    [1] = {r = 0.8, g = 0.3, b = 0.22},   -- Hated - 红色
+    [2] = {r = 0.8, g = 0.3, b = 0.22},   -- Hostile - 红色
+    [3] = {r = 0.8, g = 0.5, b = 0.22},   -- Unfriendly - 橙色
+    [4] = {r = 0.8, g = 0.6, b = 0.22},   -- Neutral - 黄橙色
+    [5] = {r = 0.8, g = 0.8, b = 0.22},   -- Friendly - 黄色
+    [6] = {r = 0.2, g = 0.8, b = 0.22},   -- Honored - 绿色
+    [7] = {r = 0.2, g = 0.8, b = 0.22},   -- Revered - 绿色
+    [8] = {r = 0.2, g = 0.6, b = 0.9},    -- Exalted - 蓝色
+}
+
+-- Paragon 颜色 (金黄色)
+local PARAGON_COLOR = {r = 0.9, g = 0.8, b = 0.6}
+
 local function CreateMessage(msg)
     local info = _G.ChatTypeInfo['COMBAT_FACTION_CHANGE']
     for i = 1, 4, 1 do
@@ -54,7 +69,9 @@ local function UpdateRep(self)
             local hasParagon = C_Reputation.IsFactionParagon(factionID)
             if hasParagon then
                 InitExtraRep(factionID, name)
-                local currentValue, threshold, _, hasRewardPending = C_Reputation.GetFactionParagonInfo(factionID)
+                local currentValue, threshold, _, hasRewardPending = C_Reputation.GetFactionParagonInfo(
+                    factionID
+                )
                 value = currentValue % threshold
                 if hasRewardPending then
                     value = value + threshold
@@ -89,6 +106,7 @@ end
 local function HookParagonRep()
     local numFactions = GetNumFactions()
     local factionOffset = FauxScrollFrame_GetOffset(_G.ReputationListScrollFrame)
+    local gradStyle = _G.ANDROMEDA_ADB.GradientStyle
 
     for i = 1, _G.NUM_FACTIONS_DISPLAYED, 1 do
         local factionIndex = factionOffset + i
@@ -97,55 +115,65 @@ local function HookParagonRep()
         local factionStanding = _G['ReputationBar' .. i .. 'ReputationBarFactionStanding']
 
         if factionIndex <= numFactions then
-            local name, _, _, _, _, _, _, _, _, _, _, _, _, factionID = GetFactionInfo(factionIndex)
+            local name, _, standingID, barMin, barMax, barValue, _, _, isHeader, _, hasRep, _, _, factionID = GetFactionInfo(factionIndex)
             if factionID and C_Reputation and C_Reputation.IsFactionParagon(factionID) then
-                local currentValue, threshold, rewardQuestID, hasRewardPending = C_Reputation.GetFactionParagonInfo(
-                    factionID
-                )
-                factionRow.questID = rewardQuestID
-                local r, g, b = 0.9, 0.8, 0.6
+                local hasParagon = C_Reputation.IsFactionParagon(factionID)
+                if hasParagon then
+                    local currentValue, threshold, rewardQuestID, hasRewardPending = C_Reputation.GetFactionParagonInfo(
+                        factionID
+                    )
+                    factionRow.questID = rewardQuestID
 
-                if currentValue then
-                    local barValue = mod(currentValue, threshold)
-                    if hasRewardPending then
-                        local paragonFrame = _G.ReputationFrame.paragonFramesPool:Acquire()
-                        paragonFrame.factionID = factionID
-                        paragonFrame:SetPoint('RIGHT', factionRow, 11, 0)
-                        paragonFrame.Glow:SetShown(true)
-                        paragonFrame.Check:SetShown(true)
-                        paragonFrame:Show()
-                        barValue = barValue + threshold
-                    end
-
-                    factionBar:SetMinMaxValues(0, threshold)
-                    factionBar:SetValue(barValue)
-                    factionBar:SetStatusBarColor(r, g, b)
-                    factionRow.rolloverText = C.INFO_COLOR
-                        .. format(_G.REPUTATION_PROGRESS_FORMAT, barValue, threshold)
-
-                    if hasRewardPending then
-                        barValue = barValue - threshold
-                        factionStanding:SetText('+' .. BreakUpLargeNumbers(barValue))
-                        factionRow.standingText = '+' .. BreakUpLargeNumbers(barValue)
-                    else
-                        barValue = threshold - barValue
-                        factionStanding:SetText(BreakUpLargeNumbers(barValue))
-                        factionRow.standingText = BreakUpLargeNumbers(barValue)
-                    end
-                    factionRow.rolloverText = nil
-
-                    if factionIndex == GetSelectedFaction() and _G.ReputationDetailFrame:IsShown() then
-                        local count = floor(currentValue / threshold)
+                    if currentValue then
+                        local barValue = mod(currentValue, threshold)
                         if hasRewardPending then
-                            count = count - 1
+                            local paragonFrame = _G.ReputationFrame.paragonFramesPool:Acquire()
+                            paragonFrame.factionID = factionID
+                            paragonFrame:SetPoint('RIGHT', factionRow, 11, 0)
+                            paragonFrame.Glow:SetShown(true)
+                            paragonFrame.Check:SetShown(true)
+                            paragonFrame:Show()
+                            barValue = barValue + threshold
                         end
-                        if count > 0 then
-                            _G.ReputationDetailFactionName:SetText(name .. ' |cffffffffx' .. count .. '|r')
+
+                        factionBar:SetMinMaxValues(0, threshold)
+                        factionBar:SetValue(barValue)
+                        -- ElvUI 风格：使用金黄色显示 Paragon 条
+                        factionBar:SetStatusBarColor(PARAGON_COLOR.r, PARAGON_COLOR.g, PARAGON_COLOR.b)
+                        factionRow.rolloverText = C.INFO_COLOR
+                            .. format(_G.REPUTATION_PROGRESS_FORMAT, barValue, threshold)
+
+                        if hasRewardPending then
+                            barValue = barValue - threshold
+                            factionStanding:SetText('+' .. BreakUpLargeNumbers(barValue))
+                            factionRow.standingText = '+' .. BreakUpLargeNumbers(barValue)
+                        else
+                            barValue = threshold - barValue
+                            factionStanding:SetText(BreakUpLargeNumbers(barValue))
+                            factionRow.standingText = BreakUpLargeNumbers(barValue)
+                        end
+                        factionRow.rolloverText = nil
+
+                        if factionIndex == GetSelectedFaction() and _G.ReputationDetailFrame:IsShown() then
+                            local count = floor(currentValue / threshold)
+                            if hasRewardPending then
+                                count = count - 1
+                            end
+                            if count > 0 then
+                                _G.ReputationDetailFactionName:SetText(name .. ' |cffffffffx' .. count .. '|r')
+                            end
                         end
                     end
                 end
             else
                 factionRow.questID = nil
+                -- 非 Paragon 声望：根据声望等级设置颜色 (ElvUI 风格)
+                if standingID and standingID >= 1 and standingID <= 8 then
+                    local color = FACTION_BAR_COLORS[standingID]
+                    if color then
+                        factionBar:SetStatusBarColor(color.r, color.g, color.b)
+                    end
+                end
             end
         else
             factionRow:Hide()

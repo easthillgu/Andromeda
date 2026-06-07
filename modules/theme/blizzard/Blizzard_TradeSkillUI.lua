@@ -1,26 +1,5 @@
 local F, C = unpack(select(2, ...))
 
--- NDui → Andromeda compat shim
--- 3.80.1 Texture:SetColorTexture polyfill (handles both (r,g,b,a) and (color,a) signatures)
-do
-    local tex = UIParent:CreateTexture(nil, "ARTWORK")
-    local mt = tex and getmetatable(tex)
-    if mt and mt.__index and mt.__index.SetColorTexture and not mt.__index.__SetColorTexture_patched then
-        mt.__index.__SetColorTexture_patched = true
-        local orig = mt.__index.SetColorTexture
-        mt.__index.SetColorTexture = function(self, r, g, b, a)
-            if type(r) == "number" and type(g) == "number" and type(b) == "number" then
-                local ok = pcall(orig, self, r, g, b, a)
-                if not ok then
-                    orig(self, CreateColor(r, g, b, a or 1))
-                end
-            else
-                orig(self, r, g)
-            end
-        end
-    end
-end
-
 local B = {}
 setmetatable(B, {__index = F})
 -- Name mismatches
@@ -62,35 +41,109 @@ C.Themes["Blizzard_TradeSkillUI"] = function()
 	TradeSkillFrameBottomLeftTexture:Hide()
 	TradeSkillFrameBottomRightTexture:Hide()
 
+	-- ElvUI 风格：处理等级进度条
 	B.StripTextures(TradeSkillRankFrameBorder)
 	B.StripTextures(TradeSkillRankFrame)
-	TradeSkillRankFrame:SetStatusBarTexture(DB.bdTex)
-	TradeSkillRankFrame.SetStatusBarColor = B.Dummy
-	TradeSkillRankFrame:GetStatusBarTexture():SetGradient("VERTICAL", CreateColor(.1, .3, .9, 1), CreateColor(.2, .4, 1, 1))
-	B.CreateBDFrame(TradeSkillRankFrame, .25)
-	TradeSkillRankFrame:SetWidth(220)
+	TradeSkillRankFrame:SetSize(322, 16)
+	TradeSkillRankFrame:ClearAllPoints()
+	TradeSkillRankFrame:SetPoint('TOP', TradeSkillFrame, 'TOP', -10, -45)
+	TradeSkillRankFrame:SetStatusBarTexture(DB.normTex)
+	TradeSkillRankFrame:SetStatusBarColor(0.13, 0.35, 0.80)
+	B.SetBD(TradeSkillRankFrame)
 
-	B.ReskinCollapse(TradeSkillCollapseAllButton)
-	TradeSkillExpandButtonFrame:DisableDrawLayer("BACKGROUND")
-	B.ReskinCheck(TradeSkillFrameAvailableFilterCheckButton)
+	-- ElvUI 风格：处理展开按钮框架
+	B.StripTextures(TradeSkillExpandButtonFrame)
 
-	hooksecurefunc("TradeSkillFrame_Update", function()
-		for i = 1, 22 do
-			local bu = _G["TradeSkillSkill"..i]
-			if bu and not bu.styled then
-				B.ReskinCollapse(bu)
-				bu.styled = true
+	-- ElvUI 风格：处理全部折叠按钮
+	local collapseAllButton = TradeSkillCollapseAllButton
+	if collapseAllButton then
+		local normalTexture = collapseAllButton:GetNormalTexture()
+		if normalTexture then
+			normalTexture:SetPoint('LEFT', 3, 2)
+			normalTexture:SetSize(15, 15)
+		end
+		collapseAllButton:SetHighlightTexture('')
+		collapseAllButton:SetDisabledTexture([[Interface\Buttons\UI-MinusButton-Up]])
+		local disabledTexture = collapseAllButton:GetDisabledTexture()
+		if disabledTexture then
+			disabledTexture:SetPoint('LEFT', 3, 2)
+			disabledTexture:SetSize(15, 15)
+			disabledTexture:SetDesaturated(true)
+		end
+		B.ReskinCollapse(collapseAllButton)
+	end
+
+	-- ElvUI 风格：处理下拉框位置
+	B.ReskinDropDown(TradeSkillInvSlotDropdown, 110)
+	TradeSkillInvSlotDropdown:ClearAllPoints()
+	TradeSkillInvSlotDropdown:SetPoint('TOPRIGHT', TradeSkillFrame, 'TOPRIGHT', -32, -68)
+
+	B.ReskinDropDown(TradeSkillSubClassDropdown, 110)
+	TradeSkillSubClassDropdown:ClearAllPoints()
+	TradeSkillSubClassDropdown:SetPoint('RIGHT', TradeSkillInvSlotDropdown, 'RIGHT', -120, 0)
+
+	-- ElvUI 风格：处理标题文本位置
+	TradeSkillFrameTitleText:ClearAllPoints()
+	TradeSkillFrameTitleText:SetPoint('TOP', TradeSkillFrame, 'TOP', 0, -18)
+
+	-- ElvUI 风格：处理技能列表按钮
+	for i = 1, TRADE_SKILLS_DISPLAYED do
+		local button = _G['TradeSkillSkill'..i]
+		if button then
+			B.ReskinCollapse(button)
+			local normal = button:GetNormalTexture()
+			if normal then
+				normal:SetSize(14, 14)
+				normal:SetPoint('LEFT', 2, 1)
+			end
+
+			local highlight = _G['TradeSkillSkill'..i..'Highlight']
+			if highlight then
+				highlight:SetTexture('')
 			end
 		end
-	end)
+	end
 
-	B.ReskinDropDown(TradeSkillSubClassDropdown)
-	B.ReskinDropDown(TradeSkillInvSlotDropdown)
-
+	B.StripTextures(TradeSkillDetailScrollFrame)
+	B.StripTextures(TradeSkillListScrollFrame)
 	B.StripTextures(TradeSkillDetailScrollChildFrame)
-	B.StripTextures(TradeSkillSkillIcon)
-	B.CreateBDFrame(TradeSkillSkillIcon)
 
+	B.ReskinCheck(TradeSkillFrameAvailableFilterCheckButton)
+
+	-- ElvUI 风格：处理技能图标
+	TradeSkillSkillIcon:SetSize(40, 40)
+	TradeSkillSkillIcon:SetPoint('TOPLEFT', 2, -3)
+	B.StripTextures(TradeSkillSkillIcon)
+	B.SetBD(TradeSkillSkillIcon)
+
+	-- ElvUI 风格：处理高亮纹理
+	TradeSkillHighlight:SetTexture(C.Assets.Textures.Glow)
+	TradeSkillHighlight:SetAlpha(0.3)
+
+	-- ElvUI 风格：处理输入框尺寸
+	TradeSkillInputBox:SetSize(36, 16)
+
+	-- ElvUI 风格：处理材料图标
+	for i = 1, MAX_TRADE_SKILL_REAGENTS do
+		local icon = _G["TradeSkillReagent"..i.."IconTexture"]
+		local count = _G["TradeSkillReagent"..i.."Count"]
+		local nameFrame = _G["TradeSkillReagent"..i.."NameFrame"]
+
+		if icon then
+			B.ReskinIcon(icon)
+			icon:SetDrawLayer('OVERLAY')
+		end
+
+		if count then
+			count:SetDrawLayer('OVERLAY')
+		end
+
+		if nameFrame then
+			nameFrame:SetAlpha(0)
+		end
+	end
+
+	-- ElvUI 风格：处理技能选择时的品质颜色
 	hooksecurefunc("TradeSkillFrame_SetSelection", function(id)
 		local skillType = select(2, GetTradeSkillInfo(id))
 		if skillType == "header" then return end
@@ -102,25 +155,46 @@ C.Themes["Blizzard_TradeSkillUI"] = function()
 
 		local skillLink = GetTradeSkillItemLink(id)
 		if skillLink then
-			local quality = select(3, GetItemInfo(skillLink))
+			local quality = C_Item.GetItemQualityByID and C_Item.GetItemQualityByID(skillLink) or select(3, GetItemInfo(skillLink))
 			if quality and quality > 1 then
 				local r, g, b = GetItemQualityColor(quality)
+				TradeSkillSkillIcon.__bg:SetBackdropBorderColor(r, g, b)
 				TradeSkillSkillName:SetTextColor(r, g, b)
 			else
+				TradeSkillSkillIcon.__bg:SetBackdropBorderColor(0, 0, 0)
 				TradeSkillSkillName:SetTextColor(1, 1, 1)
 			end
 		end
+
+		-- ElvUI 风格：处理材料品质颜色
+		for i = 1, GetTradeSkillNumReagents(id) do
+			local reagentName, reagentTexture, reagentCount, playerReagentCount = GetTradeSkillReagentInfo(id, i)
+			local reagentLink = GetTradeSkillReagentItemLink(id, i)
+
+			if reagentLink then
+				local icon = _G['TradeSkillReagent'..i..'IconTexture']
+				local quality = C_Item.GetItemQualityByID and C_Item.GetItemQualityByID(reagentLink) or select(3, GetItemInfo(reagentLink))
+				if quality and quality > 1 then
+					local name = _G['TradeSkillReagent'..i..'Name']
+					local r, g, b = GetItemQualityColor(quality)
+
+					if icon and icon.__bg then
+						icon.__bg:SetBackdropBorderColor(r, g, b)
+					end
+
+					if name then
+						if playerReagentCount >= reagentCount then
+							name:SetTextColor(r, g, b)
+						else
+							name:SetTextColor(0.5, 0.5, 0.5)
+						end
+					end
+				else
+					if icon and icon.__bg then
+						icon.__bg:SetBackdropBorderColor(0, 0, 0)
+					end
+				end
+			end
+		end
 	end)
-
-	for i = 1, MAX_TRADE_SKILL_REAGENTS do
-		local icon = _G["TradeSkillReagent"..i.."IconTexture"]
-		icon:SetTexCoord(.08, .92, .08, .92)
-		B.CreateBDFrame(icon)
-
-		local nameFrame = _G["TradeSkillReagent"..i.."NameFrame"]
-		nameFrame:Hide()
-		local bg = B.CreateBDFrame(nameFrame, .25)
-		bg:SetPoint("TOPLEFT", icon, "TOPRIGHT", 3, C.MULT)
-		bg:SetPoint("BOTTOMRIGHT", icon, "BOTTOMRIGHT", 100, -C.MULT)
-	end
 end

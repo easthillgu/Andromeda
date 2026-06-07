@@ -33,5 +33,6 @@
     <Script file="Blizzard_TalentUI.lua"/>
     <Script file="Blizzard_Tooltip.lua"/>
     <Script file="Blizzard_TrainerUI.lua"/>
+    <Script file="Blizzard_TradeSkillUI.lua"/>
     <Script file="Blizzard_Tutorial.lua"/>
 </Ui>
