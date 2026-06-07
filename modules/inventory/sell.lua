@@ -21,7 +21,7 @@ local function start()
                     not cache['b' .. bag .. 's' .. slot]
                     and info.hyperlink
                     and not info.hasNoValue
-                    and (info.quality == 0 or _G.ANDROMEDA_ADB['CustomJunkList'][info.itemID])
+                    and info.quality == 0
                     and (not INVENTORY:IsPetTrashCurrency(info.itemID))
                     and (not C_TransmogCollection or not C_TransmogCollection.GetItemInfo(info.hyperlink) or not F.IsUnknownTransmog(bag, slot))
                 then

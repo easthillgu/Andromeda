@@ -64,6 +64,12 @@ local function handleFrame(baseName, doNotReparent, isNamePlate)
 		-- 跳过所有 CompactRaid 和 CompactParty 框架，避免干扰其正常工作
 		local frameName = frame.GetName and frame:GetName()
 		if frameName and (frameName:find('CompactRaid') or frameName:find('CompactParty')) then
+			-- 为这些框架添加安全的空方法，防止 Blizzard 代码调用时出错
+			frame.Show = function() end
+			frame.SetSize = function() end
+			frame.UpdateHeight = function() end
+			frame.UpdateWidth = function() end
+			frame.UpdateSize = function() end
 			return
 		end
 
