@@ -17,16 +17,21 @@ tinsert(C.BlizzThemes, function()
     end
 
     F.SetBD(TaxiFrame, nil, 3, -23, -5, 3)
-    F.ReskinClose(TaxiFrame.CloseButton, _G.TaxiRouteMap)
 
-    -- 3.80.1: TaxiRouteMap is created dynamically when flight master dialog opens.
-    -- Use OnShow hook to style it when it becomes available.
+    -- 3.80.1: Close button is TaxiCloseButton (global), NOT TaxiFrame.CloseButton
+    local closeBtn = _G.TaxiCloseButton
+    if closeBtn then
+        F.ReskinClose(closeBtn, TaxiFrame)
+    end
+
+    -- 3.80.1: TaxiRouteMap created dynamically when flight master dialog opens.
+    -- Use OnShow hook. override=true bypasses ShadowOutline setting check.
     TaxiFrame:HookScript('OnShow', function()
         local routeMap = _G.TaxiRouteMap
         if routeMap and not routeMap._andmStyled then
             routeMap._andmStyled = true
-            -- Only shadow border — NO SetBD (dark backdrop covers the map art)
-            F.CreateSD(routeMap)
+            -- override=true: always create shadow border (ShadowOutline off -> still need frame border)
+            F.CreateSD(routeMap, nil, nil, nil, true)
         end
     end)
 end)
