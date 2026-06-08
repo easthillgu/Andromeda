@@ -518,27 +518,22 @@ tinsert(C.BlizzThemes, function()
 
     local function UpdateFactionSkins()
         for i = 1, GetNumFactions() do
-            local statusbar = _G['ReputationBar' .. i]
+            local statusbar = _G['ReputationBar' .. i .. 'ReputationBar']
             if statusbar then
-                if statusbar.SetStatusBarTexture then
-                    F.StripTextures(statusbar)
-                    statusbar:SetSize(108, 13)
-                    statusbar:SetStatusBarTexture(C.Assets.Textures.Backdrop)
+                statusbar:SetStatusBarTexture(C.Assets.Textures.Backdrop)
 
-                    local factionName = _G['ReputationBar' .. i .. 'FactionName']
-                    if factionName then
-                        factionName:SetWidth(140)
-                        factionName:SetPoint('LEFT', statusbar, 'LEFT', -150, 0)
-                        factionName.SetWidth = nop
-                    end
-
-                    local factionHeader = _G['ReputationHeader' .. i]
-                    if factionHeader then
-                        factionHeader:GetNormalTexture():SetSize(14, 14)
-                        factionHeader:SetHighlightTexture('')
-                        factionHeader:SetPoint('TOPLEFT', statusbar, 'TOPLEFT', -175, 0)
-                    end
+                if not statusbar.reskinned then
+                    F.CreateBDFrame(statusbar, 0.25)
+                    statusbar.reskinned = true
                 end
+
+                _G['ReputationBar' .. i .. 'Background']:SetTexture(nil)
+                _G['ReputationBar' .. i .. 'ReputationBarHighlight1']:SetTexture(nil)
+                _G['ReputationBar' .. i .. 'ReputationBarHighlight2']:SetTexture(nil)
+                _G['ReputationBar' .. i .. 'ReputationBarAtWarHighlight1']:SetTexture(nil)
+                _G['ReputationBar' .. i .. 'ReputationBarAtWarHighlight2']:SetTexture(nil)
+                _G['ReputationBar' .. i .. 'ReputationBarLeftTexture']:SetTexture(nil)
+                _G['ReputationBar' .. i .. 'ReputationBarRightTexture']:SetTexture(nil)
             end
         end
     end

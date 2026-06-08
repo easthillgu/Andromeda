@@ -653,6 +653,8 @@ function UNITFRAME:SpawnUnits()
     end
 
     if C.DB.Unitframe.PartyFrame then
+        UNITFRAME:RemoveBlizzRaidFrame()
+
         UNITFRAME:SyncWithZenTracker()
         UNITFRAME:UpdatePartyWatcherSpellsList()
 

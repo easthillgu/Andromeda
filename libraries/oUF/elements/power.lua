@@ -131,6 +131,8 @@ local function UpdateColor(self, event, unit)
 	if(self.unit ~= unit) then return end
 	local element = self.Power
 
+	if not unit or not UnitExists(unit) then return end
+
 	local isPlayer = UnitIsPlayer(unit) or (oUF.isRetail and UnitInPartyIsAI(unit))
 
 	local r, g, b, color, atlas

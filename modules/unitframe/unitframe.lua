@@ -218,9 +218,12 @@ end
 -- Remove blizz raid frame
 
 function UNITFRAME:RemoveBlizzRaidFrame()
-    -- 不再处理任何 Compact 相关框架
-    -- 让它们保持原样，避免触发 Blizzard 的安全检查
-    -- 隐藏 CompactPartyFrame 或 CompactRaidFrameManager 会干扰整个 CompactRaid 系统
+    if CompactRaidFrameManager_SetSetting then
+        CompactRaidFrameManager_SetSetting('IsShown', '0')
+        UIParent:UnregisterEvent('GROUP_ROSTER_UPDATE')
+        CompactRaidFrameManager:UnregisterAllEvents()
+        CompactRaidFrameManager:SetParent(F.HiddenFrame)
+    end
 end
 
 -- Make sure the state of each element is reliable #TODO

@@ -513,9 +513,9 @@ function GT:RaidTool_CreateMenu(parent)
             function()
                 if UnitIsGroupLeader('player') and not HasLFGRestrictions() and GetNumGroupMembers() <= 5 then
                     if IsInRaid() then
-                        C_PartyInfo.ConvertToParty()
+                        ConvertToParty()
                     else
-                        C_PartyInfo.ConvertToRaid()
+                        ConvertToRaid()
                     end
                     frame:Hide()
                     frame:SetScript('OnUpdate', nil)
