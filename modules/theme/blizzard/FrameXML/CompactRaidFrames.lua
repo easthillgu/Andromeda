@@ -1,10 +1,13 @@
 local F, C = unpack(select(2, ...))
+local IsAddOnLoaded = C_AddOns.IsAddOnLoaded
 
 tinsert(C.BlizzThemes, function()
     if not _G.ANDROMEDA_ADB.ReskinBlizz then
         return
     end
 
+    if not IsAddOnLoaded('Blizzard_CUFProfiles') then return end
+    if not IsAddOnLoaded('Blizzard_CompactRaidFrames') then return end
     if not _G.CompactRaidFrameManagerToggleButton then
         return
     end
@@ -41,12 +44,16 @@ tinsert(C.BlizzThemes, function()
         _G.CompactRaidFrameManagerDisplayFrameEditMode,
     }
     for _, button in pairs(buttons) do
-        for i = 1, 9 do
-            select(i, button:GetRegions()):SetAlpha(0)
+        if button then
+            for i = 1, 9 do
+                local region = select(i, button:GetRegions())
+                if region and region:GetObjectType() == 'Texture' then
+                    region:SetAlpha(0)
+                end
+            end
+            F.ReskinButton(button)
         end
-        F.ReskinButton(button)
     end
-    _G.CompactRaidFrameManagerDisplayFrameLeaderOptionsRaidWorldMarkerButton:SetNormalTexture('Interface\\RaidFrame\\Raid-WorldPing')
 
     for i = 1, 8 do
         select(i, _G.CompactRaidFrameManager:GetRegions()):SetAlpha(0)
@@ -58,6 +65,5 @@ tinsert(C.BlizzThemes, function()
     local bd = F.SetBD(_G.CompactRaidFrameManager)
     bd:SetPoint('TOPLEFT')
     bd:SetPoint('BOTTOMRIGHT', -9, 9)
-    F.ReskinCheckbox(_G.CompactRaidFrameManagerDisplayFrameEveryoneIsAssistButton)
     F.ReskinCheckbox(_G.CompactRaidFrameManagerDisplayFrameEveryoneIsAssistButton)
 end)

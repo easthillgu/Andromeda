@@ -3,6 +3,13 @@ local r, g, b = C.r or 1, C.g or 1, C.b or 1
 
 local function nop() end
 
+-- 替换纯蓝色状态条颜色为更柔和的蓝色
+local function replaceBlueColor(bar, r, g, b)
+    if r == 0 and g == 0 and b > .99 then
+        bar:SetStatusBarColor(0, .6, 1, .5)
+    end
+end
+
 function F:ReskinIconSelector()
     if not self then return end
     F.StripTextures(self)
@@ -613,10 +620,13 @@ tinsert(C.BlizzThemes, function()
         F.ReskinScroll(_G.ReputationListScrollFrameScrollBar)
     end
 
-    -- 美化声望详情框架内的滚动条
+    -- 美化声望详情框架内的滚动条和背景
     if _G.ReputationDetailFrame then
         if _G.ReputationDetailScrollFrameScrollBar then
             F.ReskinScroll(_G.ReputationDetailScrollFrameScrollBar)
+        end
+        if _G.ReputationDetailScrollFrame then
+            F.CreateBDFrame(_G.ReputationDetailScrollFrame, 0.25)
         end
     end
 
@@ -746,10 +756,10 @@ tinsert(C.BlizzThemes, function()
             _G.SkillFrameExpandButtonFrame:DisableDrawLayer('BACKGROUND')
         end
 
+        if _G.SkillDetailScrollFrameScrollBar then
+            F.ReskinScroll(_G.SkillDetailScrollFrameScrollBar)
+        end
         if _G.SkillDetailScrollFrame then
-            if _G.SkillDetailScrollFrame.ScrollBar then
-                F.ReskinScroll(_G.SkillDetailScrollFrame.ScrollBar)
-            end
             F.CreateBDFrame(_G.SkillDetailScrollFrame, 0.25)
         end
 
@@ -758,6 +768,7 @@ tinsert(C.BlizzThemes, function()
             _G.SkillDetailStatusBar:SetParent(_G.SkillDetailScrollFrame)
             _G.SkillDetailStatusBar:SetStatusBarTexture(C.Assets.Textures.StatusbarNormal)
             F.SetBD(_G.SkillDetailStatusBar)
+            hooksecurefunc(_G.SkillDetailStatusBar, 'SetStatusBarColor', replaceBlueColor)
         end
 
         -- ElvUI 风格：处理技能取消学习按钮
@@ -785,6 +796,7 @@ tinsert(C.BlizzThemes, function()
             if bar then
                 bar:SetStatusBarTexture(C.Assets.Textures.StatusbarNormal)
                 F.SetBD(bar)
+                hooksecurefunc(bar, 'SetStatusBarColor', replaceBlueColor)
             end
 
             if border then border:SetAlpha(0) end
