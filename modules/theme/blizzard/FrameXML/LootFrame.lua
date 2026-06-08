@@ -117,6 +117,7 @@ tinsert(C.BlizzThemes, function()
                 end
                 frame.bg = F.SetBD(frame)
                 frame.bg:SetInside(frame, 8, 8)  -- NDui: inset to avoid covering content
+                frame.bg:SetFrameLevel(1)        -- ensure bg renders behind content
 
                 if frame.Timer then
                     if frame.Timer.Bar then
