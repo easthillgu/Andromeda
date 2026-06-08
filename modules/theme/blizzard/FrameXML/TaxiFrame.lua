@@ -1,75 +1,62 @@
 local F, C = unpack(select(2, ...))
 
 tinsert(C.BlizzThemes, function()
-    if not _G.ANDROMEDA_ADB.ReskinBlizz then
-        return
-    end
+    if not _G.ANDROMEDA_ADB.ReskinBlizz then return end
+
+    -- NDui: TaxiFramePortrait = TaxiPortrait; TaxiFrameCloseButton = TaxiCloseButton
+    _G.TaxiFrameCloseButton = _G.TaxiCloseButton
+    _G.TaxiFramePortrait = _G.TaxiPortrait
 
     local TaxiFrame = _G.TaxiFrame
-    TaxiFrame:DisableDrawLayer('BORDER')
-    TaxiFrame:DisableDrawLayer('OVERLAY')
-    if TaxiFrame.Bg then TaxiFrame.Bg:Hide() end
-    if _G.TaxiFrame.TitleBg then
-        _G.TaxiFrame.TitleBg:Hide()
-    end
-    if TaxiFrame.TopTileStreaks then
-        TaxiFrame.TopTileStreaks:Hide()
+    -- NDui: B.ReskinPortraitFrame(TaxiFrame, 17, -8, -45, 82)
+    F.ReskinPortraitFrame(TaxiFrame)
+
+    -- Match NDui backdrop offsets
+    if TaxiFrame.__bg then
+        TaxiFrame.__bg:ClearAllPoints()
+        TaxiFrame.__bg:SetPoint('TOPLEFT', 17, -8)
+        TaxiFrame.__bg:SetPoint('BOTTOMRIGHT', -45, 82)
     end
 
-    F.SetBD(TaxiFrame, nil, 3, -23, -5, 3)
-
-    -- 3.80.1: Close button — ReskinButton + font-based X (avoid external texture issues)
-    local closeBtn = _G.TaxiCloseButton
-    if closeBtn then
-        F.StripTextures(closeBtn)
-        closeBtn:SetSize(20, 20)
-        F.ReskinButton(closeBtn, true)
-        -- Clear any existing textures from ReskinButton
-        for _, r in pairs({closeBtn:GetRegions()}) do
-            if r:GetObjectType() == 'Texture' and r:GetDrawLayer() == 'ARTWORK' then
-                r:SetTexture(nil)
+    -- 3.80.1: ReskinClose SetTexture(C.Assets.Textures.Close) fails on TaxiCloseButton
+    -- Fallback: font-based X overlay
+    local cb = _G.TaxiCloseButton
+    if cb then
+        local hasIcon = false
+        for _, r in pairs({cb:GetRegions()}) do
+            if r:GetObjectType() == 'Texture' and r:GetDrawLayer() == 'ARTWORK' and r:GetTexture() then
+                hasIcon = true
+                break
             end
         end
-        -- Font-based X icon
-        local fs = closeBtn:CreateFontString(nil, 'OVERLAY')
-        fs:SetFont(C.Assets.Fonts.Bold, 14, 'OUTLINE')
-        fs:SetText('✕')
-        fs:SetTextColor(1, 1, 1)
-        fs:SetPoint('CENTER')
-        closeBtn._andmCloseFS = fs
+        if not hasIcon then
+            local fs = cb:CreateFontString(nil, 'OVERLAY')
+            fs:SetFont(C.Assets.Fonts.Bold, 14, 'OUTLINE')
+            fs:SetText('X')
+            fs:SetTextColor(1, 1, 1)
+            fs:SetPoint('CENTER')
+        end
     end
 
-    -- 3.80.1: TaxiRouteMap — hide named decor + border overlay (from TaxiFrame)
+    -- TaxiRouteMap: hide BORDER/OVERLAY decor (keep ARTWORK = map content) + shadow border
     TaxiFrame:HookScript('OnShow', function()
-        local routeMap = _G.TaxiRouteMap
-        if not routeMap then return end
+        local rm = _G.TaxiRouteMap
+        if not rm or rm._andmStyled then return end
+        rm._andmStyled = true
 
-        -- One-time: hide Blizzard decorative sub-frames
-        if not routeMap._andmStyled then
-            routeMap._andmStyled = true
-            if routeMap.Bg then routeMap.Bg:Hide() end
-            if routeMap.Border then routeMap.Border:Hide() end
-            if routeMap.Background then routeMap.Background:Hide() end
-            -- hide any Region-type unnamed decorative textures on BORDER/OVERLAY
-            for _, r in pairs({routeMap:GetRegions()}) do
-                if r:GetObjectType() == 'Texture' then
-                    local layer = r:GetDrawLayer()
-                    if layer == 'BORDER' or layer == 'OVERLAY' then
-                        r:SetTexture(nil)
-                    end
+        for _, r in pairs({rm:GetRegions()}) do
+            if r:GetObjectType() == 'Texture' then
+                local l = r:GetDrawLayer()
+                if l == 'BORDER' or l == 'OVERLAY' then
+                    r:SetTexture(nil)
                 end
             end
         end
 
-        -- Border frame (re-create each show — may be cleaned up on hide)
-        if not routeMap._andmBorder or not routeMap._andmBorder:IsShown() then
-            if routeMap._andmBorder then routeMap._andmBorder:Hide() end
-            local border = CreateFrame('Frame', nil, TaxiFrame, 'BackdropTemplate')
-            border:SetAllPoints(routeMap)
-            border:SetBackdrop({edgeFile = C.Assets.Textures.Shadow, edgeSize = 3})
-            local color = _G.ANDROMEDA_ADB.BorderColor
-            border:SetBackdropBorderColor(color.r, color.g, color.b, 0.6)
-            routeMap._andmBorder = border
-        end
+        local bd = CreateFrame('Frame', nil, TaxiFrame, 'BackdropTemplate')
+        bd:SetAllPoints(rm)
+        bd:SetBackdrop({edgeFile = C.Assets.Textures.Shadow, edgeSize = 3})
+        local bc = _G.ANDROMEDA_ADB.BorderColor
+        bd:SetBackdropBorderColor(bc.r, bc.g, bc.b, 0.5)
     end)
 end)
