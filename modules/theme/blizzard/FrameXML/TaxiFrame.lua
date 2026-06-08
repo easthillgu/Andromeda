@@ -18,14 +18,12 @@ tinsert(C.BlizzThemes, function()
         TaxiFrame.__bg:SetPoint('BOTTOMRIGHT', -45, 82)
     end
 
-    -- 3.80.1: ReskinClose anchors to TaxiFrame (not __bg).
-    -- Fix close button position to match NDui's __bg offset.
+    -- 3.80.1: Close button at TaxiFrame TOPRIGHT (inside the frame)
     local cb = _G.TaxiCloseButton
-    if cb and TaxiFrame.__bg then
+    if cb then
         cb:ClearAllPoints()
-        cb:SetPoint('TOPRIGHT', TaxiFrame.__bg, 'TOPRIGHT', -6, -6)
-        -- Update ReskinClose's internal anchor tracking to prevent hooks resetting
-        cb.__owner = TaxiFrame.__bg
+        cb:SetPoint('TOPRIGHT', TaxiFrame, 'TOPRIGHT', -6, -6)
+        cb.__owner = TaxiFrame
         cb.__xOffset = -6
         cb.__yOffset = -6
     end
