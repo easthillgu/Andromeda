@@ -18,7 +18,8 @@
     <Script file="Blizzard_Communities.lua"/>
     <Script file="Blizzard_DebugTools.lua"/>
     <Script file="Blizzard_EventTrace.lua"/>
-    <Script file="Blizzard_FlightMap.lua"/>
+    <!-- 3.80.1: Blizzard_FlightMap addon does not exist. Flight map is TaxiRouteMap in TaxiFrame.lua -->
+    <!--<Script file="Blizzard_FlightMap.lua"/>-->
     <Script file="Blizzard_GMChatUI.lua"/>
     <Script file="Blizzard_Gossip.lua"/>
     <Script file="Blizzard_GuildBankUI.lua"/>

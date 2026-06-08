@@ -19,10 +19,14 @@ tinsert(C.BlizzThemes, function()
     F.SetBD(TaxiFrame, nil, 3, -23, -5, 3)
     F.ReskinClose(TaxiFrame.CloseButton, _G.TaxiRouteMap)
 
-    -- 3.80.1: TaxiRouteMap is the flight path map inside TaxiFrame.
-    -- Only add shadow border — NO SetBD (dark backdrop covers the map art).
-    local routeMap = _G.TaxiRouteMap
-    if routeMap then
-        F.CreateSD(routeMap)
-    end
+    -- 3.80.1: TaxiRouteMap is created dynamically when flight master dialog opens.
+    -- Use OnShow hook to style it when it becomes available.
+    TaxiFrame:HookScript('OnShow', function()
+        local routeMap = _G.TaxiRouteMap
+        if routeMap and not routeMap._andmStyled then
+            routeMap._andmStyled = true
+            -- Only shadow border — NO SetBD (dark backdrop covers the map art)
+            F.CreateSD(routeMap)
+        end
+    end)
 end)
