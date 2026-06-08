@@ -7,95 +7,102 @@ tinsert(C.BlizzThemes, function()
 
     local LootFrame = _G.LootFrame
 
-    F.ReskinClose(LootFrame.ClosePanelButton)
-    F.StripTextures(LootFrame)
-    F.SetBD(LootFrame)
+    -- 3.80.1: NDui-style approach — use ReskinPortraitFrame for the main frame
+    F.ReskinPortraitFrame(LootFrame)
     F.ReskinTrimScroll(LootFrame.ScrollBar)
 
-    local function updateHighlight(self)
-        local button = self.__owner
-        if button.HighlightNameFrame:IsShown() then
-            button.bg:SetBackdropColor(1, 1, 1, 0.25)
-        else
-            button.bg:SetBackdropColor(0, 0, 0, 0.25)
-        end
+    -- 3.80.1: ClosePanelButton may not match ReskinPortraitFrame's pattern (frameName..'CloseButton')
+    if LootFrame.ClosePanelButton then
+        F.ReskinClose(LootFrame.ClosePanelButton)
     end
 
-    local function updatePushed(self)
-        local button = self.__owner
-        if button.PushedNameFrame:IsShown() then
-            button.bg:SetBackdropBorderColor(1, 0.8, 0)
-        else
-            button.bg:SetBackdropColor(0, 0, 0)
-        end
+    -- 3.80.1: NDui reference — hide portrait overlay separately
+    if _G.LootFramePortraitOverlay then
+        _G.LootFramePortraitOverlay:Hide()
     end
 
-    local function onHide(self)
-        self.__owner.bg:SetBackdropBorderColor(0, 0, 0)
-    end
+    -- 3.80.1: Classic LootFrame_UpdateButton hook (ScrollBox does NOT exist in Cata Classic)
+    hooksecurefunc('LootFrame_UpdateButton', function(index)
+        local name = 'LootButton' .. index
+        local bu = _G[name]
+        if not bu or not bu:IsShown() then return end
 
-    if LootFrame.ScrollBox then
-        hooksecurefunc(LootFrame.ScrollBox, 'Update', function(self)
-        for i = 1, self.ScrollTarget:GetNumChildren() do
-            local button = select(i, self.ScrollTarget:GetChildren())
-            local item = button.Item
-            local questTexture = button.IconQuestTexture
-            local pushedFrame = button.PushedNameFrame
-            if item and not button.styled then
-                F.StripTextures(item, 1)
-                item.bg = F.ReskinIcon(item.icon)
-                item.bg:SetFrameLevel(item.bg:GetFrameLevel() + 1)
-                F.ReskinIconBorder(item.IconBorder, true)
+        local nameFrame = _G[name .. 'NameFrame']
 
-                pushedFrame:SetAlpha(0)
-                questTexture:SetAlpha(0)
-                button.NameFrame:SetAlpha(0)
-                button.BorderFrame:SetAlpha(0)
-                button.HighlightNameFrame:SetAlpha(0)
-                button.bg = F.CreateBDFrame(button.HighlightNameFrame, 0.25)
-                button.bg:SetAllPoints()
-                item.__owner = button
-                item:HookScript('OnMouseUp', updatePushed)
-                item:HookScript('OnMouseDown', updatePushed)
-                item:HookScript('OnEnter', updateHighlight)
-                item:HookScript('OnLeave', updateHighlight)
-                item:HookScript('OnHide', onHide)
-
-                button.styled = true
+        if not bu.bg then
+            -- Hide Blizzard decorative layers
+            if nameFrame then nameFrame:Hide() end
+            bu:SetNormalTexture(0)
+            if bu.SetPushedTexture then
+                bu:SetPushedTexture(0)
             end
+            bu:GetHighlightTexture():SetColorTexture(1, 1, 1, 0.25)
+            bu.IconBorder:SetAlpha(0)
 
-            local itemBG = item and item.bg
-            if itemBG and questTexture:IsShown() then
-                itemBG:SetBackdropBorderColor(1, 0.8, 0)
-            end
+            -- Andromeda icon border
+            bu.bg = F.ReskinIcon(bu.icon)
+
+            -- Text background frame (NDui pattern: bg anchored to icon right)
+            local bg = F.CreateBDFrame(bu, 0.25)
+            bg:SetPoint('TOPLEFT', bu.bg, 'TOPRIGHT', 1, 0)
+            bg:SetPoint('BOTTOMRIGHT', bu.bg, 115, 0)
+        end
+
+        -- Quest item: yellow border
+        if select(7, GetLootSlotInfo(index)) then
+            bu.bg:SetBackdropBorderColor(0.8, 0.8, 0)
+        else
+            bu.bg:SetBackdropBorderColor(0, 0, 0)
         end
     end)
+
+    -- Reposition navigation buttons (NDui reference)
+    local downBtn = _G.LootFrameDownButton
+    local prevBtn = _G.LootFramePrev
+    local nextBtn = _G.LootFrameNext
+    local upBtn = _G.LootFrameUpButton
+
+    if downBtn then
+        downBtn:ClearAllPoints()
+        downBtn:SetPoint('BOTTOMRIGHT', -8, 6)
+    end
+    if prevBtn and upBtn then
+        prevBtn:ClearAllPoints()
+        prevBtn:SetPoint('LEFT', upBtn, 'RIGHT', 4, 0)
+    end
+    if nextBtn and downBtn then
+        nextBtn:ClearAllPoints()
+        nextBtn:SetPoint('RIGHT', downBtn, 'LEFT', -4, 0)
     end
 
     -- Bonus roll
     local BonusRollFrame = _G.BonusRollFrame
-    BonusRollFrame.Background:SetAlpha(0)
-    BonusRollFrame.IconBorder:Hide()
-    BonusRollFrame.BlackBackgroundHoist.Background:Hide()
-    BonusRollFrame.SpecRing:SetAlpha(0)
-    F.SetBD(BonusRollFrame)
+    if BonusRollFrame then
+        BonusRollFrame.Background:SetAlpha(0)
+        BonusRollFrame.IconBorder:Hide()
+        BonusRollFrame.BlackBackgroundHoist.Background:Hide()
+        BonusRollFrame.SpecRing:SetAlpha(0)
+        F.SetBD(BonusRollFrame)
 
-    local specIcon = BonusRollFrame.SpecIcon
-    specIcon:ClearAllPoints()
-    specIcon:SetPoint('TOPRIGHT', -90, -18)
-    local bg = F.ReskinIcon(specIcon)
-    hooksecurefunc('BonusRollFrame_StartBonusRoll', function()
-        bg:SetShown(specIcon:IsShown())
-    end)
+        local specIcon = BonusRollFrame.SpecIcon
+        specIcon:ClearAllPoints()
+        specIcon:SetPoint('TOPRIGHT', -90, -18)
+        local specBg = F.ReskinIcon(specIcon)
+        hooksecurefunc('BonusRollFrame_StartBonusRoll', function()
+            specBg:SetShown(specIcon:IsShown())
+        end)
 
-    local promptFrame = BonusRollFrame.PromptFrame
-    F.ReskinIcon(promptFrame.Icon)
-    promptFrame.Timer.Bar:SetTexture(C.Assets.Textures.StatusbarNormal)
-    F.CreateBDFrame(promptFrame.Timer, 0.25)
+        local promptFrame = BonusRollFrame.PromptFrame
+        if promptFrame then
+            F.ReskinIcon(promptFrame.Icon)
+            promptFrame.Timer.Bar:SetTexture(C.Assets.Textures.StatusbarNormal)
+            F.CreateBDFrame(promptFrame.Timer, 0.25)
+        end
 
-    local from, to = '|T.+|t', '|T%%s:14:14:0:0:64:64:5:59:5:59|t'
-    _G.BONUS_ROLL_COST = _G.BONUS_ROLL_COST:gsub(from, to)
-    _G.BONUS_ROLL_CURRENT_COUNT = _G.BONUS_ROLL_CURRENT_COUNT:gsub(from, to)
+        local from, to = '|T.+|t', '|T%%s:14:14:0:0:64:64:5:59:5:59|t'
+        _G.BONUS_ROLL_COST = _G.BONUS_ROLL_COST:gsub(from, to)
+        _G.BONUS_ROLL_CURRENT_COUNT = _G.BONUS_ROLL_CURRENT_COUNT:gsub(from, to)
+    end
 
     -- Loot Roll Frame
     hooksecurefunc('GroupLootFrame_OpenNewFrame', function()
