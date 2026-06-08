@@ -516,35 +516,108 @@ tinsert(C.BlizzThemes, function()
         _G.ReputationDetailFrame:SetPoint('TOPLEFT', _G.ReputationFrame, 'TOPRIGHT', -31, -12)
     end
 
-    local function UpdateFactionSkins()
-        for i = 1, GetNumFactions() do
-            local statusbar = _G['ReputationBar' .. i .. 'ReputationBar']
-            if statusbar then
-                statusbar:SetStatusBarTexture(C.Assets.Textures.Backdrop)
+    -- 修复声望名称宽度和位置 (ElvUI 风格)
+    for i = 1, _G.NUM_FACTIONS_DISPLAYED do
+        local factionBar = _G['ReputationBar' .. i]  -- 行框架
+        local factionStatusBar = _G['ReputationBar' .. i .. 'ReputationBar']  -- 实际的状态条
+        local factionHeader = _G['ReputationHeader' .. i]
+        local factionName = _G['ReputationBar' .. i .. 'FactionName']
+        local factionWar = _G['ReputationBar' .. i .. 'AtWarCheck']
 
-                if not statusbar.reskinned then
-                    F.CreateBDFrame(statusbar, 0.25)
-                    statusbar.reskinned = true
-                end
+        -- 处理状态条
+        if factionStatusBar and factionStatusBar.SetStatusBarTexture then
+            F.StripTextures(factionStatusBar)
+            factionStatusBar:SetSize(108, 13)
+            factionStatusBar:SetStatusBarTexture(C.Assets.Textures.StatusbarNormal)
+            F.SetBD(factionStatusBar)
+        elseif factionBar then
+            -- 如果没有子状态条，处理行框架
+            F.StripTextures(factionBar)
+            if factionBar.SetStatusBarTexture then
+                factionBar:SetStatusBarTexture(C.Assets.Textures.StatusbarNormal)
+            end
+            F.SetBD(factionBar)
+        end
 
-                _G['ReputationBar' .. i .. 'Background']:SetTexture(nil)
-                _G['ReputationBar' .. i .. 'ReputationBarHighlight1']:SetTexture(nil)
-                _G['ReputationBar' .. i .. 'ReputationBarHighlight2']:SetTexture(nil)
-                _G['ReputationBar' .. i .. 'ReputationBarAtWarHighlight1']:SetTexture(nil)
-                _G['ReputationBar' .. i .. 'ReputationBarAtWarHighlight2']:SetTexture(nil)
-                _G['ReputationBar' .. i .. 'ReputationBarLeftTexture']:SetTexture(nil)
-                _G['ReputationBar' .. i .. 'ReputationBarRightTexture']:SetTexture(nil)
+        -- 调整声望条位置
+        if factionBar and i == 1 then
+            factionBar:SetPoint('TOPLEFT', 190, -86)
+        end
+
+        -- 处理声望名称
+        if factionName then
+            factionName:SetWidth(140)
+            local anchorBar = factionStatusBar or factionBar
+            if anchorBar then
+                factionName:SetPoint('LEFT', anchorBar, 'LEFT', -150, 0)
+            end
+            factionName.SetWidth = nop
+        end
+
+        -- 处理折叠按钮
+        if factionHeader then
+            factionHeader:GetNormalTexture():SetSize(14)
+            factionHeader:SetHighlightTexture('')
+            local anchorBar = factionStatusBar or factionBar
+            if anchorBar then
+                factionHeader:SetPoint('TOPLEFT', anchorBar, 'TOPLEFT', -175, 0)
+            end
+        end
+
+        -- 处理交战状态图标
+        if factionWar then
+            F.StripTextures(factionWar)
+            local anchorBar = factionStatusBar or factionBar
+            if anchorBar then
+                factionWar:SetPoint('LEFT', anchorBar, 'RIGHT', 0, 0)
+            end
+
+            if not factionWar.Icon then
+                factionWar.Icon = factionWar:CreateTexture(nil, 'OVERLAY')
+                factionWar.Icon:SetPoint('LEFT', 6, -8)
+                factionWar.Icon:SetSize(32)
+                factionWar.Icon:SetTexture([[Interface\Buttons\UI-CheckBox-SwordCheck]])
             end
         end
     end
-    if _G.ReputationFrame then
-        _G.ReputationFrame:HookScript('OnShow', UpdateFactionSkins)
-    end
-    hooksecurefunc('ReputationFrame_Update', UpdateFactionSkins)
 
-    for i = 1, _G.NUM_FACTIONS_DISPLAYED do
-        local bu = _G['ReputationBar' .. i .. 'ExpandOrCollapseButton']
-        if bu then F.ReskinCollapse(bu) end
+    -- 修复展开/折叠图标切换 (ElvUI 风格)
+    local function ReputationFrameUpdate()
+        local factionOffset = _G.FauxScrollFrame_GetOffset(_G.ReputationListScrollFrame)
+        local numFactions = _G.GetNumFactions()
+
+        for i = 1, _G.NUM_FACTIONS_DISPLAYED do
+            local factionIndex = factionOffset + i
+            if factionIndex <= numFactions then
+                local factionHeader = _G['ReputationHeader' .. i]
+                if factionHeader then
+                    local tex = factionHeader:GetNormalTexture()
+                    if factionHeader.isCollapsed then
+                        tex:SetTexture([[Interface\Buttons\UI-PlusButton-Up]])
+                    else
+                        tex:SetTexture([[Interface\Buttons\UI-MinusButton-Up]])
+                    end
+                    tex:SetSize(14, 14)
+                end
+            end
+        end
+    end
+    hooksecurefunc('ReputationFrame_Update', ReputationFrameUpdate)
+
+    -- 美化滚动框架和滚动条
+    if _G.ReputationListScrollFrame then
+        F.StripTextures(_G.ReputationListScrollFrame)
+        F.CreateBDFrame(_G.ReputationListScrollFrame, 0.25)
+        
+        -- 使用 ReskinScroll 美化滚动条
+        F.ReskinScroll(_G.ReputationListScrollFrameScrollBar)
+    end
+
+    -- 美化声望详情框架内的滚动条
+    if _G.ReputationDetailFrame then
+        if _G.ReputationDetailScrollFrameScrollBar then
+            F.ReskinScroll(_G.ReputationDetailScrollFrameScrollBar)
+        end
     end
 
     if _G.ReputationFrame then F.StripTextures(_G.ReputationFrame) end
@@ -555,7 +628,6 @@ tinsert(C.BlizzThemes, function()
     if _G.ReputationDetailCloseButton then F.ReskinClose(_G.ReputationDetailCloseButton) end
     if _G.ReputationDetailInactiveCheckbox then F.ReskinCheckbox(_G.ReputationDetailInactiveCheckbox) end
     if _G.ReputationDetailMainScreenCheckbox then F.ReskinCheckbox(_G.ReputationDetailMainScreenCheckbox) end
-    if _G.ReputationListScrollFrameScrollBar then F.ReskinScroll(_G.ReputationListScrollFrameScrollBar) end
     select(3, _G.ReputationDetailFrame:GetRegions()):Hide()
 
     if _G.ReputationDetailAtWarCheckbox then
@@ -565,6 +637,19 @@ tinsert(C.BlizzThemes, function()
         atWarCheckTex:ClearAllPoints()
         atWarCheckTex:SetSize(26, 26)
         atWarCheckTex:SetPoint('CENTER')
+    end
+
+    -- 改进 Paragon 奖励图标样式 (ElvUI 风格)
+    if _G.ReputationFrame and _G.ReputationFrame.paragonFramesPool then
+        hooksecurefunc(_G.ReputationFrame.paragonFramesPool, 'Acquire', function(self)
+            for frame in self:EnumerateActive() do
+                if frame and frame.Glow and not frame._styled then
+                    frame.Glow:SetTexture(C.Assets.Textures.Glow)
+                    frame.Check:SetTexture(C.Assets.Textures.Tick)
+                    frame._styled = true
+                end
+            end
+        end)
     end
 
     if _G.TokenFrame then
@@ -639,9 +724,27 @@ tinsert(C.BlizzThemes, function()
     if _G.SkillFrame then
         F.StripTextures(_G.SkillFrame)
         if _G.SkillListScrollFrameScrollBar then F.ReskinScroll(_G.SkillListScrollFrameScrollBar) end
-        if _G.SkillFrameCancelButton then F.ReskinButton(_G.SkillFrameCancelButton) end
-        if _G.SkillFrameCollapseAllButton then F.ReskinCollapse(_G.SkillFrameCollapseAllButton) end
-        if _G.SkillFrameExpandButtonFrame then F.StripTextures(_G.SkillFrameExpandButtonFrame) end
+        
+        -- ElvUI 风格：隐藏 CancelButton（重复的关闭按钮）
+        if _G.SkillFrameCancelButton then _G.SkillFrameCancelButton:Hide() end
+        
+        -- ElvUI 风格：处理 CollapseAllButton
+        if _G.SkillFrameCollapseAllButton then
+            F.ReskinCollapse(_G.SkillFrameCollapseAllButton)
+            local normalTex = _G.SkillFrameCollapseAllButton:GetNormalTexture()
+            if normalTex then
+                normalTex:SetSize(15, 15)
+            end
+            _G.SkillFrameCollapseAllButton:SetHighlightTexture('')
+            if _G.SkillFrameExpandTabLeft then
+                _G.SkillFrameCollapseAllButton:SetPoint('LEFT', _G.SkillFrameExpandTabLeft, 'RIGHT', -40, -3)
+            end
+        end
+        
+        -- ElvUI 风格：禁用展开按钮框架的背景层
+        if _G.SkillFrameExpandButtonFrame then
+            _G.SkillFrameExpandButtonFrame:DisableDrawLayer('BACKGROUND')
+        end
 
         if _G.SkillDetailScrollFrame then
             if _G.SkillDetailScrollFrame.ScrollBar then
@@ -651,38 +754,49 @@ tinsert(C.BlizzThemes, function()
         end
 
         if _G.SkillDetailStatusBar then
-            if _G.SkillDetailStatusBarBorder then
-                _G.SkillDetailStatusBarBorder:SetAlpha(0)
-            end
-            _G.SkillDetailStatusBar:SetStatusBarTexture(C.Assets.Textures.Backdrop)
-            F.CreateBDFrame(_G.SkillDetailStatusBar, 0.25)
+            F.StripTextures(_G.SkillDetailStatusBar)
+            _G.SkillDetailStatusBar:SetParent(_G.SkillDetailScrollFrame)
+            _G.SkillDetailStatusBar:SetStatusBarTexture(C.Assets.Textures.StatusbarNormal)
+            F.SetBD(_G.SkillDetailStatusBar)
         end
 
+        -- ElvUI 风格：处理技能取消学习按钮
         if _G.SkillDetailStatusBarUnlearnButton then
             F.ReskinButton(_G.SkillDetailStatusBarUnlearnButton)
             local bu = _G.SkillDetailStatusBarUnlearnButton
+            bu.__bg = F.CreateBDFrame(bu)
             bu.__bg:SetInside(nil, 7, 7)
-            bu:SetPoint('LEFT', _G.SkillDetailStatusBar, 'RIGHT', 2, 0)
+            bu:SetSize(26, 26)
+            bu:SetPoint('LEFT', _G.SkillDetailStatusBarBorder or _G.SkillDetailStatusBar, 'RIGHT', 5, 0)
+            bu:SetHitRectInsets(0, 0, 0, 0)
             local tex = bu:CreateTexture()
             tex:SetTexture(C.Assets.Textures.Close)
             tex:SetVertexColor(1, 0, 0)
             tex:SetAllPoints(bu.__bg)
         end
 
-        for i = 1, 12 do
+        for i = 1, _G.SKILLS_TO_DISPLAY do
             local name = 'SkillRankFrame'..i
             local bar = _G[name]
+            local label = _G['SkillTypeLabel'..i]
             local border = _G[name..'Border']
-            if bar then
-                bar:SetStatusBarTexture(C.Assets.Textures.Backdrop)
-                F.CreateBDFrame(bar, 0.25)
-            end
-            if border then border:SetAlpha(0) end
-        end
+            local background = _G[name..'Background']
 
-        for i = 1, 12 do
-            local label = _G['SkillTypeLabel' .. i]
+            if bar then
+                bar:SetStatusBarTexture(C.Assets.Textures.StatusbarNormal)
+                F.SetBD(bar)
+            end
+
+            if border then border:SetAlpha(0) end
+            if background then background:SetTexture(nil) end
+
+            -- ElvUI 风格：处理技能类型标签
             if label then
+                local labelNormal = label:GetNormalTexture()
+                if labelNormal then
+                    labelNormal:SetSize(14, 14)
+                end
+                label:SetHighlightTexture('')
                 F.ReskinCollapse(label)
             end
         end
@@ -694,8 +808,8 @@ tinsert(C.BlizzThemes, function()
 
         if _G.PetPaperDollFrameExpBar then
             F.StripTextures(_G.PetPaperDollFrameExpBar)
-            _G.PetPaperDollFrameExpBar:SetStatusBarTexture(C.Assets.Textures.Backdrop)
-            F.CreateBDFrame(_G.PetPaperDollFrameExpBar, 0.25)
+            _G.PetPaperDollFrameExpBar:SetStatusBarTexture(C.Assets.Textures.StatusbarNormal)
+            F.SetBD(_G.PetPaperDollFrameExpBar)
         end
 
         if _G.PetModelFrame then
@@ -772,6 +886,15 @@ tinsert(C.BlizzThemes, function()
                     local a, b, _, _, _, _, c, d = icon:GetTexCoord()
                     icon:SetTexCoord(a + 0.2, c - 0.2, b + 0.018, d - 0.018)
                 end
+            end
+        end
+
+        -- 宠物抗性框架背景 (ElvUI 风格)
+        if _G.PetResistanceFrame then
+            local petResBG = F.CreateBDFrame(_G.PetResistanceFrame, 0.25)
+            if petResBG and _G.PetMagicResFrame1 and _G.PetMagicResFrame5 then
+                petResBG:SetPoint('TOPLEFT', _G.PetMagicResFrame1, -2, 2)
+                petResBG:SetPoint('BOTTOMRIGHT', _G.PetMagicResFrame5, 2, -2)
             end
         end
 
@@ -938,5 +1061,18 @@ tinsert(C.BlizzThemes, function()
         if _G.QuickJoinRoleSelectionFrame.RoleButtonTank then F.ReskinRole(_G.QuickJoinRoleSelectionFrame.RoleButtonTank, 'TANK') end
         if _G.QuickJoinRoleSelectionFrame.RoleButtonHealer then F.ReskinRole(_G.QuickJoinRoleSelectionFrame.RoleButtonHealer, 'HEALER') end
         if _G.QuickJoinRoleSelectionFrame.RoleButtonDPS then F.ReskinRole(_G.QuickJoinRoleSelectionFrame.RoleButtonDPS, 'DPS') end
+    end
+
+    -- 荣誉框架美化 (ElvUI 风格)
+    if _G.HonorFrame then
+        F.StripTextures(_G.HonorFrame)
+
+        if _G.HonorFrameProgressBar then
+            F.StripTextures(_G.HonorFrameProgressBar)
+            _G.HonorFrameProgressBar:SetHeight(22)
+            _G.HonorFrameProgressBar:SetParent(_G.HonorFrame)
+            _G.HonorFrameProgressBar:SetStatusBarTexture(C.Assets.Textures.StatusbarNormal)
+            F.SetBD(_G.HonorFrameProgressBar)
+        end
     end
 end)

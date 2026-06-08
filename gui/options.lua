@@ -2366,6 +2366,17 @@ GUI.OptionsList = {
             UpdateAllHeaders,
             L['Only show RaidFrame if there are more than 5 members in your group.|nIf disabled, show RaidFrame when in raid, show PartyFrame when in party.'],
         },
+        {},
+        {
+            1,
+            'Unitframe',
+            'ClickCast',
+            L['Enable Click Cast'],
+            nil,
+            nil,
+            'UpdateAllClickSets',
+            L['Enable click casting on raid and party frames. You can cast spells by clicking on unit frames with different mouse buttons and modifier keys.'],
+        },
     },
     [13] = { -- nameplate
         {

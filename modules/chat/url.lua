@@ -54,7 +54,7 @@ function CHAT:HyperlinkShowHook(link, _, button)
         if type == 'player' then
             local unit = strmatch(value, '([^:]+)')
             if IsAltKeyDown() then
-                C_PartyInfo.InviteUnit(unit)
+                InviteUnit(unit)
                 hide = true
             elseif IsControlKeyDown() then
                 GuildInvite(unit)

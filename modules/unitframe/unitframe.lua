@@ -218,11 +218,41 @@ end
 -- Remove blizz raid frame
 
 function UNITFRAME:RemoveBlizzRaidFrame()
-    if CompactRaidFrameManager_SetSetting then
-        CompactRaidFrameManager_SetSetting('IsShown', '0')
-        UIParent:UnregisterEvent('GROUP_ROSTER_UPDATE')
+    local function HideFrame(frameName)
+        local frame = _G[frameName]
+        if frame then
+            frame:Hide()
+            frame:UnregisterAllEvents()
+            frame.Show = function() end
+        end
+    end
+
+    HideFrame('RaidGroup1')
+    HideFrame('RaidGroup2')
+    HideFrame('RaidGroup3')
+    HideFrame('RaidGroup4')
+    HideFrame('RaidGroup5')
+    HideFrame('RaidGroup6')
+    HideFrame('RaidGroup7')
+    HideFrame('RaidGroup8')
+    HideFrame('PartyMemberFrame1')
+    HideFrame('PartyMemberFrame2')
+    HideFrame('PartyMemberFrame3')
+    HideFrame('PartyMemberFrame4')
+    HideFrame('PartyMemberFrame5')
+    HideFrame('PartyMemberFrame1PetFrame')
+    HideFrame('PartyMemberFrame2PetFrame')
+    HideFrame('PartyMemberFrame3PetFrame')
+    HideFrame('PartyMemberFrame4PetFrame')
+    HideFrame('PartyMemberFrame5PetFrame')
+    HideFrame('PartyFrame')
+    HideFrame('RaidFrame')
+
+    if CompactRaidFrameManager then
         CompactRaidFrameManager:UnregisterAllEvents()
-        CompactRaidFrameManager:SetParent(F.HiddenFrame)
+        CompactRaidFrameManager:SetParent(UIParent)
+        CompactRaidFrameManager:Hide()
+        CompactRaidFrameManager.Show = function() end
     end
 end
 
@@ -238,6 +268,8 @@ function UNITFRAME:UpdateAllElements()
 end
 
 function UNITFRAME:OnLogin()
+    print("[Andromeda] Unitframe module loading...")
+    
     -- 3.80.1: EditModeManagerFrame doesn't exist, manually hide Blizzard castbars
     if _G.PlayerCastingBarFrame then
         _G.PlayerCastingBarFrame:Hide()
@@ -266,7 +298,13 @@ function UNITFRAME:OnLogin()
     -- 使用官方 API 隐藏 Raid 框架（参考 NDui 和 ElvUI）
     F.Libs.oUF:DisableBlizzardRaid()
 
+    -- Initialize ClickCast defaults
+    UNITFRAME:InitDefaultClickSets()
+    UNITFRAME:AddClickSetsListener()
+
     UNITFRAME:InitFilters()
     UNITFRAME:SpawnUnits()
     UNITFRAME:UpdateAllElements()
+    
+    print("[Andromeda] Unitframe module loaded")
 end

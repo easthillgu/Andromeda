@@ -312,7 +312,7 @@ StaticPopupDialogs.ANDROMEDA_DISBAND_GROUP = {
                 end
             end
         end
-        C_PartyInfo.LeaveParty()
+        LeaveParty()
     end,
     timeout = 0,
     whileDead = 1,

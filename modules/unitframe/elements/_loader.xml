@@ -3,6 +3,7 @@
     <Script file="auras.lua"/>
     <Script file="castbar.lua"/>
     <Script file="classpower.lua"/>
+    <Script file="clickcast.lua"/>
     <Script file="cornerspell.lua"/>
     <Script file="debuffwatcher.lua"/>
     <Script file="gcd.lua"/>

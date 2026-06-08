@@ -48,6 +48,9 @@ function COOLDOWN:ForceUpdate()
 end
 
 function COOLDOWN:OnSizeChanged(width, height)
+    if not width or not height then
+        return
+    end
     local fontScale = F:Round((width + height) / 2) / iconSize
     if fontScale == self.fontScale then
         return
@@ -155,7 +158,7 @@ function COOLDOWN:StartTimer(start, duration, modRate)
             COOLDOWN.StopTimer(chargeTimer)
         end
 
-        if timer.fontScale >= minScale then
+        if timer.fontScale and timer.fontScale >= minScale then
             timer:Show()
         end
     elseif self.timer then

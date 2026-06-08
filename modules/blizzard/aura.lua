@@ -11,7 +11,7 @@ local function onEvent(_, isLogin, isReload)
 end
 
 function AURA:HideBlizzFrame()
-    if not C.DB.Aura.Enable and not C.DB.Auras.HideBlizzFrame then
+    if not C.DB.Aura.Enable and not C.DB.Aura.HideBlizzFrame then
         return
     end
 
@@ -46,11 +46,13 @@ function AURA:BuildBuffFrame()
     AURA.BuffFrame.mover = F.Mover(AURA.BuffFrame, L['BuffFrame'], 'BuffAnchor', { 'TOPLEFT', _G.UIParent, 'TOPLEFT', C.UI_GAP, -C.UI_GAP })
     AURA.BuffFrame:ClearAllPoints()
     AURA.BuffFrame:SetPoint('TOPRIGHT', AURA.BuffFrame.mover)
+    AURA.BuffFrame:SetAttribute('showBuffType', 3) -- 显示所有buff类型
 
     AURA.DebuffFrame = AURA:CreateAuraHeader('HARMFUL')
     AURA.DebuffFrame.mover = F.Mover(AURA.DebuffFrame, L['DebuffFrame'], 'DebuffAnchor', { 'TOPLEFT', AURA.BuffFrame, 'BOTTOMLEFT', 0, -5 })
     AURA.DebuffFrame:ClearAllPoints()
     AURA.DebuffFrame:SetPoint('TOPRIGHT', AURA.DebuffFrame.mover)
+    AURA.DebuffFrame:SetAttribute('showBuffType', 3) -- 显示所有debuff类型
 
     AURA:CreatePrivateAuras()
 end
@@ -195,9 +197,11 @@ function AURA:UpdateHeader(header)
         cfg = AURA.settings.Buffs
         header:SetAttribute('consolidateTo', 0)
         header:SetAttribute('weaponTemplate', format(C.ADDON_TITLE .. 'AuraTemplate%d', cfg.size))
+        header:SetAttribute('separateOwn', 0) -- buff不使用separateOwn，显示所有buff
+    else
+        header:SetAttribute('separateOwn', C.DB.Aura.OnlyShowPlayer and 1 or 0) -- debuff使用配置
     end
 
-    header:SetAttribute('separateOwn', 1)
     header:SetAttribute('sortMethod', 'INDEX')
     header:SetAttribute('sortDirection', '+')
     header:SetAttribute('wrapAfter', cfg.wrapAfter)
