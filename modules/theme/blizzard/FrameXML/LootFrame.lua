@@ -115,9 +115,10 @@ tinsert(C.BlizzThemes, function()
                 if frame.Background then
                     frame.Background:SetAlpha(0)
                 end
-                frame.bg = F.SetBD(frame)
-                frame.bg:SetInside(frame, 8, 8)  -- NDui: inset to avoid covering content
-                frame.bg:SetFrameLevel(1)        -- ensure bg renders behind content
+                -- Use transparent bg + border (SetBD's dark fill covers content)
+                frame.bg = F.CreateBDFrame(frame, 0.25)
+                frame.bg:SetAllPoints()
+                F.CreateSD(frame.bg)
 
                 if frame.Timer then
                     if frame.Timer.Bar then
