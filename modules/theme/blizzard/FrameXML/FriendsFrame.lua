@@ -55,13 +55,15 @@ tinsert(C.BlizzThemes, function()
         return
     end
 
-    for i = 1, 4 do
+    for i = 1, 5 do
         local tab = _G['FriendsFrameTab' .. i]
         if tab then
             F.ReskinTab(tab)
             F.ResetTabAnchor(tab)
 
-            if i ~= 1 then
+            if i == 1 then
+                tab:SetPoint('BOTTOMLEFT', -2, -31)
+            elseif i ~= 1 then
                 tab:ClearAllPoints()
                 tab:SetPoint('TOPLEFT', _G['FriendsFrameTab' .. (i - 1)], 'TOPRIGHT', -10, 0)
             end

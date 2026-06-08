@@ -248,11 +248,13 @@ function UNITFRAME:RemoveBlizzRaidFrame()
     HideFrame('PartyFrame')
     HideFrame('RaidFrame')
 
+    -- 只隐藏 CompactRaidFrame 的单位框架，保留管理器功能用于社交界面
     if CompactRaidFrameManager then
         CompactRaidFrameManager:UnregisterAllEvents()
-        CompactRaidFrameManager:SetParent(UIParent)
-        CompactRaidFrameManager:Hide()
-        CompactRaidFrameManager.Show = function() end
+        -- 不要完全禁用管理器，只隐藏单位框架显示
+        if CompactRaidFrameManager.displayFrame then
+            CompactRaidFrameManager.displayFrame:Hide()
+        end
     end
 end
 
@@ -268,8 +270,6 @@ function UNITFRAME:UpdateAllElements()
 end
 
 function UNITFRAME:OnLogin()
-    print("[Andromeda] Unitframe module loading...")
-    
     -- 3.80.1: EditModeManagerFrame doesn't exist, manually hide Blizzard castbars
     if _G.PlayerCastingBarFrame then
         _G.PlayerCastingBarFrame:Hide()
@@ -305,6 +305,4 @@ function UNITFRAME:OnLogin()
     UNITFRAME:InitFilters()
     UNITFRAME:SpawnUnits()
     UNITFRAME:UpdateAllElements()
-    
-    print("[Andromeda] Unitframe module loaded")
 end

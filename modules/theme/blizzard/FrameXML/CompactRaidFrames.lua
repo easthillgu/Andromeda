@@ -35,35 +35,52 @@ tinsert(C.BlizzThemes, function()
         _G.CompactRaidFrameManagerDisplayFrameFilterOptionsFilterGroup7,
         _G.CompactRaidFrameManagerDisplayFrameFilterOptionsFilterGroup8,
         _G.CompactRaidFrameManagerDisplayFrameLeaderOptionsInitiateRolePoll,
-        _G.CompactRaidFrameManagerDisplayFrameLeaderOptionsCountdown,
         _G.CompactRaidFrameManagerDisplayFrameLeaderOptionsInitiateReadyCheck,
         _G.CompactRaidFrameManagerDisplayFrameLeaderOptionsRaidWorldMarkerButton,
         _G.CompactRaidFrameManagerDisplayFrameLockedModeToggle,
         _G.CompactRaidFrameManagerDisplayFrameHiddenModeToggle,
         _G.CompactRaidFrameManagerDisplayFrameConvertToRaid,
-        _G.CompactRaidFrameManagerDisplayFrameEditMode,
     }
     for _, button in pairs(buttons) do
         if button then
+            -- 隐藏所有前9个区域（参考 NDui）
             for i = 1, 9 do
                 local region = select(i, button:GetRegions())
-                if region and region:GetObjectType() == 'Texture' then
-                    region:SetAlpha(0)
-                end
+                if region then region:SetAlpha(0) end
             end
             F.ReskinButton(button)
         end
     end
 
-    for i = 1, 8 do
-        select(i, _G.CompactRaidFrameManager:GetRegions()):SetAlpha(0)
+    -- 处理 CompactRaidFrameManager 的区域
+    if _G.CompactRaidFrameManager then
+        for i = 1, 8 do
+            local region = select(i, _G.CompactRaidFrameManager:GetRegions())
+            if region then region:SetAlpha(0) end
+        end
+        local bd = F.SetBD(_G.CompactRaidFrameManager)
+        if bd then
+            bd:SetPoint('TOPLEFT')
+            bd:SetPoint('BOTTOMRIGHT', -9, 9)
+        end
     end
-    select(1, _G.CompactRaidFrameManagerDisplayFrameFilterOptions:GetRegions()):SetAlpha(0)
-    select(1, _G.CompactRaidFrameManagerDisplayFrame:GetRegions()):SetAlpha(0)
-    select(4, _G.CompactRaidFrameManagerDisplayFrame:GetRegions()):SetAlpha(0)
 
-    local bd = F.SetBD(_G.CompactRaidFrameManager)
-    bd:SetPoint('TOPLEFT')
-    bd:SetPoint('BOTTOMRIGHT', -9, 9)
-    F.ReskinCheckbox(_G.CompactRaidFrameManagerDisplayFrameEveryoneIsAssistButton)
+    -- 处理 DisplayFrame 的区域
+    if _G.CompactRaidFrameManagerDisplayFrame then
+        local region1 = select(1, _G.CompactRaidFrameManagerDisplayFrame:GetRegions())
+        if region1 then region1:SetAlpha(0) end
+        local region4 = select(4, _G.CompactRaidFrameManagerDisplayFrame:GetRegions())
+        if region4 then region4:SetAlpha(0) end
+    end
+
+    -- 处理 FilterOptions 的区域
+    if _G.CompactRaidFrameManagerDisplayFrameFilterOptions then
+        local region = select(1, _G.CompactRaidFrameManagerDisplayFrameFilterOptions:GetRegions())
+        if region then region:SetAlpha(0) end
+    end
+
+    -- 处理全员协助按钮
+    if _G.CompactRaidFrameManagerDisplayFrameEveryoneIsAssistButton then
+        F.ReskinCheckbox(_G.CompactRaidFrameManagerDisplayFrameEveryoneIsAssistButton)
+    end
 end)
