@@ -18,7 +18,7 @@ tinsert(C.BlizzThemes, function()
 
     F.SetBD(TaxiFrame, nil, 3, -23, -5, 3)
 
-    -- 3.80.1: Close button — use ReskinButton (ReskinClose's SetTexture fails on this frame)
+    -- 3.80.1: Close button — ReskinButton + Blizzard close icon (ReskinClose SetTexture fails)
     local closeBtn = _G.TaxiCloseButton
     if closeBtn and not closeBtn._andmCloseStyled then
         closeBtn._andmCloseStyled = true
@@ -26,7 +26,6 @@ tinsert(C.BlizzThemes, function()
         closeBtn:SetSize(20, 20)
         F.ReskinButton(closeBtn, true)
 
-        -- Manual close icon
         local tex = closeBtn:CreateTexture(nil, 'ARTWORK')
         tex:SetAllPoints()
         tex:SetTexture('Interface\\Buttons\\UI-Panel-MinimizeButton-Up')
@@ -42,13 +41,24 @@ tinsert(C.BlizzThemes, function()
         end)
     end
 
-    -- 3.80.1: TaxiRouteMap — border as TaxiFrame sibling (map frames don't render children)
+    -- 3.80.1: TaxiRouteMap — hide Blizzard decor + add border (sibling of TaxiFrame)
     TaxiFrame:HookScript('OnShow', function()
         C_Timer.After(0.1, function()
             if not TaxiFrame:IsShown() then return end
             local routeMap = _G.TaxiRouteMap
             if routeMap and not routeMap._andmStyled then
                 routeMap._andmStyled = true
+
+                -- Hide Blizzard decorative layers (don't touch ARTWORK = map content)
+                routeMap:DisableDrawLayer('BORDER')
+                routeMap:DisableDrawLayer('OVERLAY')
+
+                -- Hide named decorative sub-frames
+                if routeMap.Bg then routeMap.Bg:Hide() end
+                if routeMap.Border then routeMap.Border:Hide() end
+                if routeMap.Background then routeMap.Background:Hide() end
+
+                -- Border as TaxiFrame sibling (map frames don't render children)
                 local border = CreateFrame('Frame', nil, TaxiFrame, 'BackdropTemplate')
                 border:SetAllPoints(routeMap)
                 border:SetBackdrop({edgeFile = C.Assets.Textures.Shadow, edgeSize = 3})
