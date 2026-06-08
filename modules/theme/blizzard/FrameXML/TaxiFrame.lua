@@ -3,51 +3,40 @@ local F, C = unpack(select(2, ...))
 tinsert(C.BlizzThemes, function()
     if not _G.ANDROMEDA_ADB.ReskinBlizz then return end
 
-    -- NDui: TaxiFramePortrait = TaxiPortrait; TaxiFrameCloseButton = TaxiCloseButton
-    _G.TaxiFrameCloseButton = _G.TaxiCloseButton
-    _G.TaxiFramePortrait = _G.TaxiPortrait
-
     local TaxiFrame = _G.TaxiFrame
-    -- NDui: B.ReskinPortraitFrame(TaxiFrame, 17, -8, -45, 82)
-    F.ReskinPortraitFrame(TaxiFrame)
 
-    -- Match NDui backdrop offsets
-    if TaxiFrame.__bg then
-        TaxiFrame.__bg:ClearAllPoints()
-        TaxiFrame.__bg:SetPoint('TOPLEFT', 17, -8)
-        TaxiFrame.__bg:SetPoint('BOTTOMRIGHT', -45, 82)
+    -- Hide Blizzard decorative layers (NDui: ReskinPortraitFrame StripTextures equivalent)
+    TaxiFrame:DisableDrawLayer('BORDER')
+    TaxiFrame:DisableDrawLayer('OVERLAY')
+    if TaxiFrame.Bg then TaxiFrame.Bg:Hide() end
+    if _G.TaxiFrame.TitleBg then _G.TaxiFrame.TitleBg:Hide() end
+    if TaxiFrame.TopTileStreaks then TaxiFrame.TopTileStreaks:Hide() end
+    -- NDui: hide portrait
+    if TaxiFrame.PortraitTexture or TaxiFrame.portrait then
+        (TaxiFrame.PortraitTexture or TaxiFrame.portrait):SetAlpha(0)
     end
 
-    -- 3.80.1: Close button at TaxiFrame TOPRIGHT (inside the frame)
+    -- Background: original Andromeda offsets (proven visible in 3.80.1)
+    F.SetBD(TaxiFrame, nil, 3, -23, -5, 3)
+
+    -- NDui: TaxiCloseButton → ReskinButton + font X
     local cb = _G.TaxiCloseButton
     if cb then
+        F.StripTextures(cb)
+        cb:SetSize(20, 20)
         cb:ClearAllPoints()
         cb:SetPoint('TOPRIGHT', TaxiFrame, 'TOPRIGHT', -6, -6)
-        cb.__owner = TaxiFrame
-        cb.__xOffset = -6
-        cb.__yOffset = -6
+        F.ReskinButton(cb, true)
+
+        -- Font-based X (ReskinClose's C.Assets.Textures.Close fails on this frame)
+        local fs = cb:CreateFontString(nil, 'OVERLAY')
+        fs:SetFont(C.Assets.Fonts.Bold, 14, 'OUTLINE')
+        fs:SetText('X')
+        fs:SetTextColor(1, 1, 1)
+        fs:SetPoint('CENTER')
     end
 
-    -- 3.80.1: ReskinClose SetTexture(C.Assets.Textures.Close) fails on TaxiCloseButton
-    -- Fallback: font-based X overlay
-    if cb then
-        local hasIcon = false
-        for _, r in pairs({cb:GetRegions()}) do
-            if r:GetObjectType() == 'Texture' and r:GetDrawLayer() == 'ARTWORK' and r:GetTexture() then
-                hasIcon = true
-                break
-            end
-        end
-        if not hasIcon then
-            local fs = cb:CreateFontString(nil, 'OVERLAY')
-            fs:SetFont(C.Assets.Fonts.Bold, 14, 'OUTLINE')
-            fs:SetText('X')
-            fs:SetTextColor(1, 1, 1)
-            fs:SetPoint('CENTER')
-        end
-    end
-
-    -- TaxiRouteMap: hide BORDER/OVERLAY decor (keep ARTWORK = map content) + shadow border
+    -- TaxiRouteMap: hide BORDER/OVERLAY decor + shadow border
     TaxiFrame:HookScript('OnShow', function()
         local rm = _G.TaxiRouteMap
         if not rm or rm._andmStyled then return end
