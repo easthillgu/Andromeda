@@ -680,6 +680,7 @@ C.AccountSettings = {
     ReskinImmersion = true,
     ReskinOpie = true,
     ReskinPremadeGroupsFilter = true,
+    ReskinMeetingHorn = true,
     ReskinREHack = true,
     NumberFormat = 1,
     FontOutline = true,

@@ -691,6 +691,7 @@ L["Reskin Immersion"] = true
 L["Reskin Method Raid Tools (MRT)"] = true
 L["Reskin Opie"] = true
 L["Reskin Premade Groups Filter"] = true
+L["Reskin MeetingHorn"] = true
 L["Reskin REHack"] = true
 L["Reskin WeakAuras"] = true
 L["Restyle Blizzard Frames"] = true
