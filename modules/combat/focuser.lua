@@ -3,59 +3,62 @@ local COMBAT = F:GetModule('Combat')
 local oUF = F.Libs.oUF
 
 local modifier
-local mouseButton = '1' -- 1 = left, 2 = right, 3 = middle, 4 and 5 = thumb buttons if there are any
+local mouseButton = '1'
 local pending = {}
 
-function COMBAT:Focuser_Setup()
+local function getModifierFromIndex(index)
+    if index == 1 then
+        return 'control'
+    elseif index == 2 then
+        return 'alt'
+    elseif index == 3 then
+        return 'shift'
+    end
+end
+
+function COMBAT:Focuser_Setup(frame)
     if not C.DB.Combat.EasyFocusOnUnitframe then
         return
     end
 
-    if not self or self.focuser then
+    if not frame or frame.focuser then
         return
     end
 
-    local name = self.GetName and self:GetName()
+    local name = frame.GetName and frame:GetName()
     if name and strmatch(name, 'oUF_NPs') then
         return
     end
 
     if not InCombatLockdown() then
-        local index = C.DB.Combat.EasyFocusKey
-        if index == 1 then
-            modifier = 'control'
-        elseif index == 2 then
-            modifier = 'alt'
-        elseif index == 3 then
-            modifier = 'shift'
-        elseif index == 4 then
-            return
+        modifier = getModifierFromIndex(C.DB.Combat.EasyFocusKey)
+        if modifier then
+            frame:SetAttribute(modifier .. '-type' .. mouseButton, 'focus')
+            frame.focuser = true
+            pending[frame] = nil
         end
-        self:SetAttribute(modifier .. '-type' .. mouseButton, 'focus')
-        self.focuser = true
-        pending[self] = nil
     else
-        pending[self] = true
+        pending[frame] = true
     end
 end
 
 function COMBAT:Focuser_CreateFrameHook(name, _, template)
     if name and template == 'SecureUnitButtonTemplate' then
-        COMBAT.Focuser_Setup(_G[name])
+        COMBAT:Focuser_Setup(_G[name])
     end
 end
 
-function COMBAT.Focuser_OnEvent(event)
+function COMBAT:Focuser_OnEvent(event)
     if event == 'PLAYER_REGEN_ENABLED' then
         if next(pending) then
             for frame in next, pending do
-                COMBAT.Focuser_Setup(frame)
+                COMBAT:Focuser_Setup(frame)
             end
         end
     else
         for _, object in next, oUF.objects do
             if not object.focuser then
-                COMBAT.Focuser_Setup(object)
+                COMBAT:Focuser_Setup(object)
             end
         end
     end
@@ -66,18 +69,11 @@ function COMBAT:EasyFocus()
         return
     end
 
-    local index = C.DB.Combat.EasyFocusKey
-    if index == 1 then
-        modifier = 'control'
-    elseif index == 2 then
-        modifier = 'alt'
-    elseif index == 3 then
-        modifier = 'shift'
-    elseif index == 4 then
+    modifier = getModifierFromIndex(C.DB.Combat.EasyFocusKey)
+    if not modifier then
         return
     end
 
-    -- Keybinding override so that models can be shift/alt/ctrl+clicked
     local f = CreateFrame('CheckButton', 'FocuserButton', _G.UIParent, 'SecureActionButtonTemplate')
     f:SetAttribute('type1', 'macro')
     f:SetAttribute('macrotext', '/focus mouseover')

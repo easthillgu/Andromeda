@@ -18,14 +18,6 @@ local powerTypes = {
 
 local allowedPowerTypes = {
     ['MANA'] = true,
-    ['RAGE'] = false,
-    ['FOCUS'] = false,
-    ['ENERGY'] = false,
-    ['RUNIC_POWER'] = false,
-    ['LUNAR_POWER'] = false,
-    ['MAELSTROM'] = false,
-    ['FURY'] = false,
-    ['PAIN'] = false,
 }
 
 local function lowHealthAlert(_, unit)
@@ -82,27 +74,25 @@ function COMBAT:LowManaAlert()
     end
 end
 
+local function isSourceMine(srcGUID)
+    return srcGUID == UnitGUID('player') or srcGUID == UnitGUID('pet')
+end
+
 local function spellAlert()
     local _, eventType, _, srcGUID, _, _, _, destGUID = CombatLogGetCurrentEventInfo()
 
-    if not (srcGUID == UnitGUID('player') or srcGUID == UnitGUID('pet')) then
+    if not isSourceMine(srcGUID) then
         return
     end
 
     if eventType == 'SPELL_INTERRUPT' and C.DB.Combat.Interrupt then
-        if srcGUID == UnitGUID('player') or srcGUID == UnitGUID('pet') then
-            PlaySoundFile(C.Assets.Sounds.Interrupt, 'Master')
-        end
+        PlaySoundFile(C.Assets.Sounds.Interrupt, 'Master')
     elseif eventType == 'SPELL_DISPEL' and C.DB.Combat.Dispel then
-        if srcGUID == UnitGUID('player') or srcGUID == UnitGUID('pet') then
-            PlaySoundFile(C.Assets.Sounds.Dispel, 'Master')
-        end
-    elseif eventType == 'SPELL_STOLEN' and C.DB.Combat.Steal then
-        if srcGUID == UnitGUID('player') then
-            PlaySoundFile(C.Assets.Sounds.Dispel, 'Master')
-        end
+        PlaySoundFile(C.Assets.Sounds.Dispel, 'Master')
+    elseif eventType == 'SPELL_STOLEN' and C.DB.Combat.Steal and srcGUID == UnitGUID('player') then
+        PlaySoundFile(C.Assets.Sounds.Dispel, 'Master')
     elseif eventType == 'SPELL_MISSED' and C.DB.Combat.Miss then
-        local missType, _, _ = select(15, CombatLogGetCurrentEventInfo())
+        local missType = select(15, CombatLogGetCurrentEventInfo())
         if missType == 'REFLECT' and destGUID == UnitGUID('player') then
             PlaySoundFile(C.Assets.Sounds.Missed, 'Master')
         end

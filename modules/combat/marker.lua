@@ -1,62 +1,41 @@
 local F, C = unpack(select(2, ...))
 local COMBAT = F:GetModule('Combat')
 
-local menuList = {
-    {
-        text = _G.RAID_TARGET_NONE,
-        func = function()
-            SetRaidTarget('target', 0)
-        end,
-    },
-    {
-        text = F:RgbToHex(1, 0.92, 0) .. _G.RAID_TARGET_1 .. ' ' .. _G.ICON_LIST[1] .. '12|t',
-        func = function()
-            SetRaidTarget('target', 1)
-        end,
-    },
-    {
-        text = F:RgbToHex(0.98, 0.57, 0) .. _G.RAID_TARGET_2 .. ' ' .. _G.ICON_LIST[2] .. '12|t',
-        func = function()
-            SetRaidTarget('target', 2)
-        end,
-    },
-    {
-        text = F:RgbToHex(0.83, 0.22, 0.9) .. _G.RAID_TARGET_3 .. ' ' .. _G.ICON_LIST[3] .. '12|t',
-        func = function()
-            SetRaidTarget('target', 3)
-        end,
-    },
-    {
-        text = F:RgbToHex(0.04, 0.95, 0) .. _G.RAID_TARGET_4 .. ' ' .. _G.ICON_LIST[4] .. '12|t',
-        func = function()
-            SetRaidTarget('target', 4)
-        end,
-    },
-    {
-        text = F:RgbToHex(0.7, 0.82, 0.875) .. _G.RAID_TARGET_5 .. ' ' .. _G.ICON_LIST[5] .. '12|t',
-        func = function()
-            SetRaidTarget('target', 5)
-        end,
-    },
-    {
-        text = F:RgbToHex(0, 0.71, 1) .. _G.RAID_TARGET_6 .. ' ' .. _G.ICON_LIST[6] .. '12|t',
-        func = function()
-            SetRaidTarget('target', 6)
-        end,
-    },
-    {
-        text = F:RgbToHex(1, 0.24, 0.168) .. _G.RAID_TARGET_7 .. ' ' .. _G.ICON_LIST[7] .. '12|t',
-        func = function()
-            SetRaidTarget('target', 7)
-        end,
-    },
-    {
-        text = F:RgbToHex(0.98, 0.98, 0.98) .. _G.RAID_TARGET_8 .. ' ' .. _G.ICON_LIST[8] .. '12|t',
-        func = function()
-            SetRaidTarget('target', 8)
-        end,
-    },
+local raidTargetColors = {
+    { 1, 0.92, 0 },
+    { 0.98, 0.57, 0 },
+    { 0.83, 0.22, 0.9 },
+    { 0.04, 0.95, 0 },
+    { 0.7, 0.82, 0.875 },
+    { 0, 0.71, 1 },
+    { 1, 0.24, 0.168 },
+    { 0.98, 0.98, 0.98 },
 }
+
+local function createMenuList()
+    local menuList = {
+        {
+            text = _G.RAID_TARGET_NONE,
+            func = function()
+                SetRaidTarget('target', 0)
+            end,
+        },
+    }
+
+    for i = 1, 8 do
+        local color = raidTargetColors[i]
+        tinsert(menuList, {
+            text = F:RgbToHex(color[1], color[2], color[3]) .. _G['RAID_TARGET_' .. i] .. ' ' .. _G.ICON_LIST[i] .. '12|t',
+            func = function()
+                SetRaidTarget('target', i)
+            end,
+        })
+    end
+
+    return menuList
+end
+
+local menuList = createMenuList()
 
 local function getModifiedKey()
     local index = C.DB.Combat.EasyMarkKey
@@ -66,9 +45,34 @@ local function getModifiedKey()
         return IsAltKeyDown()
     elseif index == 3 then
         return IsShiftKeyDown()
-    elseif index == 4 then
-        return false
     end
+    return false
+end
+
+local function canMarkUnit()
+    if not IsInGroup() then
+        return true
+    end
+    if not IsInRaid() then
+        return true
+    end
+    return UnitIsGroupLeader('player') or UnitIsGroupAssistant('player')
+end
+
+local function onWorldFrameClick(_, btn)
+    if btn ~= 'LeftButton' or not getModifiedKey() or not UnitExists('mouseover') then
+        return
+    end
+
+    if not canMarkUnit() then
+        return
+    end
+
+    local ricon = GetRaidTargetIndex('mouseover')
+    for i = 1, 8 do
+        menuList[i + 1].checked = ricon == i
+    end
+    EasyMenu(menuList, F.EasyMenu, 'cursor', 0, 0, 'MENU', 1)
 end
 
 function COMBAT:EasyMark()
@@ -76,24 +80,5 @@ function COMBAT:EasyMark()
         return
     end
 
-    _G.WorldFrame:HookScript('OnMouseDown', function(_, btn)
-        if btn == 'LeftButton' and getModifiedKey() and UnitExists('mouseover') then
-            if
-                not IsInGroup()
-                or (IsInGroup() and not IsInRaid())
-                or UnitIsGroupLeader('player')
-                or UnitIsGroupAssistant('player')
-            then
-                local ricon = GetRaidTargetIndex('mouseover')
-                for i = 1, 8 do
-                    if ricon == i then
-                        menuList[i + 1].checked = true
-                    else
-                        menuList[i + 1].checked = false
-                    end
-                end
-                EasyMenu(menuList, F.EasyMenu, 'cursor', 0, 0, 'MENU', 1)
-            end
-        end
-    end)
+    _G.WorldFrame:HookScript('OnMouseDown', onWorldFrameClick)
 end

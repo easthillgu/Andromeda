@@ -10,13 +10,10 @@ local elapsed, runtimer = 0, 0
 local cooldowns, animating, watching = {}, {}, {}
 local itemSpells, ignoredSpells = {}, {}
 
-local FRAME
-local TEXTURE
-
-FRAME = CreateFrame('Frame', C.ADDON_TITLE .. 'CooldownPulseFrame', _G.UIParent, 'BackdropTemplate')
+local FRAME = CreateFrame('Frame', C.ADDON_TITLE .. 'CooldownPulseFrame', _G.UIParent, 'BackdropTemplate')
 FRAME:SetSize(iconSize, iconSize)
 
-TEXTURE = FRAME:CreateTexture(nil, 'ARTWORK')
+local TEXTURE = FRAME:CreateTexture(nil, 'ARTWORK')
 TEXTURE:SetAllPoints()
 
 local function tcount(tab)
@@ -24,20 +21,17 @@ local function tcount(tab)
     for _ in pairs(tab) do
         n = n + 1
     end
-
     return n
 end
 
 local function memoize(f)
     local cache = nil
-
     local memoized = {}
 
     local function get()
         if cache == nil then
             cache = f()
         end
-
         return cache
     end
 
@@ -46,17 +40,15 @@ local function memoize(f)
     end
 
     setmetatable(memoized, { __call = get })
-
     return memoized
 end
 
 local function getPetActionIndexByName(name)
-    for i = 1, _G.NUM_PET_ACTION_SLOTS, 1 do
+    for i = 1, _G.NUM_PET_ACTION_SLOTS do
         if GetPetActionInfo(i) == name then
             return i
         end
     end
-
     return nil
 end
 
@@ -65,9 +57,8 @@ local function trackItemSpell(itemID)
     if spellID then
         itemSpells[spellID] = itemID
         return true
-    else
-        return false
     end
+    return false
 end
 
 local function isAnimatingCooldownByName(name)
@@ -76,7 +67,6 @@ local function isAnimatingCooldownByName(name)
             return true
         end
     end
-
     return false
 end
 
@@ -132,7 +122,6 @@ local function onUpdate(_, update)
                             cooldowns[i] = getCooldownDetails
                         end
                     end
-
                     if not (cooldown.enabled == 0 and v[2] == 'spell') then
                         watching[i] = nil
                     end
@@ -148,7 +137,6 @@ local function onUpdate(_, update)
                     if not isAnimatingCooldownByName(cooldown.name) then
                         tinsert(animating, {cooldown.texture,cooldown.isPet,cooldown.name})
                     end
-
                     cooldowns[i] = nil
                 end
             else
@@ -196,7 +184,6 @@ function FRAME:ADDON_LOADED()
     for _, v in pairs(ignoredSpells) do
         ignoredSpells[v] = true
     end
-
     self:UnregisterEvent('ADDON_LOADED')
 end
 
@@ -207,19 +194,21 @@ function FRAME:SPELL_UPDATE_COOLDOWN()
 end
 
 function FRAME:UNIT_SPELLCAST_SUCCEEDED(unit, _, spellID)
-    if unit == 'player' then
-        local itemID = itemSpells[spellID]
-        if itemID then
-            local texture = select(10, GetItemInfo(itemID))
-            watching[itemID] = { GetTime(), 'item', texture }
-            itemSpells[spellID] = nil
-        else
-            watching[spellID] = { GetTime(), 'spell', spellID }
-        end
+    if unit ~= 'player' then
+        return
+    end
 
-        if not self:IsMouseEnabled() then
-            self:SetScript('OnUpdate', onUpdate)
-        end
+    local itemID = itemSpells[spellID]
+    if itemID then
+        local texture = select(10, GetItemInfo(itemID))
+        watching[itemID] = { GetTime(), 'item', texture }
+        itemSpells[spellID] = nil
+    else
+        watching[spellID] = { GetTime(), 'spell', spellID }
+    end
+
+    if not self:IsMouseEnabled() then
+        self:SetScript('OnUpdate', onUpdate)
     end
 end
 
@@ -228,21 +217,20 @@ function FRAME:COMBAT_LOG_EVENT_UNFILTERED()
     local isPet = _G.bit.band(sourceFlags, _G.COMBATLOG_OBJECT_TYPE_PET) == _G.COMBATLOG_OBJECT_TYPE_PET
     local isMine = _G.bit.band(sourceFlags, _G.COMBATLOG_OBJECT_AFFILIATION_MINE) == _G.COMBATLOG_OBJECT_AFFILIATION_MINE
 
-    if eventType == 'SPELL_CAST_SUCCESS' then
-        if isPet and isMine then
-            local name = GetSpellInfo(spellID)
-            local index = getPetActionIndexByName(name)
-            if index and not select(6, GetPetActionInfo(index)) then
-                watching[spellID] = { GetTime(), 'pet', index }
-            elseif not index and spellID then
-                watching[spellID] = { GetTime(), 'spell', spellID }
-            else
-                return
-            end
+    if eventType == 'SPELL_CAST_SUCCESS' and isPet and isMine then
+        local name = GetSpellInfo(spellID)
+        local index = getPetActionIndexByName(name)
 
-            if not self:IsMouseEnabled() then
-                self:SetScript('OnUpdate', onUpdate)
-            end
+        if index and not select(6, GetPetActionInfo(index)) then
+            watching[spellID] = { GetTime(), 'pet', index }
+        elseif not index and spellID then
+            watching[spellID] = { GetTime(), 'spell', spellID }
+        else
+            return
+        end
+
+        if not self:IsMouseEnabled() then
+            self:SetScript('OnUpdate', onUpdate)
         end
     end
 end
