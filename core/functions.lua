@@ -2335,8 +2335,7 @@ do
 
     do
         local function updateCollapseTexture(texture, collapsed)
-            local atlas = collapsed and 'Soulbinds_Collection_CategoryHeader_Expand' or 'Soulbinds_Collection_CategoryHeader_Collapse'
-            texture:SetAtlas(atlas, true)
+            texture:SetTexture(collapsed and C.Assets.Textures.ButtonPlus or C.Assets.Textures.ButtonMinus)
         end
 
         local function resetCollapseTexture(frame, texture)
@@ -2347,9 +2346,9 @@ do
             frame:SetNormalTexture(0)
 
             if texture and texture ~= '' then
-                if strfind(texture, 'Plus') or strfind(texture, '[Cc]losed') then
+                if strfind(texture, 'Plus') or strfind(texture, 'Closed') then
                     frame.__texture:DoCollapse(true)
-                elseif strfind(texture, 'Minus') or strfind(texture, '[Oo]pen') then
+                elseif strfind(texture, 'Minus') or strfind(texture, 'Open') then
                     frame.__texture:DoCollapse(false)
                 end
                 frame.bg:Show()
@@ -2360,21 +2359,29 @@ do
             frame.settingTexture = nil
         end
 
+        local function hideCollapseTexture(frame)
+            if frame.bg then
+                frame.bg:Hide()
+            end
+        end
+
         function F:ReskinCollapse(isAtlas)
             if not self then return end
             self:SetNormalTexture(0)
             self:SetHighlightTexture(0)
             self:SetPushedTexture(0)
+            self:SetDisabledTexture(0)
 
-            local bg = F.CreateBDFrame(self)
+            local bg = F.CreateBDFrame(self, 0.25, true)
             bg:ClearAllPoints()
             bg:SetSize(13, 13)
-            bg:SetPoint('TOPLEFT', self:GetNormalTexture())
-            F.CreateSD(bg, 0.25)
+            bg:SetPoint('LEFT', self:GetNormalTexture())
             self.bg = bg
 
             self.__texture = bg:CreateTexture(nil, 'OVERLAY')
             self.__texture:SetPoint('CENTER')
+            self.__texture:SetSize(13, 13)
+            self.__texture:SetTexture(C.Assets.Textures.ButtonPlus)
             self.__texture.DoCollapse = updateCollapseTexture
 
             self:HookScript('OnEnter', F.Texture_OnEnter)
@@ -2384,6 +2391,9 @@ do
                 hooksecurefunc(self, 'SetNormalAtlas', resetCollapseTexture)
             else
                 hooksecurefunc(self, 'SetNormalTexture', resetCollapseTexture)
+                if self.ClearNormalTexture then
+                    hooksecurefunc(self, 'ClearNormalTexture', hideCollapseTexture)
+                end
             end
         end
 
