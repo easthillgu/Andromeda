@@ -101,6 +101,10 @@ local function GetSlotItemLocation(id)
 end
 
 function IL:ItemLevel_UpdateTraits(button, id, link)
+    if not C_AzeriteEmpoweredItem then
+        return
+    end
+
     local empoweredItemLocation = GetSlotItemLocation(id)
     if not empoweredItemLocation then
         return
@@ -118,7 +122,7 @@ function IL:ItemLevel_UpdateTraits(button, id, link)
         end
 
         for _, powerID in pairs(powerIDs) do
-            local selected = C_AzeriteEmpoweredItem and C_AzeriteEmpoweredItem.IsPowerSelected(empoweredItemLocation, powerID)
+            local selected = C_AzeriteEmpoweredItem.IsPowerSelected(empoweredItemLocation, powerID)
             if selected then
                 local spellID = TT:Azerite_PowerToSpell(powerID)
                 local name, _, icon = GetSpellInfo(spellID)

@@ -46,8 +46,9 @@ local function CreateMessage(msg)
 end
 
 local function InitExtraRep(factionID, name)
-    if not C_Reputation then return end
+    if not C_Reputation or not C_Reputation.GetFactionParagonInfo then return end
     local currentValue, threshold, _, hasRewardPending = C_Reputation.GetFactionParagonInfo(factionID)
+    if not currentValue or not threshold then return end
     if not extraRep[name] then
         extraRep[name] = currentValue % threshold
         if hasRewardPending then
@@ -65,27 +66,27 @@ local function UpdateRep(self)
     for i = 1, numFactions, 1 do
         local name, _, _, barMin, barMax, barValue, _, _, isHeader, _, hasRep, _, _, factionID = GetFactionInfo(i)
 
-        if barValue >= 42000 and C_Reputation then
+        if barValue >= 42000 and C_Reputation and C_Reputation.IsFactionParagon and C_Reputation.GetFactionParagonInfo then
             local hasParagon = C_Reputation.IsFactionParagon(factionID)
             if hasParagon then
                 InitExtraRep(factionID, name)
-                local currentValue, threshold, _, hasRewardPending = C_Reputation.GetFactionParagonInfo(
-                    factionID
-                )
-                value = currentValue % threshold
-                if hasRewardPending then
-                    value = value + threshold
-                end
-                local extraChange = value - extraRep[name]
-                if extraChange > 0 and value < 10000 then
-                    extraRep[name] = value
-                    local extra_msg = format(paraMsg, name, value, extraChange)
-                    CreateMessage(extra_msg)
-                end
-                if extraChange ~= 0 and value > 10000 then
-                    extraRep[name] = value
-                    local extra_msg2 = format(cacheMsg, name, value, extraChange)
-                    CreateMessage(extra_msg2)
+                local currentValue, threshold, _, hasRewardPending = C_Reputation.GetFactionParagonInfo(factionID)
+                if currentValue and threshold then
+                    value = currentValue % threshold
+                    if hasRewardPending then
+                        value = value + threshold
+                    end
+                    local extraChange = value - extraRep[name]
+                    if extraChange > 0 and value < 10000 then
+                        extraRep[name] = value
+                        local extra_msg = format(paraMsg, name, value, extraChange)
+                        CreateMessage(extra_msg)
+                    end
+                    if extraChange ~= 0 and value > 10000 then
+                        extraRep[name] = value
+                        local extra_msg2 = format(cacheMsg, name, value, extraChange)
+                        CreateMessage(extra_msg2)
+                    end
                 end
             end
         elseif name and not isHeader or hasRep then
@@ -104,6 +105,10 @@ local function UpdateRep(self)
 end
 
 local function HookParagonRep()
+    if not C_Reputation or not C_Reputation.IsFactionParagon or not C_Reputation.GetFactionParagonInfo then
+        return
+    end
+
     local numFactions = GetNumFactions()
     local factionOffset = FauxScrollFrame_GetOffset(_G.ReputationListScrollFrame)
     local gradStyle = _G.ANDROMEDA_ADB.GradientStyle
@@ -116,17 +121,15 @@ local function HookParagonRep()
 
         if factionIndex <= numFactions then
             local name, _, standingID, barMin, barMax, barValue, _, _, isHeader, _, hasRep, _, _, factionID = GetFactionInfo(factionIndex)
-            if factionID and C_Reputation and C_Reputation.IsFactionParagon(factionID) then
+            if factionID and C_Reputation.IsFactionParagon(factionID) then
                 local hasParagon = C_Reputation.IsFactionParagon(factionID)
                 if hasParagon then
-                    local currentValue, threshold, rewardQuestID, hasRewardPending = C_Reputation.GetFactionParagonInfo(
-                        factionID
-                    )
-                    factionRow.questID = rewardQuestID
+                    local currentValue, threshold, rewardQuestID, hasRewardPending = C_Reputation.GetFactionParagonInfo(factionID)
+                    if currentValue and threshold then
+                        factionRow.questID = rewardQuestID
 
-                    if currentValue then
                         local barValue = mod(currentValue, threshold)
-                        if hasRewardPending then
+                        if hasRewardPending and _G.ReputationFrame.paragonFramesPool then
                             local paragonFrame = _G.ReputationFrame.paragonFramesPool:Acquire()
                             paragonFrame.factionID = factionID
                             paragonFrame:SetPoint('RIGHT', factionRow, 11, 0)
@@ -138,10 +141,8 @@ local function HookParagonRep()
 
                         factionBar:SetMinMaxValues(0, threshold)
                         factionBar:SetValue(barValue)
-                        -- ElvUI 风格：使用金黄色显示 Paragon 条
                         factionBar:SetStatusBarColor(PARAGON_COLOR.r, PARAGON_COLOR.g, PARAGON_COLOR.b)
-                        factionRow.rolloverText = C.INFO_COLOR
-                            .. format(_G.REPUTATION_PROGRESS_FORMAT, barValue, threshold)
+                        factionRow.rolloverText = C.INFO_COLOR .. format(_G.REPUTATION_PROGRESS_FORMAT, barValue, threshold)
 
                         if hasRewardPending then
                             barValue = barValue - threshold
@@ -167,7 +168,6 @@ local function HookParagonRep()
                 end
             else
                 factionRow.questID = nil
-                -- 非 Paragon 声望：根据声望等级设置颜色 (ElvUI 风格)
                 if standingID and standingID >= 1 and standingID <= 8 then
                     local color = FACTION_BAR_COLORS[standingID]
                     if color then

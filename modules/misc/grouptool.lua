@@ -1,6 +1,8 @@
 local F, C, L = unpack(select(2, ...))
 local GT = F:RegisterModule('GroupTool')
 
+local ConvertToParty, ConvertToRaid = ConvertToParty, ConvertToRaid
+
 local buffsList = {
     [1] = {
         -- 合剂

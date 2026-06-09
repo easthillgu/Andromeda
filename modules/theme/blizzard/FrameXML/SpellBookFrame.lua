@@ -96,6 +96,10 @@ tinsert(C.BlizzThemes, function()
         end
     end
 
+    if _G.ShowAllSpellRanksCheckbox then
+        F.ReskinCheckbox(_G.ShowAllSpellRanksCheckbox)
+    end
+
     -- 3.80.1: SpellBookFrame_Update may not exist
     if _G.SpellBookFrame_Update then
         hooksecurefunc('SpellBookFrame_Update', function()
@@ -224,12 +228,14 @@ tinsert(C.BlizzThemes, function()
         end)
     end
 
-    F.CreateBDFrame(_G.SecondaryProfession1, 0.25)
-    F.CreateBDFrame(_G.SecondaryProfession2, 0.25)
-    F.CreateBDFrame(_G.SecondaryProfession3, 0.25)
-    F.ReskinArrow(_G.SpellBookPrevPageButton, 'left')
-    F.ReskinArrow(_G.SpellBookNextPageButton, 'right')
-    _G.SpellBookPageText:SetTextColor(0.8, 0.8, 0.8)
+    if _G.SecondaryProfession1 then F.CreateBDFrame(_G.SecondaryProfession1, 0.25) end
+    if _G.SecondaryProfession2 then F.CreateBDFrame(_G.SecondaryProfession2, 0.25) end
+    if _G.SecondaryProfession3 then F.CreateBDFrame(_G.SecondaryProfession3, 0.25) end
+
+    if _G.SpellBookPrevPageButton then F.ReskinArrow(_G.SpellBookPrevPageButton, 'left') end
+    if _G.SpellBookNextPageButton then F.ReskinArrow(_G.SpellBookNextPageButton, 'right') end
+
+    if _G.SpellBookPageText then _G.SpellBookPageText:SetTextColor(0.8, 0.8, 0.8) end
 
     if _G.UpdateProfessionButton then  -- 3.80.1
         hooksecurefunc('UpdateProfessionButton', function(self)
