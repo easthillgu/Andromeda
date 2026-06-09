@@ -1,6 +1,10 @@
 local F, C = unpack(select(2, ...))
 
 tinsert(C.BlizzThemes, function()
+    if not _G.ANDROMEDA_ADB.ReskinBlizz then
+        return
+    end
+
     local QuestLogFrame = _G.QuestLogFrame
     if not QuestLogFrame then return end
 

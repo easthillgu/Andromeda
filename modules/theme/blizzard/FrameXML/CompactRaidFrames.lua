@@ -19,6 +19,7 @@ tinsert(C.BlizzThemes, function()
         _G.CompactRaidFrameManagerToggleButton:GetNormalTexture():SetTexCoord(0.86, 1, 0, 1)
     end)
 
+    -- 参考 NDui：只美化按钮，不隐藏按钮区域
     local buttons = {
         _G.CompactRaidFrameManagerDisplayFrameFilterOptionsFilterRoleTank,
         _G.CompactRaidFrameManagerDisplayFrameFilterOptionsFilterRoleHealer,
@@ -40,12 +41,6 @@ tinsert(C.BlizzThemes, function()
     }
     for _, button in pairs(buttons) do
         if button then
-            for i = 1, 9 do
-                local region = select(i, button:GetRegions())
-                if region then
-                    region:SetAlpha(0)
-                end
-            end
             F.ReskinButton(button)
         end
     end
@@ -54,6 +49,7 @@ tinsert(C.BlizzThemes, function()
         _G.CompactRaidFrameManagerDisplayFrameLeaderOptionsRaidWorldMarkerButton:SetNormalTexture('Interface\\RaidFrame\\Raid-WorldPing')
     end
 
+    -- 参考 NDui：只隐藏管理器本身的区域
     for i = 1, 8 do
         local region = select(i, _G.CompactRaidFrameManager:GetRegions())
         if region then

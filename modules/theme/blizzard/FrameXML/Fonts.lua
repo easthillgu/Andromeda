@@ -61,6 +61,10 @@ local function ReskinFont(font, size)
 end
 
 tinsert(C.BlizzThemes, function()
+    if not _G.ANDROMEDA_ADB.ReskinBlizz then
+        return
+    end
+
 	-- Text color
 	GameFontBlack:SetTextColor(1, 1, 1)
 	GameFontBlackMedium:SetTextColor(1, 1, 1)

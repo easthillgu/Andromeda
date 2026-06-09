@@ -20,7 +20,7 @@ tinsert(C.BlizzThemes, function()
 
         -- Scroll bar
         if greetingPanel.ScrollBar then
-            F:ReskinTrimScroll()
+            F.ReskinTrimScroll(greetingPanel.ScrollBar)
         end
 
         -- Goodbye button

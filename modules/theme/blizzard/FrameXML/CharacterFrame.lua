@@ -940,7 +940,7 @@ tinsert(C.BlizzThemes, function()
     if not _G.PVPFrame.CloseButton then
         _G.PVPFrame.CloseButton = _G.PVPParentFrameCloseButton
     end
-    F.ReskinPortraitFrame(_G.PVPFrame)
+    F.ReskinPortraitFrame(_G.PVPFrame, 15, -15, -35, 73)
 
     if _G.PVPFrameToggleButton then F.ReskinArrow(_G.PVPFrameToggleButton, 'right') end
 
@@ -955,7 +955,7 @@ tinsert(C.BlizzThemes, function()
         F.CreateBDFrame(_G[tName .. 'Background'], 0.25)
     end
 
-    F.ReskinPortraitFrame(_G.PVPTeamDetails)
+    F.ReskinPortraitFrame(_G.PVPTeamDetails, 12, -12, -5, 5)
     if _G.PVPTeamDetailsAddTeamMember then F.ReskinButton(_G.PVPTeamDetailsAddTeamMember) end
     if _G.PVPTeamDetailsToggleButton then F.ReskinArrow(_G.PVPTeamDetailsToggleButton, 'right') end
 

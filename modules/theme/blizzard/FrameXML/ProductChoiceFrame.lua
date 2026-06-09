@@ -49,6 +49,10 @@ local DB = {
     QualityColors = ITEM_QUALITY_COLORS,
 }
 tinsert(C.BlizzThemes, function()
+    if not _G.ANDROMEDA_ADB.ReskinBlizz then
+        return
+    end
+
 	local ProductChoiceFrame = ProductChoiceFrame
 
 	B.ReskinPortraitFrame(ProductChoiceFrame)

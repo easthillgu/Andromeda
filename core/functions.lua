@@ -2418,10 +2418,10 @@ do
     -- UI templates
 
     do
-        function F:ReskinPortraitFrame()
+        function F:ReskinPortraitFrame(x, y, x2, y2)
             if not self then return end
             F.StripTextures(self)
-            local bg = F.SetBD(self)
+            local bg = F.SetBD(self, nil, x, y, x2, y2)
             bg:SetAllPoints(self)
 
             local frameName = self.GetName and self:GetName()

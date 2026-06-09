@@ -91,6 +91,10 @@ local function setTextColor_White(font)
 end
 
 tinsert(C.BlizzThemes, function()
+    if not _G.ANDROMEDA_ADB.ReskinBlizz then
+        return
+    end
+
     -- Item reward highlight
     _G.QuestInfoItemHighlight:GetRegions():Hide()
     hooksecurefunc(_G.QuestInfoItemHighlight, 'SetPoint', setHighlight)

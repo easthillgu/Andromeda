@@ -9,6 +9,10 @@ local function reskinOptionCheck(button)
 end
 
 tinsert(C.BlizzThemes, function()
+    if not _G.ANDROMEDA_ADB.ReskinBlizz then
+        return
+    end
+
     if not C.HAS_EDIT_MODE then return end
     local frame = EditModeManagerFrame
 

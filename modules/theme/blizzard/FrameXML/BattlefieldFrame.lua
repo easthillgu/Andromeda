@@ -52,6 +52,10 @@ local DB = {
     QualityColors = ITEM_QUALITY_COLORS,
 }
 tinsert(C.BlizzThemes, function()
+    if not _G.ANDROMEDA_ADB.ReskinBlizz then
+        return
+    end
+
 	-- BattlefieldFrame
 	if BattlefieldFrame then
 		B.ReskinPortraitFrame(BattlefieldFrame, 15, -15, -35, 73)

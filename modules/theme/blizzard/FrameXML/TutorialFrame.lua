@@ -1,6 +1,10 @@
 local F, C = unpack(select(2, ...))
 
 tinsert(C.BlizzThemes, function()
+    if not _G.ANDROMEDA_ADB.ReskinBlizz then
+        return
+    end
+
     F.SetBD(_G.TutorialFrame)
 
     if _G.TutorialFrameBackground then
