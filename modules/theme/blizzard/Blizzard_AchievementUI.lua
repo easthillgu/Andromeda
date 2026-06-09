@@ -14,6 +14,24 @@ local function SetupStatusbar(bar)
     F.CreateBDFrame(bar, 0.25)
 end
 
+local function ReskinTrackedCheckbox(ch, r, g, b)
+    if not ch then return end
+    ch:SetNormalTexture(0)
+    ch:SetPushedTexture(0)
+    ch:SetHighlightTexture(C.Assets.Textures.Backdrop)
+    local check = ch:GetCheckedTexture()
+    check:SetDesaturated(true)
+    check:SetVertexColor(r, g, b)
+
+    local chbg = F.CreateBDFrame(ch, 0, true)
+    chbg:SetPoint('TOPLEFT', 2, -2)
+    chbg:SetPoint('BOTTOMRIGHT', -2, 2)
+
+    local hl = ch:GetHighlightTexture()
+    hl:SetInside(chbg)
+    hl:SetVertexColor(r, g, b, 0.25)
+end
+
 C.Themes['Blizzard_AchievementUI'] = function()
     local r, g, b = C.r, C.g, C.b
 
@@ -37,6 +55,12 @@ C.Themes['Blizzard_AchievementUI'] = function()
     AchievementFrameSummary:GetChildren():Hide()
     if AchievementFrameCategoriesContainerScrollBarBG then
         AchievementFrameCategoriesContainerScrollBarBG:SetAlpha(0)
+    end
+    -- 隐藏 AchievementFrameCategoriesContainer 背景
+    if AchievementFrameCategoriesContainer then
+        F.StripTextures(AchievementFrameCategoriesContainer)
+        AchievementFrameCategoriesContainer:DisableDrawLayer('BACKGROUND')
+        AchievementFrameCategoriesContainer:DisableDrawLayer('BORDER')
     end
 
     for i = 1, 4 do
@@ -124,6 +148,24 @@ C.Themes['Blizzard_AchievementUI'] = function()
                 tab:ClearAllPoints()
                 tab:SetPoint('TOPLEFT', _G['AchievementFrameTab' .. (i - 1)], 'TOPRIGHT', -10, 0)
             end
+        end
+    end
+
+    -- 经典版成就按钮 (NDui 风格)
+    for i = 1, 7 do
+        local bu = _G['AchievementFrameAchievementsContainerButton' .. i]
+        if bu then
+            F.StripTextures(bu, true)
+            bu.highlight:SetAlpha(0)
+            bu.icon.frame:Hide()
+
+            local bg = F.CreateBDFrame(bu, 0.25)
+            bg:SetPoint('TOPLEFT', 1, -1)
+            bg:SetPoint('BOTTOMRIGHT', 0, 2)
+            F.ReskinIcon(bu.icon.texture)
+
+            -- tracked checkbox (NDui 风格)
+            ReskinTrackedCheckbox(bu.tracked, r, g, b)
         end
     end
 
@@ -221,7 +263,6 @@ C.Themes['Blizzard_AchievementUI'] = function()
                     local child = select(i, self.ScrollTarget:GetChildren())
                     if child and not child.styled then
                         F.StripTextures(child, true)
-                        child.Background:SetAlpha(0)
                         child.highlight:SetAlpha(0)
                         child.icon.frame:Hide()
                         child.description:SetTextColor(0.9, 0.9, 0.9)
@@ -232,10 +273,8 @@ C.Themes['Blizzard_AchievementUI'] = function()
                         bg:SetPoint('BOTTOMRIGHT', 0, 2)
                         F.ReskinIcon(child.icon.texture)
 
-                        if child.tracked then
-                            F.ReskinCheckbox(child.tracked)
-                            child.tracked:SetSize(20, 20)
-                        end
+                        -- tracked checkbox (NDui 风格)
+                        ReskinTrackedCheckbox(child.tracked, r, g, b)
                         if child.Check then child.Check:SetAlpha(0) end
 
                         hooksecurefunc(child, 'UpdatePlusMinusTexture', updateAccountString)
@@ -394,6 +433,43 @@ C.Themes['Blizzard_AchievementUI'] = function()
     end
     handleCompareSummary(AchievementFrameComparisonSummaryPlayer)
     handleCompareSummary(AchievementFrameComparisonSummaryFriend)
+
+    -- Comparison Summary StatusBars (NDui 风格)
+    local bars = {AchievementFrameComparisonSummaryPlayerStatusBar, AchievementFrameComparisonSummaryFriendStatusBar}
+    for _, bar in pairs(bars) do
+        if bar then
+            F.StripTextures(bar)
+            bar:SetStatusBarTexture(C.Assets.Textures.Backdrop)
+            bar:GetStatusBarTexture():SetGradient('VERTICAL', CreateColor(0, 0.4, 0, 1), CreateColor(0, 0.6, 0, 1))
+            if bar.title then
+                bar.title:SetTextColor(1, 1, 1)
+                bar.title:SetPoint('LEFT', bar, 'LEFT', 6, 0)
+            end
+            if bar.text then
+                bar.text:SetPoint('RIGHT', bar, 'RIGHT', -5, 0)
+            end
+            F.CreateBDFrame(bar, 0.25)
+        end
+    end
+
+    -- 经典版 Comparison Container Buttons (NDui 风格)
+    for _, name in pairs({'Player', 'Friend'}) do
+        for i = 1, 9 do
+            local button = _G['AchievementFrameComparisonContainerButton' .. i .. name]
+            if button then
+                button:DisableDrawLayer('ARTWORK')
+                button:DisableDrawLayer('BORDER')
+                button:DisableDrawLayer('BACKGROUND')
+                button:HideBackdrop()
+                local bg = F.CreateBDFrame(button, 0.25)
+                bg:SetPoint('TOPLEFT', 2, -1)
+                bg:SetPoint('BOTTOMRIGHT', -2, 2)
+
+                if button.icon and button.icon.frame then button.icon.frame:Hide() end
+                if button.icon and button.icon.texture then F.ReskinIcon(button.icon.texture) end
+            end
+        end
+    end
 
     local function handleCompareCategory(button)
         if not button then return end

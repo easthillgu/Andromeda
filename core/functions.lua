@@ -2375,7 +2375,7 @@ do
             local bg = F.CreateBDFrame(self, 0.25, true)
             bg:ClearAllPoints()
             bg:SetSize(13, 13)
-            bg:SetPoint('LEFT', self:GetNormalTexture())
+            bg:SetPoint('LEFT', self)
             self.bg = bg
 
             self.__texture = bg:CreateTexture(nil, 'OVERLAY')
