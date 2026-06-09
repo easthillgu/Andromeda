@@ -177,4 +177,5 @@ function THEME:OnLogin()
     THEME:ReskinREHack()
     THEME:ReskinMRT()
     THEME:ReskinMeetingHorn()
+    THEME:ReskinPallyPower()
 end

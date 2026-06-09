@@ -2984,6 +2984,13 @@ GUI.OptionsList = {
         {
             1,
             'ACCOUNT',
+            'ReskinPallyPower',
+            L['Reskin PallyPower'],
+            true,
+        },
+        {
+            1,
+            'ACCOUNT',
             'ReskinREHack',
             L['Reskin REHack'],
         },

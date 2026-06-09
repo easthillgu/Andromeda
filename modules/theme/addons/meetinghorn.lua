@@ -60,7 +60,7 @@ local function reskinHeader(header)
     for i = 4, 18 do
         select(i, header.Button:GetRegions()):SetTexture('')
     end
-    F.Reskin(header.Button)
+    F.ReskinButton(header.Button)
     header.Button.Title:SetTextColor(1, 1, 1)
     header.Button.Title.SetTextColor = nop
     header.Button.ExpandedIcon:SetWidth(20)
@@ -235,7 +235,7 @@ function THEME:ReskinMeetingHorn()
     for _, v in pairs(Buttons) do
         local button = getValue(v, mainFrame)
         if button then
-            F.Reskin(button)
+            F.ReskinButton(button)
             if button.LeftSeparator then button.LeftSeparator:SetAlpha(0) end
             if button.RightSeparator then button.RightSeparator:SetAlpha(0) end
         end
@@ -261,7 +261,7 @@ function THEME:ReskinMeetingHorn()
             end
 
             if button.Signup then
-                F.Reskin(button.Signup)
+                F.ReskinButton(button.Signup)
                 button.Signup:SetSize(60, 20)
             end
 
@@ -300,7 +300,7 @@ function THEME:ReskinMeetingHorn()
         for _, child in pairs({Browser:GetChildren()}) do
             local objType = child:GetObjectType()
             if objType == 'Button' and child.Left and child.Right and child.Middle and child.Text then
-                F.Reskin(child)
+                F.ReskinButton(child)
             end
         end
 
@@ -327,7 +327,7 @@ function THEME:ReskinMeetingHorn()
     if Encounter then
         F.StripTextures(Encounter)
         F.StripTextures(Encounter.ZoneButton)
-        F.Reskin(Encounter.ZoneButton)
+        F.ReskinButton(Encounter.ZoneButton)
 
         F.ReskinScroll(Encounter.BossList.scrollBar)
         Encounter.BossList.scrollBar.trackBG:SetAlpha(0)
@@ -392,9 +392,9 @@ function THEME:ReskinMeetingHorn()
         local Body = Challenge.Body
         Body:DisableDrawLayer('BORDER')
         F.CreateBDFrame(Body, .25)
-        F.Reskin(Body.WebButton)
-        F.Reskin(Body.UpdateButton)
-        F.Reskin(Body.Reward.Exchange)
+        F.ReskinButton(Body.WebButton)
+        F.ReskinButton(Body.UpdateButton)
+        F.ReskinButton(Body.Reward.Exchange)
 
         for i = 1, Body.Reward:GetNumRegions() do
             local region = select(i, Body.Reward:GetRegions())
@@ -414,7 +414,7 @@ function THEME:ReskinMeetingHorn()
             local button = self.challengeButtons[i]
             if button and not button.styled then
                 button.bg:SetAlpha(0)
-                F.Reskin(button)
+                F.ReskinButton(button)
                 button.styled = true
             end
         end)
@@ -427,7 +427,7 @@ function THEME:ReskinMeetingHorn()
         if Body then
             F.StripTextures(Body)
             F.CreateBDFrame(Body, .25)
-            if Body.Refresh then F.Reskin(Body.Refresh) end
+            if Body.Refresh then F.ReskinButton(Body.Refresh) end
         end
 
         local Summary = Quest.Summary
@@ -452,8 +452,8 @@ function THEME:ReskinMeetingHorn()
                 F.CreateBD(self, .25)
 
                 if self.Reward then
-                    F.Reskin(self.Reward)
-                end
+                F.ReskinButton(self.Reward)
+            end
 
                 for index, item in ipairs(self.Items) do
                     reskinItemButton(item)
@@ -482,7 +482,7 @@ function THEME:ReskinMeetingHorn()
                 if v == 'First.Header' then
                     local ApplyLeaderBtn = subFrame.ApplyLeaderBtn
                     if ApplyLeaderBtn then
-                        F.Reskin(ApplyLeaderBtn)
+                        F.ReskinButton(ApplyLeaderBtn)
                         ApplyLeaderBtn:HookScript('PostClick', reskinImageFrame)
                     end
                 end
@@ -511,8 +511,8 @@ function THEME:ReskinMeetingHorn()
                 local qrBG = F.SetBD(self.QrCodeFrame)
                 qrBG:SetInside()
 
-                F.Reskin(self.Commit)
-                F.Reskin(self.Cancel)
+                F.ReskinButton(self.Commit)
+                F.ReskinButton(self.Cancel)
 
                 self.styled = true
             end

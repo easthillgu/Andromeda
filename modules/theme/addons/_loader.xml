@@ -6,6 +6,7 @@
     <Script file="meetinghorn.lua"/>
     <Script file="mrt.lua"/>
     <Script file="opie.lua"/>
+    <Script file="pallypower.lua"/>
     <Script file="pgf.lua"/>
     <Script file="rehack.lua"/>
     <Script file="wa.lua"/>

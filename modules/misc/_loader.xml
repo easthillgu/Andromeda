@@ -9,10 +9,8 @@
     <Script file="characterstatpanel.lua"/>
     <Script file="itemlevel.lua"/>
     <Script file="logo.lua"/>
-    <Script file="meetinghorn.lua"/>
     <Script file="misc.lua"/>
     <Script file="opie.lua"/>
-    <Script file="pallypower.lua"/>
     <Script file="proposaltimer.lua"/>
     <Script file="reputation.lua"/>
     <Script file="screenshot.lua"/>

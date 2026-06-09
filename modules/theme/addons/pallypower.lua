@@ -6,7 +6,9 @@ local function handleIcon(icon)
     icon:SetTexCoord(unpack(C.TEX_COORD))
 end
 
-local function ReskinPallyPower()
+function THEME:ReskinPallyPower()
+    if not _G.ANDROMEDA_ADB.ReskinPallyPower then return end
+
     local PallyPower = _G.PallyPower
     if not PallyPower then return end
 
@@ -15,14 +17,8 @@ local function ReskinPallyPower()
 
     F.StripTextures(frame)
     F.SetBD(frame)
-
-    if _G.PallyPowerBlessingsFrameCloseButton then
-        F.ReskinClose(_G.PallyPowerBlessingsFrameCloseButton)
-    end
-
-    if _G.PallyPowerBlessingsFrameAuraGroup1AuraHeaderIcon then
-        F.ReskinIcon(_G.PallyPowerBlessingsFrameAuraGroup1AuraHeaderIcon)
-    end
+    F.ReskinClose(_G.PallyPowerBlessingsFrameCloseButton)
+    F.ReskinIcon(_G.PallyPowerBlessingsFrameAuraGroup1AuraHeaderIcon)
 
     local buttons = {
         'PallyPowerBlessingsFrameRefresh',
@@ -32,17 +28,12 @@ local function ReskinPallyPower()
         'PallyPowerBlessingsFrameOptions',
     }
     for _, button in next, buttons do
-        local bu = _G[button]
-        if bu then
-            F.ReskinButton(bu)
-        end
+        F.ReskinButton(_G[button])
     end
 
     for i = 1, _G.PALLYPOWER_MAXCLASSES do
         local icon = _G['PallyPowerBlessingsFrameClassGroup'..i..'ClassButtonIcon']
-        if icon then
-            F.ReskinIcon(icon)
-        end
+        F.ReskinIcon(icon)
     end
 
     for i = 1, 15 do
@@ -75,13 +66,11 @@ local function ReskinPallyPower()
         handleIcon(_G[icon])
     end
 
-    for cbNum = 1, _G.PALLYPOWER_MAXCLASSES do
+    for cbNum = 1, PALLYPOWER_MAXCLASSES do
         handleIcon(_G['PallyPowerC'..cbNum..'ClassIcon'])
         handleIcon(_G['PallyPowerC'..cbNum..'BuffIcon'])
-        for pbNum = 1, _G.PALLYPOWER_MAXPERCLASS do
+        for pbNum = 1, PALLYPOWER_MAXPERCLASS do
             handleIcon(_G['PallyPowerC'..cbNum..'P'..pbNum..'BuffIcon'])
         end
     end
 end
-
-THEME:RegisterSkin('PallyPower', ReskinPallyPower)
