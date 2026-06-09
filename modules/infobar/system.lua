@@ -1,6 +1,5 @@
 local F, C, L = unpack(select(2, ...))
 local INFOBAR = F:GetModule('InfoBar')
-local oUF = F.Libs.oUF
 
 local showMoreString = '%d %s (%s)'
 local usageString = '%.3f ms'
@@ -11,23 +10,15 @@ local ipTypes = { 'IPv4', 'IPv6' }
 local entered
 
 local function formatMemory(value)
-    if value > 1024 then
-        return format('%.1f mb', value / 1024)
-    else
-        return format('%.0f kb', value)
-    end
+    return value > 1024 and format('%.1f mb', value / 1024) or format('%.0f kb', value)
 end
 
 local function sortByMemory(a, b)
-    if a and b then
-        return (a[3] == b[3] and a[2] < b[2]) or a[3] > b[3]
-    end
+    return a and b and ((a[3] == b[3] and a[2] < b[2]) or a[3] > b[3])
 end
 
 local function sortByCPU(a, b)
-    if a and b then
-        return (a[4] == b[4] and a[2] < b[2]) or a[4] > b[4]
-    end
+    return a and b and ((a[4] == b[4] and a[2] < b[2]) or a[4] > b[4])
 end
 
 local function ColorGradient(perc, ...)
@@ -42,13 +33,12 @@ end
 
 local usageColor = { 0, 1, 0, 1, 1, 0, 1, 0, 0 }
 local function smoothColor(cur, max)
-    local r, g, b = ColorGradient(cur / max, unpack(usageColor))
-    return r, g, b
+    return ColorGradient(cur / max, unpack(usageColor))
 end
 
 local infoTable = {}
 local function BuildAddonList()
-    local numAddons = (C_AddOns and C_AddOns.GetNumAddOns and C_AddOns.GetNumAddOns()) or GetNumAddOns() or 0
+    local numAddons = (C_AddOns and C_AddOns.GetNumAddOns or GetNumAddOns)() or 0
     if numAddons == #infoTable then
         return
     end
@@ -110,6 +100,7 @@ local function Block_OnEnter(self)
     if not next(infoTable) then
         BuildAddonList()
     end
+
     local isShiftKeyDown = IsShiftKeyDown()
     local maxAddOns = 10
     local maxShown = isShiftKeyDown and #infoTable or min(maxAddOns, #infoTable)
@@ -134,54 +125,33 @@ local function Block_OnEnter(self)
 
     _G.GameTooltip:AddLine(' ')
 
-    if self.showMemory or not scriptProfileStatus then
-        local totalMemory = UpdateMemory()
-        _G.GameTooltip:AddDoubleLine(_G.ADDONS, formatMemory(totalMemory), 0.6, 0.8, 1, 1, 1, 1)
-        _G.GameTooltip:AddLine(' ')
+    local updateFunc = self.showMemory or not scriptProfileStatus and UpdateMemory or UpdateCPU
+    local totalUsage = updateFunc()
+    local usageLabel = self.showMemory or not scriptProfileStatus and formatMemory(totalUsage) or format(usageString, totalUsage / max(1, GetTime() - INFOBAR.loginTime))
 
-        local numEnabled = 0
-        for _, data in ipairs(infoTable) do
-            if IsAddOnLoaded(data[1]) then
-                numEnabled = numEnabled + 1
-                if numEnabled <= maxShown then
-                    local r, g, b = smoothColor(data[3], totalMemory)
-                    _G.GameTooltip:AddDoubleLine(data[2], formatMemory(data[3]), 1, 1, 1, r, g, b)
-                end
+    _G.GameTooltip:AddDoubleLine(_G.ADDONS, usageLabel, 0.6, 0.8, 1, 1, 1, 1)
+    _G.GameTooltip:AddLine(' ')
+
+    local numEnabled = 0
+    for _, data in ipairs(infoTable) do
+        if IsAddOnLoaded(data[1]) then
+            numEnabled = numEnabled + 1
+            if numEnabled <= maxShown then
+                local usageValue = self.showMemory or not scriptProfileStatus and data[3] or data[4]
+                local r, g, b = smoothColor(usageValue, totalUsage)
+                local formattedValue = self.showMemory or not scriptProfileStatus and formatMemory(usageValue) or format(usageString, usageValue / max(1, GetTime() - INFOBAR.loginTime))
+                _G.GameTooltip:AddDoubleLine(data[2], formattedValue, 1, 1, 1, r, g, b)
             end
         end
+    end
 
-        if not isShiftKeyDown and (numEnabled > maxAddOns) then
-            local hiddenMemory = 0
-            for i = (maxAddOns + 1), numEnabled do
-                hiddenMemory = hiddenMemory + infoTable[i][3]
-            end
-            _G.GameTooltip:AddDoubleLine(format(showMoreString, numEnabled - maxAddOns, L['Hidden'], L['Hold SHIFT for more details']), formatMemory(hiddenMemory), 0.6, 0.8, 1, 0.6, 0.8, 1)
+    if not isShiftKeyDown and numEnabled > maxAddOns then
+        local hiddenUsage = 0
+        for i = maxAddOns + 1, numEnabled do
+            hiddenUsage = hiddenUsage + (self.showMemory or not scriptProfileStatus and infoTable[i][3] or infoTable[i][4])
         end
-    else
-        local totalCPU = UpdateCPU()
-        local passedTime = max(1, GetTime() - INFOBAR.loginTime)
-
-        _G.GameTooltip:AddDoubleLine(_G.ADDONS, format(usageString, totalCPU / passedTime), 0.6, 0.8, 1, 1, 1, 1)
-        _G.GameTooltip:AddLine(' ')
-
-        local numEnabled = 0
-        for _, data in ipairs(infoTable) do
-            if IsAddOnLoaded(data[1]) then
-                numEnabled = numEnabled + 1
-                if numEnabled <= maxShown then
-                    local r, g, b = smoothColor(data[4], totalCPU)
-                    _G.GameTooltip:AddDoubleLine(data[2], format(usageString, data[4] / passedTime), 1, 1, 1, r, g, b)
-                end
-            end
-        end
-
-        if not isShiftKeyDown and (numEnabled > maxAddOns) then
-            local hiddenUsage = 0
-            for i = (maxAddOns + 1), numEnabled do
-                hiddenUsage = hiddenUsage + infoTable[i][4]
-            end
-            _G.GameTooltip:AddDoubleLine(format(showMoreString, numEnabled - maxAddOns, L['Hidden'], L['Hold SHIFT for more details']), format(usageString, hiddenUsage / passedTime), 0.6, 0.8, 1, 0.6, 0.8, 1)
-        end
+        local formattedHidden = self.showMemory or not scriptProfileStatus and formatMemory(hiddenUsage) or format(usageString, hiddenUsage / max(1, GetTime() - INFOBAR.loginTime))
+        _G.GameTooltip:AddDoubleLine(format(showMoreString, numEnabled - maxAddOns, L['Hidden'], L['Hold SHIFT for more details']), formattedHidden, 0.6, 0.8, 1, 0.6, 0.8, 1)
     end
 
     _G.GameTooltip:AddLine(' ')
@@ -194,7 +164,7 @@ local function Block_OnEnter(self)
     _G.GameTooltip:Show()
 end
 
-local function Block_OnLeave(self)
+local function Block_OnLeave()
     entered = false
     _G.GameTooltip:Hide()
 end
@@ -206,7 +176,6 @@ local function Block_OnUpdate(self, elapsed)
         if entered then
             Block_OnEnter(self)
         end
-
         self.timer = 0
     end
 end
@@ -225,17 +194,8 @@ local function Block_OnMouseUp(self, btn)
         self.showMemory = not self.showMemory
         Block_OnEnter(self)
     elseif btn == 'MiddleButton' then
-        if GetCVarBool('scriptProfile') then
-            SetCVar('scriptProfile', 0)
-        else
-            SetCVar('scriptProfile', 1)
-        end
-
-        if GetCVarBool('scriptProfile') == scriptProfileStatus then
-            StaticPopup_Hide('ANDROMEDA_RELOADUI_REQUIRED')
-        else
-            StaticPopup_Show('ANDROMEDA_RELOADUI_REQUIRED')
-        end
+        SetCVar('scriptProfile', GetCVarBool('scriptProfile') and 0 or 1)
+        StaticPopup[(GetCVarBool('scriptProfile') == scriptProfileStatus) and 'Hide' or 'Show']('ANDROMEDA_RELOADUI_REQUIRED')
         Block_OnEnter(self)
     end
 end

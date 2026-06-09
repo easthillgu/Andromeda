@@ -2,7 +2,8 @@ local F, C, L = unpack(select(2, ...))
 local INFOBAR = F:GetModule('InfoBar')
 
 local function FormatMoney(money)
-    return format('%s: %s', L['Gold'], GetMoneyString(money))
+    local goldText = L['Gold'] or _G.GOLD or 'Gold'
+    return format('%s: %s', goldText, GetMoneyString(money))
 end
 
 local crossRealms = GetAutoCompleteRealms()
@@ -20,7 +21,6 @@ StaticPopupDialogs.ANDROMEDA_RESET_ALL_GOLD_STATISTICS = {
                 wipe(_G.ANDROMEDA_ADB['GoldStatistic'][realm])
             end
         end
-
         _G.ANDROMEDA_ADB['GoldStatistic'][C.MY_REALM][C.MY_NAME] = { GetMoney(), C.MY_CLASS }
     end,
     timeout = 0,
@@ -41,11 +41,8 @@ local function GetClassIcon(class)
     local c1, c2, c3, c4 = unpack(_G.CLASS_ICON_TCOORDS[class])
     c1, c2, c3, c4 = (c1 + 0.03) * 50, (c2 - 0.03) * 50, (c3 + 0.03) * 50, (c4 - 0.03) * 50
     local prefix = '|TInterface\\Glues\\CharacterCreate\\UI-CharacterCreate-Classes:13:15:0:-1:50:50:'
-    local classStr = prefix .. c1 .. ':' .. c2 .. ':' .. c3 .. ':' .. c4 .. '|t '
-    return classStr or ''
+    return prefix .. c1 .. ':' .. c2 .. ':' .. c3 .. ':' .. c4 .. '|t '
 end
-
-local RebuildCharList
 
 local function clearCharGold(_, realm, name)
     _G.ANDROMEDA_ADB['GoldStatistic'][realm][name] = nil
@@ -53,7 +50,7 @@ local function clearCharGold(_, realm, name)
     RebuildCharList()
 end
 
-function RebuildCharList()
+local function RebuildCharList()
     for i = 2, #menuList do
         if menuList[i] then
             wipe(menuList[i])
@@ -62,13 +59,11 @@ function RebuildCharList()
 
     local index = 1
     for _, realm in pairs(crossRealms) do
-        if _G.ANDROMEDA_ADB['GoldStatistic'][C.MY_REALM] then
-            for name, value in pairs(_G.ANDROMEDA_ADB['GoldStatistic'][C.MY_REALM]) do
+        if _G.ANDROMEDA_ADB['GoldStatistic'][realm] then
+            for name, value in pairs(_G.ANDROMEDA_ADB['GoldStatistic'][realm]) do
                 if not (realm == C.MY_REALM and name == C.MY_REALM) then
                     index = index + 1
-                    if not menuList[index] then
-                        menuList[index] = {}
-                    end
+                    menuList[index] = menuList[index] or {}
                     menuList[index].text = F:RgbToHex(F:ClassColor(value[2])) .. Ambiguate(name .. '-' .. realm, 'none')
                     menuList[index].notCheckable = true
                     menuList[index].arg1 = realm
@@ -87,6 +82,8 @@ local function Button_OnEvent(self, event)
         oldMoney = GetMoney()
         C_WowTokenPublic.UpdateMarketPrice()
         self:UnregisterEvent(event)
+        self.text:SetText(FormatMoney(oldMoney))
+        return
     end
 
     if event == 'TOKEN_MARKET_PRICE_UPDATED' then
@@ -104,14 +101,15 @@ local function Button_OnEvent(self, event)
 
     self.text:SetText(FormatMoney(newMoney))
 
-    if not _G.ANDROMEDA_ADB['GoldStatistic'][C.MY_REALM] then
-        _G.ANDROMEDA_ADB['GoldStatistic'][C.MY_REALM] = {}
+    local goldStat = _G.ANDROMEDA_ADB['GoldStatistic']
+    if not goldStat[C.MY_REALM] then
+        goldStat[C.MY_REALM] = {}
     end
-    if not _G.ANDROMEDA_ADB['GoldStatistic'][C.MY_REALM][C.MY_NAME] then
-        _G.ANDROMEDA_ADB['GoldStatistic'][C.MY_REALM][C.MY_NAME] = {}
+    if not goldStat[C.MY_REALM][C.MY_NAME] then
+        goldStat[C.MY_REALM][C.MY_NAME] = {}
     end
-    _G.ANDROMEDA_ADB['GoldStatistic'][C.MY_REALM][C.MY_NAME][1] = GetMoney()
-    _G.ANDROMEDA_ADB['GoldStatistic'][C.MY_REALM][C.MY_NAME][2] = C.MY_CLASS
+    goldStat[C.MY_REALM][C.MY_NAME][1] = GetMoney()
+    goldStat[C.MY_REALM][C.MY_NAME][2] = C.MY_CLASS
 
     oldMoney = newMoney
 end
@@ -119,7 +117,7 @@ end
 local function Button_OnMouseUp(self, btn)
     if btn == 'LeftButton' then
         if InCombatLockdown() then return end
-        ToggleCharacter("TokenFrame")
+        ToggleCharacter('TokenFrame')
     elseif btn == 'RightButton' then
         if not menuList[1].created then
             RebuildCharList()
@@ -178,7 +176,7 @@ local function Button_OnEnter(self)
     _G.GameTooltip:Show()
 end
 
-local function Button_OnLeave(self)
+local function Button_OnLeave()
     F:HideTooltip()
 end
 
@@ -187,7 +185,7 @@ function INFOBAR:CreateGoldBlock()
         return
     end
 
-    local gold = INFOBAR:RegisterNewBlock('gold', 'LEFT', 200)
+    local gold = INFOBAR:RegisterNewBlock('gold', 'LEFT', 220)
     gold:HookScript('OnEvent', Button_OnEvent)
     gold:HookScript('OnMouseUp', Button_OnMouseUp)
     gold:HookScript('OnEnter', Button_OnEnter)

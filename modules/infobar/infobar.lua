@@ -6,14 +6,16 @@ local barAlpha, blockAlpha
 INFOBAR.Modules = {}
 INFOBAR.Blocks = {}
 
-local function fadeIn(self, elapsed)
-    local bar = INFOBAR.Bar
-    if barAlpha < 0.5 then
-        barAlpha = barAlpha + elapsed
-        blockAlpha = blockAlpha + (elapsed * 4)
-    else
-        barAlpha = 0.5
-        blockAlpha = 1
+local function updateAlphaValues(bar, isFadingIn, elapsed)
+    local targetBarAlpha = isFadingIn and 0.5 or 0.25
+    local targetBlockAlpha = isFadingIn and 1 or 0
+    local alphaStep = isFadingIn and elapsed or -elapsed
+    local blockAlphaStep = isFadingIn and elapsed * 4 or -elapsed * 4
+
+    barAlpha = Clamp(barAlpha + alphaStep, 0.25, 0.5)
+    blockAlpha = Clamp(blockAlpha + blockAlphaStep, 0, 1)
+
+    if barAlpha == targetBarAlpha then
         bar:SetScript('OnUpdate', nil)
     end
 
@@ -28,44 +30,26 @@ local function fadeIn(self, elapsed)
     end
 end
 
+local function fadeIn(self, elapsed)
+    updateAlphaValues(INFOBAR.Bar, true, elapsed)
+end
+
 local function fadeOut(self, elapsed)
-    local bar = INFOBAR.Bar
-    if barAlpha > 0.25 then
-        barAlpha = barAlpha - elapsed
-        blockAlpha = blockAlpha - (elapsed * 4)
-    else
-        barAlpha = 0.25
-        blockAlpha = 0
-        bar:SetScript('OnUpdate', nil)
-    end
-
-    if bar.bg then
-        bar.bg:SetBackdropColor(0, 0, 0, barAlpha)
-    end
-
-    for _, block in pairs(INFOBAR.Blocks) do
-        if not block.noFade then
-            block:SetAlpha(F.TempFixSetAlpha(blockAlpha))
-        end
-    end
+    updateAlphaValues(INFOBAR.Bar, false, elapsed)
 end
 
 local function bar_OnEnter()
     if not C.DB.Infobar.Mouseover then
         return
     end
-
-    local bar = INFOBAR.Bar
-    bar:SetScript('OnUpdate', fadeIn)
+    INFOBAR.Bar:SetScript('OnUpdate', fadeIn)
 end
 
 local function bar_OnLeave()
     if not C.DB.Infobar.Mouseover then
         return
     end
-
-    local bar = INFOBAR.Bar
-    bar:SetScript('OnUpdate', fadeOut)
+    INFOBAR.Bar:SetScript('OnUpdate', fadeOut)
 end
 
 local function block_OnEnter(block)
@@ -159,7 +143,7 @@ function INFOBAR:CreateInfoBar()
     bar.bg = CreateFrame('Frame', nil, bar, 'BackdropTemplate')
     bar.bg:SetOutside(bar, 2, 2)
     bar.bg:SetFrameStrata('BACKGROUND')
-    bar.bg:SetFrameLevel(1) -- Make sure the frame level is higher than the vignetting
+    bar.bg:SetFrameLevel(1)
     bar.bg:SetBackdrop({ bgFile = C.Assets.Textures.Backdrop, edgeFile = C.Assets.Textures.Backdrop, edgeSize = 1 })
     bar.bg:SetBackdropColor(0, 0, 0, mouseover and 0.25 or 0.65)
     bar.bg:SetBackdropBorderColor(0, 0, 0)
@@ -215,14 +199,16 @@ local function UpdateCombatPulse(event)
 end
 
 function INFOBAR:CreateCombatPulse()
+    local events = { 'PLAYER_REGEN_ENABLED', 'PLAYER_REGEN_DISABLED', 'CALENDAR_UPDATE_PENDING_INVITES' }
+
     if C.DB.Infobar.CombatPulse then
-        F:RegisterEvent('PLAYER_REGEN_ENABLED', UpdateCombatPulse)
-        F:RegisterEvent('PLAYER_REGEN_DISABLED', UpdateCombatPulse)
-        F:RegisterEvent('CALENDAR_UPDATE_PENDING_INVITES', UpdateCombatPulse)
+        for _, event in pairs(events) do
+            F:RegisterEvent(event, UpdateCombatPulse)
+        end
     else
-        F:UnregisterEvent('PLAYER_REGEN_ENABLED', UpdateCombatPulse)
-        F:UnregisterEvent('PLAYER_REGEN_DISABLED', UpdateCombatPulse)
-        F:UnregisterEvent('CALENDAR_UPDATE_PENDING_INVITES', UpdateCombatPulse)
+        for _, event in pairs(events) do
+            F:UnregisterEvent(event, UpdateCombatPulse)
+        end
     end
 end
 
@@ -242,8 +228,6 @@ function INFOBAR:OnLogin()
 
     INFOBAR:CreateGuildBlock()
     INFOBAR:CreateFriendsBlock()
-    -- 3.80.1: daily.lua not loaded in _loader.xml
-    -- INFOBAR:CreateDailyBlock()
 
     for _, block in pairs(INFOBAR.Modules) do
         INFOBAR:LoadInfobar(block)
