@@ -31,7 +31,9 @@ tinsert(C.BlizzThemes, function()
         bu.Border:Hide()
         bu:SetNormalTexture(0)
         bu:SetPushedTexture(0)
-        bu.Checked:SetTexture(C.Assets.Textures.ButtonChecked)
+        if bu.Checked then
+            bu.Checked:SetTexture(C.Assets.Textures.ButtonChecked)
+        end
         bu:GetHighlightTexture():SetColorTexture(1, 1, 1, 0.25)
 
         _G['PetStableActivePet' .. i .. 'IconTexture']:SetTexCoord(unpack(C.TEX_COORD))
@@ -43,7 +45,9 @@ tinsert(C.BlizzThemes, function()
         local bu = _G['PetStableStabledPet' .. i]
         bu:SetNormalTexture(0)
         bu:SetPushedTexture(0)
-        bu.Checked:SetTexture(C.Assets.Textures.ButtonChecked)
+        if bu.Checked then
+            bu.Checked:SetTexture(C.Assets.Textures.ButtonChecked)
+        end
         bu:GetHighlightTexture():SetColorTexture(1, 1, 1, 0.25)
         bu:DisableDrawLayer('BACKGROUND')
 
