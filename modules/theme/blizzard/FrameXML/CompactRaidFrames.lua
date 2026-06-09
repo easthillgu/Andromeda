@@ -32,32 +32,58 @@ tinsert(C.BlizzThemes, function()
         _G.CompactRaidFrameManagerDisplayFrameFilterOptionsFilterGroup7,
         _G.CompactRaidFrameManagerDisplayFrameFilterOptionsFilterGroup8,
         _G.CompactRaidFrameManagerDisplayFrameLeaderOptionsInitiateRolePoll,
-        _G.CompactRaidFrameManagerDisplayFrameLeaderOptionsCountdown,
         _G.CompactRaidFrameManagerDisplayFrameLeaderOptionsInitiateReadyCheck,
         _G.CompactRaidFrameManagerDisplayFrameLeaderOptionsRaidWorldMarkerButton,
         _G.CompactRaidFrameManagerDisplayFrameLockedModeToggle,
         _G.CompactRaidFrameManagerDisplayFrameHiddenModeToggle,
         _G.CompactRaidFrameManagerDisplayFrameConvertToRaid,
-        _G.CompactRaidFrameManagerDisplayFrameEditMode,
     }
     for _, button in pairs(buttons) do
-        for i = 1, 9 do
-            select(i, button:GetRegions()):SetAlpha(0)
+        if button then
+            for i = 1, 9 do
+                local region = select(i, button:GetRegions())
+                if region then
+                    region:SetAlpha(0)
+                end
+            end
+            F.ReskinButton(button)
         end
-        F.ReskinButton(button)
     end
-    _G.CompactRaidFrameManagerDisplayFrameLeaderOptionsRaidWorldMarkerButton:SetNormalTexture('Interface\\RaidFrame\\Raid-WorldPing')
+
+    if _G.CompactRaidFrameManagerDisplayFrameLeaderOptionsRaidWorldMarkerButton then
+        _G.CompactRaidFrameManagerDisplayFrameLeaderOptionsRaidWorldMarkerButton:SetNormalTexture('Interface\\RaidFrame\\Raid-WorldPing')
+    end
 
     for i = 1, 8 do
-        select(i, _G.CompactRaidFrameManager:GetRegions()):SetAlpha(0)
+        local region = select(i, _G.CompactRaidFrameManager:GetRegions())
+        if region then
+            region:SetAlpha(0)
+        end
     end
-    select(1, _G.CompactRaidFrameManagerDisplayFrameFilterOptions:GetRegions()):SetAlpha(0)
-    select(1, _G.CompactRaidFrameManagerDisplayFrame:GetRegions()):SetAlpha(0)
-    select(4, _G.CompactRaidFrameManagerDisplayFrame:GetRegions()):SetAlpha(0)
+
+    if _G.CompactRaidFrameManagerDisplayFrameFilterOptions then
+        local region = select(1, _G.CompactRaidFrameManagerDisplayFrameFilterOptions:GetRegions())
+        if region then
+            region:SetAlpha(0)
+        end
+    end
+
+    if _G.CompactRaidFrameManagerDisplayFrame then
+        local region = select(1, _G.CompactRaidFrameManagerDisplayFrame:GetRegions())
+        if region then
+            region:SetAlpha(0)
+        end
+        region = select(4, _G.CompactRaidFrameManagerDisplayFrame:GetRegions())
+        if region then
+            region:SetAlpha(0)
+        end
+    end
 
     local bd = F.SetBD(_G.CompactRaidFrameManager)
     bd:SetPoint('TOPLEFT')
     bd:SetPoint('BOTTOMRIGHT', -9, 9)
-    F.ReskinCheckbox(_G.CompactRaidFrameManagerDisplayFrameEveryoneIsAssistButton)
-    F.ReskinCheckbox(_G.CompactRaidFrameManagerDisplayFrameEveryoneIsAssistButton)
+
+    if _G.CompactRaidFrameManagerDisplayFrameEveryoneIsAssistButton then
+        F.ReskinCheckbox(_G.CompactRaidFrameManagerDisplayFrameEveryoneIsAssistButton)
+    end
 end)
