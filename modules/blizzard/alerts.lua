@@ -4,7 +4,9 @@ local BLIZZARD = F:GetModule('Blizzard')
 local POSITION, ANCHOR_POINT, YOFFSET = 'TOP', 'BOTTOM', -10
 local parentFrame
 
-function BLIZZARD:AlertFrame_UpdateAnchor()
+function BLIZZARD:AlertFrame_UpdateAnchor(frame)
+    if not parentFrame then return end
+    
     local y = select(2, parentFrame:GetCenter())
     local screenHeight = _G.UIParent:GetTop()
     if y > screenHeight / 2 then
@@ -17,10 +19,15 @@ function BLIZZARD:AlertFrame_UpdateAnchor()
         YOFFSET = 10
     end
 
-    self:ClearAllPoints()
-    self:SetPoint(POSITION, parentFrame)
-    _G.GroupLootContainer:ClearAllPoints()
-    _G.GroupLootContainer:SetPoint(POSITION, parentFrame)
+    if frame and frame.ClearAllPoints then
+        frame:ClearAllPoints()
+        frame:SetPoint(POSITION, parentFrame)
+    end
+    
+    if _G.GroupLootContainer then
+        _G.GroupLootContainer:ClearAllPoints()
+        _G.GroupLootContainer:SetPoint(POSITION, parentFrame)
+    end
 end
 
 function BLIZZARD:UpdatGroupLootContainer()
@@ -103,6 +110,8 @@ function BLIZZARD:AlertFrame_Setup()
 
     _G.GroupLootContainer:EnableMouse(false)
     _G.GroupLootContainer.ignoreFramePositionManager = true
+    _G.GroupLootContainer:SetFrameStrata('DIALOG')
+    _G.GroupLootContainer:SetFrameLevel(100)
 
     for index, alertFrameSubSystem in ipairs(_G.AlertFrame.alertFrameSubSystems) do
         if alertFrameSubSystem.anchorFrame and alertFrameSubSystem.anchorFrame == _G.TalkingHeadFrame then
@@ -117,6 +126,10 @@ function BLIZZARD:AlertFrame_Setup()
     end)
 
     hooksecurefunc(_G.AlertFrame, 'UpdateAnchors', BLIZZARD.AlertFrame_UpdateAnchor)
+    BLIZZARD:AlertFrame_UpdateAnchor(_G.GroupLootContainer)
+    hooksecurefunc('GroupLootFrame_OpenNewFrame', function()
+        BLIZZARD:AlertFrame_UpdateAnchor(_G.GroupLootContainer)
+    end)
     hooksecurefunc('GroupLootContainer_Update', BLIZZARD.UpdatGroupLootContainer)
 
     if _G.TalkingHeadFrame then

@@ -105,55 +105,82 @@ tinsert(C.BlizzThemes, function()
     end
 
     -- Loot Roll Frame
+    local function StyleGroupLootFrame(frame)
+        if not frame or frame.styled then return end
+        
+        if frame.Border then
+            frame.Border:SetAlpha(0)
+        end
+        if frame.Background then
+            frame.Background:SetAlpha(0)
+        end
+        
+        -- Use transparent bg + border (SetBD's dark fill covers content)
+        frame.bg = F.CreateBDFrame(frame, 0.25)
+        frame.bg:SetAllPoints()
+        F.CreateSD(frame.bg)
+
+        if frame.Timer then
+            if frame.Timer.Bar then
+                frame.Timer.Bar:SetTexture(C.Assets.Textures.Backdrop)
+                frame.Timer.Bar:SetVertexColor(1, 0.8, 0)
+            end
+            if frame.Timer.Background then
+                frame.Timer.Background:SetAlpha(0)
+            end
+            F.CreateBDFrame(frame.Timer, 0.25)
+        end
+
+        if frame.IconFrame then
+            if frame.IconFrame.Border then
+                frame.IconFrame.Border:SetAlpha(0)
+            end
+            if frame.IconFrame.Icon then
+                F.ReskinIcon(frame.IconFrame.Icon)
+            end
+        end
+
+        local bg = F.CreateBDFrame(frame, 0.25)
+        if frame.IconFrame and frame.IconFrame.Icon then
+            bg:SetPoint('TOPLEFT', frame.IconFrame.Icon, 'TOPRIGHT', 0, 1)
+            bg:SetPoint('BOTTOMRIGHT', frame.IconFrame.Icon, 'BOTTOMRIGHT', 150, -1)
+        end
+
+        frame.styled = true
+        
+        -- Update border color if already shown
+        if frame:IsShown() then
+            local _, _, _, quality = GetLootRollItemInfo(frame.rollID)
+            local color = C.QualityColors and C.QualityColors[quality]
+            if color then
+                frame.bg:SetBackdropBorderColor(color.r, color.g, color.b)
+            end
+        end
+    end
+
+    -- Hook new frame creation
     hooksecurefunc('GroupLootFrame_OpenNewFrame', function()
         for i = 1, _G.NUM_GROUP_LOOT_FRAMES do
             local frame = _G['GroupLootFrame' .. i]
-            if frame and not frame.styled then
-                if frame.Border then
-                    frame.Border:SetAlpha(0)
-                end
-                if frame.Background then
-                    frame.Background:SetAlpha(0)
-                end
-                -- Use transparent bg + border (SetBD's dark fill covers content)
-                frame.bg = F.CreateBDFrame(frame, 0.25)
-                frame.bg:SetAllPoints()
-                F.CreateSD(frame.bg)
-
-                if frame.Timer then
-                    if frame.Timer.Bar then
-                        frame.Timer.Bar:SetTexture(C.Assets.Textures.Backdrop)
-                        frame.Timer.Bar:SetVertexColor(1, 0.8, 0)
-                    end
-                    if frame.Timer.Background then
-                        frame.Timer.Background:SetAlpha(0)
-                    end
-                    F.CreateBDFrame(frame.Timer, 0.25)
-                end
-
-                if frame.IconFrame then
-                    if frame.IconFrame.Border then
-                        frame.IconFrame.Border:SetAlpha(0)
-                    end
-                    if frame.IconFrame.Icon then
-                        F.ReskinIcon(frame.IconFrame.Icon)
-                    end
-                end
-
-                local bg = F.CreateBDFrame(frame, 0.25)
-                if frame.IconFrame and frame.IconFrame.Icon then
-                    bg:SetPoint('TOPLEFT', frame.IconFrame.Icon, 'TOPRIGHT', 0, 1)
-                    bg:SetPoint('BOTTOMRIGHT', frame.IconFrame.Icon, 'BOTTOMRIGHT', 150, -1)
-                end
-
-                frame.styled = true
+            if frame and frame:IsShown() then
+                StyleGroupLootFrame(frame)
             end
+        end
+    end)
 
-            if frame and frame:IsShown() and frame.bg then
-                local _, _, _, quality = GetLootRollItemInfo(frame.rollID)
-                local color = C.QualityColors and C.QualityColors[quality]
-                if color then
-                    frame.bg:SetBackdropBorderColor(color.r, color.g, color.b)
+    -- Also style existing frames
+    hooksecurefunc('GroupLootContainer_Update', function()
+        for i = 1, _G.NUM_GROUP_LOOT_FRAMES do
+            local frame = _G['GroupLootFrame' .. i]
+            if frame and frame:IsShown() then
+                StyleGroupLootFrame(frame)
+                -- Update border color
+                if frame.bg then
+                    local _, _, _, quality = GetLootRollItemInfo(frame.rollID)
+                    local color = C.QualityColors and C.QualityColors[quality]
+                    if color then
+                        frame.bg:SetBackdropBorderColor(color.r, color.g, color.b)
+                    end
                 end
             end
         end

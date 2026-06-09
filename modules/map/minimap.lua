@@ -59,6 +59,30 @@ function MAP:RemoveBlizzStuff()
     -- 3.80.1: unnamed children include the tracking overlay — do NOT blind-hide them
 end
 
+-- LFG Minimap Frame
+
+local function UpdateLFGMinimapFrame()
+    if _G.LFGMinimapFrame then
+        _G.LFGMinimapFrame:ClearAllPoints()
+        _G.LFGMinimapFrame:SetPoint('RIGHT', _G.Minimap, 5, 0)
+        if _G.LFGMinimapFrameBorder then
+            _G.LFGMinimapFrameBorder:Hide()
+        end
+    end
+end
+
+function MAP:ReskinLFGMinimap()
+    UpdateLFGMinimapFrame()
+    -- Hook to update when addon loads
+    if not _G.LFGMinimapFrame then
+        F:RegisterEvent('ADDON_LOADED', function(_, name)
+            if name == 'Blizzard_GroupFinder_VanillaStyle' then
+                UpdateLFGMinimapFrame()
+            end
+        end)
+    end
+end
+
 -- Rectangular Minimap
 
 function MAP:RestyleMinimap()
@@ -707,6 +731,7 @@ function MAP:SetupMinimap()
     MAP:CreateQueueStatusButton()
     MAP:AddOnIconCollector()
     MAP:ReskinTrackingButton()
+    MAP:ReskinLFGMinimap()
     MAP:WhoPings()
     MAP:BuildDropDown()
     MAP:SoundVolume()
