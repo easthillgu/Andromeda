@@ -19,17 +19,22 @@ local function ReskinTrackedCheckbox(ch, r, g, b)
     ch:SetNormalTexture(0)
     ch:SetPushedTexture(0)
     ch:SetHighlightTexture(C.Assets.Textures.Backdrop)
+
     local check = ch:GetCheckedTexture()
-    check:SetDesaturated(true)
-    check:SetVertexColor(r, g, b)
+    if check then
+        check:SetDesaturated(true)
+        check:SetVertexColor(r, g, b)
+    end
 
     local chbg = F.CreateBDFrame(ch, 0, true)
     chbg:SetPoint('TOPLEFT', 2, -2)
     chbg:SetPoint('BOTTOMRIGHT', -2, 2)
 
     local hl = ch:GetHighlightTexture()
-    hl:SetInside(chbg)
-    hl:SetVertexColor(r, g, b, 0.25)
+    if hl then
+        hl:SetInside(chbg)
+        hl:SetVertexColor(r, g, b, 0.25)
+    end
 end
 
 C.Themes['Blizzard_AchievementUI'] = function()

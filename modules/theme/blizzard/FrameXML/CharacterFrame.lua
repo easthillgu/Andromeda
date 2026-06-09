@@ -695,7 +695,7 @@ tinsert(C.BlizzThemes, function()
             F.StripTextures(_G.SkillDetailStatusBar)
             _G.SkillDetailStatusBar:SetParent(_G.SkillDetailScrollFrame)
             _G.SkillDetailStatusBar:SetStatusBarTexture(C.Assets.Textures.StatusbarNormal)
-            F.SetBD(_G.SkillDetailStatusBar)
+            F.CreateBDFrame(_G.SkillDetailStatusBar, 0.25)
             hooksecurefunc(_G.SkillDetailStatusBar, 'SetStatusBarColor', replaceBlueColor)
         end
 
@@ -723,7 +723,7 @@ tinsert(C.BlizzThemes, function()
 
             if bar then
                 bar:SetStatusBarTexture(C.Assets.Textures.StatusbarNormal)
-                F.SetBD(bar)
+                F.CreateBDFrame(bar, 0.25)
                 hooksecurefunc(bar, 'SetStatusBarColor', replaceBlueColor)
             end
 
