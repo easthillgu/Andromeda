@@ -6,7 +6,7 @@ local COMBAT = C.Assets.Fonts.Combat
 local HEADER = C.Assets.Fonts.Header
 
 local function ReplaceFont(obj, font, size, flag, shadow)
-    if not font then
+    if not obj or not font then
         F:Debug('ReplaceFont: Unknown font object.')
         return
     end
