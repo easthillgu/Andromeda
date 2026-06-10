@@ -6,3 +6,4 @@ C.Themes['Blizzard_GlyphUI'] = function()
         _G.GlyphFrameBackground:Hide()
     end
 end
+
