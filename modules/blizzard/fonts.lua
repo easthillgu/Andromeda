@@ -1,21 +1,26 @@
 local F, C = unpack(select(2, ...))
 
-local NORMAL = C.Assets.Fonts.PingFang
-local BOLD = C.Assets.Fonts.PingFang
-local COMBAT = C.Assets.Fonts.PingFang
-local HEADER = C.Assets.Fonts.PingFang
+local NORMAL = C.Assets.Fonts.Regular
+local BOLD = C.Assets.Fonts.Bold
+local COMBAT = C.Assets.Fonts.Combat
+local HEADER = C.Assets.Fonts.Header
 
 local function ReplaceFont(obj, font, size, flag, shadow)
-    if not obj or not font then
-        -- 3.80.1: some font objects don't exist, skip silently
+    if not font then
+        F:Debug('ReplaceFont: Unknown font object.')
         return
     end
 
+    local outline = _G.ANDROMEDA_ADB.FontOutline
     local origFont, origSize = obj:GetFont()
     font = font or origFont
     size = size or origSize
 
-    obj:SetFont(font, size, 'OUTLINEMONOCHROME')
+    if outline then
+        obj:SetFont(font, size, 'OUTLINE')
+    else
+        obj:SetFont(font, size, flag and 'OUTLINE' or '')
+    end
 
     if shadow then
         obj:SetShadowColor(0, 0, 0, 1)
