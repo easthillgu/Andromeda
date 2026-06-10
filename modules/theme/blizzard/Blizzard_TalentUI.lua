@@ -47,12 +47,4 @@ C.Themes['Blizzard_TalentUI'] = function()
             F.CreateBDFrame(tab)
         end
     end
-
-    -- Glyph panel (Cataclysm)
-    if _G.GlyphFrame then
-        F.StripTextures(_G.GlyphFrame)
-        if _G.GlyphFrameBackground then
-            _G.GlyphFrameBackground:Hide()
-        end
-    end
 end

@@ -32,6 +32,7 @@
     <!--<Script file="Blizzard_PVPUI.lua"/>-->
     <Script file="Blizzard_RaidUI.lua"/>
     <Script file="Blizzard_TalentUI.lua"/>
+    <Script file="Blizzard_GlyphUI.lua"/>
     <Script file="Blizzard_Tooltip.lua"/>
     <Script file="Blizzard_TrainerUI.lua"/>
     <Script file="Blizzard_TradeSkillUI.lua"/>
