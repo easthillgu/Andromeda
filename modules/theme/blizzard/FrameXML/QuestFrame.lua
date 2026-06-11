@@ -56,12 +56,20 @@ tinsert(C.BlizzThemes, function()
         end
     end)
 
-    F.ReskinButton(_G.QuestFrameAcceptButton)
-    F.ReskinButton(_G.QuestFrameDeclineButton)
-    F.ReskinButton(_G.QuestFrameCompleteQuestButton)
-    F.ReskinButton(_G.QuestFrameCompleteButton)
-    F.ReskinButton(_G.QuestFrameGoodbyeButton)
-    F.ReskinButton(_G.QuestFrameGreetingGoodbyeButton)
+    local function reskinQuestButtons()
+        F.ReskinButton(_G.QuestFrameAcceptButton)
+        F.ReskinButton(_G.QuestFrameDeclineButton)
+        F.ReskinButton(_G.QuestFrameCompleteQuestButton)
+        F.ReskinButton(_G.QuestFrameCompleteButton)
+        F.ReskinButton(_G.QuestFrameGoodbyeButton)
+        F.ReskinButton(_G.QuestFrameGreetingGoodbyeButton)
+        if _G.QuestFrameCancelButton then
+            F.ReskinButton(_G.QuestFrameCancelButton)
+        end
+    end
+    reskinQuestButtons()
+
+    _G.QuestFrame:HookScript('OnShow', reskinQuestButtons)
 
     if C.IS_NEW_PATCH_10_1 then
         F.ReskinTrimScroll(_G.QuestProgressScrollFrame.ScrollBar)

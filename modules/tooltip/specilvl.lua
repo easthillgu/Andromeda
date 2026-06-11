@@ -128,7 +128,7 @@ local function canInspect(unit, guid)
     if not UnitIsPlayer(unit) then return false end
     if UnitCanAttack('player', unit) then return false end
     if not UnitIsVisible(unit) then return false end
-    if not UnitIsInRange(unit) then return false end
+    if CheckInteractDistance and not CheckInteractDistance(unit, 1) then return false end
     if not CanInspect(unit) then return false end
     if InCombatLockdown() then return false end
     if _G.InspectFrame and _G.InspectFrame:IsShown() then return false end
