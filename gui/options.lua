@@ -793,7 +793,6 @@ GUI.OptionsList = {
             'ACCOUNT',
             'VersionCheck',
             L['AddOn Outdated'],
-            true,
         },
     },
     [3] = { -- infobar
