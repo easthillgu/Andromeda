@@ -668,7 +668,7 @@ do
         end
 
         function F:CreateColorString(text, color)
-            if not text or not type(text) == 'string' then
+            if not text or type(text) ~= 'string' then
                 return
             end
 
@@ -682,7 +682,7 @@ do
         end
 
         function F:CreateClassColorString(text, class)
-            if not text or not type(text) == 'string' then
+            if not text or type(text) ~= 'string' then
                 return
             end
 

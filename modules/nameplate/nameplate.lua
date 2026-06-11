@@ -598,7 +598,7 @@ local disabledElements = {
 function NAMEPLATE:UpdatePlateByType()
     local questIcon = self.questIcon
     if questIcon then
-        questIcon:SetShown(not self.plateType == 'NameOnly')
+        questIcon:SetShown(self.plateType ~= 'NameOnly')
     end
 
     if self.plateType == 'Hidden' then
