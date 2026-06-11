@@ -48,6 +48,24 @@ C.Assets = {
         ButtonCircleMask      = C.ASSET_PATH .. 'textures\\button\\button-circle-mask',
         ButtonPlus            = C.ASSET_PATH .. 'textures\\button\\button-plus',
         ButtonMinus           = C.ASSET_PATH .. 'textures\\button\\button-minus',
+        -- Settings tab icons
+        IconGeneral           = C.ASSET_PATH .. 'textures\\icons\\ui-general',
+        IconNotification      = C.ASSET_PATH .. 'textures\\icons\\ui-notification',
+        IconInfobar           = C.ASSET_PATH .. 'textures\\icons\\ui-infobar',
+        IconChat              = C.ASSET_PATH .. 'textures\\icons\\ui-chat',
+        IconActionbar         = C.ASSET_PATH .. 'textures\\icons\\ui-actionbar',
+        IconCombat            = C.ASSET_PATH .. 'textures\\icons\\ui-combat',
+        IconAnnouncement      = C.ASSET_PATH .. 'textures\\icons\\ui-announcement',
+        IconBackpack          = C.ASSET_PATH .. 'textures\\icons\\ui-backpack',
+        IconMap               = C.ASSET_PATH .. 'textures\\icons\\ui-map',
+        IconTooltip           = C.ASSET_PATH .. 'textures\\icons\\ui-tooltip',
+        IconUnitframe         = C.ASSET_PATH .. 'textures\\icons\\ui-unitframe',
+        IconGroupframe        = C.ASSET_PATH .. 'textures\\icons\\ui-groupframe',
+        IconNameplate         = C.ASSET_PATH .. 'textures\\icons\\ui-nameplate',
+        IconTheme             = C.ASSET_PATH .. 'textures\\icons\\ui-theme',
+        IconProfile           = C.ASSET_PATH .. 'textures\\icons\\ui-profile',
+        IconAbout             = C.ASSET_PATH .. 'textures\\icons\\ui-about',
+        IconCredits           = C.ASSET_PATH .. 'textures\\icons\\ui-credits',
         MenuBarAchievement    = C.ASSET_PATH .. 'textures\\menu\\menu-achievement',
         MenuBarBag            = C.ASSET_PATH .. 'textures\\menu\\menu-bag',
         MenuBarCalendar       = C.ASSET_PATH .. 'textures\\menu\\menu-calendar',
@@ -147,7 +165,7 @@ do
         C.Assets.Fonts.Combat = path .. 'combat.ttf'
         C.Assets.Fonts.Header = path .. 'header.ttf'
     --elseif GetLocale() == 'zhCN' then
-    --    C.Assets.Fonts.Regular = --[[['Fonts\\ARKai_T.ttf']] C.ASSET_PATH .. 'fonts\\Pingfangpixel.ttf'
+    --    C.Assets.Fonts.Regular = --[['Fonts\\ARKai_T.ttf']] C.ASSET_PATH .. 'fonts\\Pingfangpixel.ttf'
     --    C.Assets.Fonts.Condensed = --[['Fonts\\ARKai_T.ttf']] C.ASSET_PATH .. 'fonts\\Pingfangpixel.ttf'
     --    C.Assets.Fonts.Bold = 'Fonts\\ARHei.ttf'
     --    C.Assets.Fonts.Heavy = 'Fonts\\ARHei.ttf'
