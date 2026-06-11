@@ -1,6 +1,7 @@
 local F, C = unpack(select(2, ...))
 
 local ACTIONBAR = F:GetModule('ActionBar')
+local LibCustomGlow = LibStub('LibCustomGlow-1.0', true)
 
 local keyButton = gsub(_G.KEY_BUTTON4, '%d', '')
 local keyNumpad = gsub(_G.KEY_NUMPAD1, '%d', '')
@@ -98,8 +99,6 @@ function ACTIONBAR:HandleButton(btn)
     local petShine = _G[btnName .. 'Shine']
     local autoCastable = btn.AutoCastable
 
-    local LibCustomGlow = LibStub('LibCustomGlow-1.0', true)
-    
     -- Hide Blizzard proc highlight (replaced by pixel glow)
     if LibCustomGlow and spellHighlight then
         spellHighlight:SetAlpha(0)
