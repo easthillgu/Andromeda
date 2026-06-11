@@ -11,7 +11,6 @@ do
                     PlaySound(_G.SOUNDKIT.PVP_THROUGH_QUEUE, 'Master')
                     break
                 end
-                i = i + 1
             end
         elseif event == 'PET_BATTLE_QUEUE_PROPOSE_MATCH' then
             PlaySound(_G.SOUNDKIT.PVP_THROUGH_QUEUE, 'Master')

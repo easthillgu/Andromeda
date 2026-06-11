@@ -297,7 +297,7 @@ function AURA:CreateAuraIcon(button)
     end
     
     -- 使用 pcall 保护整个函数，防止任何错误
-    local success, err = pcall(function()
+    pcall(function()
         -- 只处理 Andromeda 自己创建的 aura 图标
         local buttonName = button and button.GetName and button:GetName()
         if not buttonName then
@@ -379,11 +379,7 @@ function AURA:CreateAuraIcon(button)
             end
         end
     end)
-    
-    if not success then
-        -- 静默处理错误，不显示给用户
-        -- print('Error in CreateAuraIcon:', err)
-    end
+
 end
 
 local auraAnchor = {

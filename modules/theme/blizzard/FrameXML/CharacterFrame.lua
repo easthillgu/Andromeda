@@ -135,14 +135,6 @@ tinsert(C.BlizzThemes, function()
         end
     end
 
-    local function UpdateHighlight(self)
-        local highlight = self:GetHighlightTexture()
-        if highlight and self.bg then
-            highlight:SetColorTexture(1, 1, 1, 0.25)
-            highlight:SetInside(self.bg)
-        end
-    end
-
     local function updateCheckState(button, state)
         if button.bg then
             if state then

@@ -224,9 +224,9 @@ function BR:Reminder_Create(cfg)
     F.CreateSD(frame)
     local texture = cfg.texture
     if not texture then
-        for spellID in pairs(cfg.spells) do
+        local spellID = next(cfg.spells)
+        if spellID then
             texture = GetSpellTexture(spellID)
-            break
         end
     end
     frame.Icon:SetTexture(texture)

@@ -39,13 +39,6 @@ local function GetEquipSlot(itemID)
 end
 
 local function EquipItem(bagId, slotId, itemID)
-    local slot = GetEquipSlot(itemID)
-    if not slot then return end
-    
-    if type(slot) == 'table' then
-        slot = slot[1]
-    end
-    
     C_Container.UseContainerItem(bagId, slotId)
 end
 

@@ -2,33 +2,9 @@ local F, C = unpack(select(2, ...))
 local oUF = F.Libs.oUF
 
 -- Colors
-local function classColor(class, showRGB)
-    local color = C.ClassColors[C.ClassList[class] or class]
-    if not color then
-        color = C.ClassColors['PRIEST']
-    end
-
-    if showRGB then
-        return color.r, color.g, color.b
-    else
-        return '|c' .. color.colorStr
-    end
-end
-
-local function diffColor(level)
-    return F:RgbToHex(GetQuestDifficultyColor(level))
-end
-
 local rankColor = { 1, 0, 0, 1, 1, 0, 0, 1, 0 }
 
-local repColor = { 1, 0, 0, 1, 1, 0, 0, 1, 0, 0, 1, 1, 0, 0, 1 }
-
-local function smoothColor(cur, max, color)
-    local r, g, b = oUF:RGBColorGradient(cur, max, unpack(color))
-    return F:RgbToHex(r, g, b)
-end
-
--- Guild (3.80.1: use classic GuildStatus_Update + GuildFrameButton, ref iColor)
+local repColor
 local function classColorRGB(class)
     local color = C.ClassColors[C.ClassList[class] or class]
     if not color then color = C.ClassColors['PRIEST'] end
@@ -172,7 +148,7 @@ hooksecurefunc('PaperDollFrame_SetLevel', function()
     local color = C.ClassColors[class]
     color = F:RgbToHex(color.r, color.g, color.b, 'ff')
 
-    primaryTalentTree, specName = GetSpecialization and GetSpecialization() or GetActiveSpecGroup and GetActiveSpecGroup()
+    primaryTalentTree, specName = GetSpecialization and GetSpecialization() or GetActiveSpecGroup and GetActiveSpecGroup(), nil
     if primaryTalentTree then
         primaryTalentTree, specName = GetSpecializationInfo(primaryTalentTree)
     end

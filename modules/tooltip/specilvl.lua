@@ -453,10 +453,6 @@ function TOOLTIP:InspectUnit(unit, forced)
             end
         end
 
-        if not C.DB.Tooltip.SpecIlvlByAlt and IsAltKeyDown() then
-            forced = true
-        end
-
         if not UnitIsVisible(unit) or UnitIsDeadOrGhost('player') or UnitOnTaxi('player') then
             return
         end

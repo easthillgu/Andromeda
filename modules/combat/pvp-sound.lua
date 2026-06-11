@@ -69,10 +69,6 @@ local function resetAll()
     streakCount = 0
 end
 
-local function updateMode()
-
-end
-
 local function onEvent()
     local timestamp, type, _, sourceGUID, sourceName, sourceFlags, _, destGUID, destName, destFlags, _, _, swingOverkill, _, _, spellOverkill = CombatLogGetCurrentEventInfo()
 

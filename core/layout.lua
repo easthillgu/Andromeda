@@ -464,10 +464,6 @@ local function isPartyEnable()
     return C.DB['Unitframe']['Enable'] and C.DB['Unitframe']['RaidFrame'] and C.DB['Unitframe']['PartyFrame']
 end
 
-local function isRaidEnable()
-    return C.DB['Unitframe']['Enable'] and C.DB['Unitframe']['RaidFrame']
-end
-
 local function isArenaEnable()
     return C.DB['Unitframe']['Enable'] and C.DB['Unitframe']['Arena']
 end

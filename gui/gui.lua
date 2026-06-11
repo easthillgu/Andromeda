@@ -296,16 +296,6 @@ local abPreStr = {
     [3] = 'AAB:34:12:12:12:34:12:12:12:34:12:12:6:34:12:12:6:30:12:12:1:32:12:10:10:32:12:10:12:32:12:12:12:26:12:10:30:12:10:  0B33:0B70:  -334B33:334B33:  334B33:0R0:  0B500:0B536:0B572:  0B112:-202B100',
 }
 
-local function updateBarLayout(self)
-    local str = abPreStr[self.index]
-
-    if not str then
-        return
-    end
-
-    ACTIONBAR:ImportBarLayout(str)
-end
-
 local function updateDropdownClick(self)
     local dd = self.__owner
     UpdateValue(dd.__key, dd.__value, self.index)
@@ -595,18 +585,6 @@ local function MainMenu_OnShow(self)
 
     -- _G.GameMenuButtonQuit:ClearAllPoints()
     -- _G.GameMenuButtonQuit:SetPoint('TOP', _G.GameMenuButtonLogout, 'BOTTOM', 0, -4)
-end
-
-local function Button_OnClick()
-    if InCombatLockdown() then
-        _G.UIErrorsFrame:AddMessage(C.RED_COLOR .. _G.ERR_NOT_IN_COMBAT)
-        return
-    end
-
-    CreateConsole()
-    HideUIPanel(_G.GameMenuFrame)
-
-    PlaySound(_G.SOUNDKIT.IG_MAINMENU_OPTION)
 end
 
 local function CreateGameMenuButton()

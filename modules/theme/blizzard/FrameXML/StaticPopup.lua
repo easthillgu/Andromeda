@@ -88,8 +88,7 @@ tinsert(C.BlizzThemes, function()
             return
         end
 
-        local dialog = nil
-        dialog = _G.StaticPopup_FindVisible(which, data)
+        local dialog = _G.StaticPopup_FindVisible(which, data)
 
         if not dialog then
             local index = 1
