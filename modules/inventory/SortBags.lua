@@ -53,7 +53,8 @@ local function GetItemCategory(classID)
 end
 
 local function MakeSortKey(itemID, quality, itemLevel, classID, subclassID, equipLoc)
-    local cat = GetItemCategory(classID, subclassID, equipLoc)
+    --local cat = GetItemCategory(classID, subclassID, equipLoc)
+    local cat = GetItemCategory(classID)
     return cat * 100000000
         + (quality and (4 - quality) or 3) * 10000000
         + (itemLevel and (999 - itemLevel) or 0) * 10000
