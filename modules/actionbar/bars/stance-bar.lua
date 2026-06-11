@@ -22,7 +22,7 @@ function ACTIONBAR:UpdateStanceBar()
     for i = 1, num do
         local button = frame.buttons[i]
         if button then
-            button:SetSize(size, size*0.618)
+            button:SetSize(size, size)
             button:ClearAllPoints()
             if i == 1 then
                 button:SetPoint('BOTTOMLEFT', frame, padding, padding)
@@ -67,10 +67,8 @@ function ACTIONBAR:UpdateStance()
 
             if isCastable then
                 button.icon:SetVertexColor(1.0, 1.0, 1.0)
-                
             else
                 button.icon:SetVertexColor(0.4, 0.4, 0.4)
-                
             end
         else
             button.icon:Hide()
@@ -111,11 +109,12 @@ function ACTIONBAR:CreateStanceBar()
     local margin = C.DB['Actionbar']['ButtonMargin']
     local padding = C.DB['Actionbar']['BarPadding']
     local buttonList = {}
-    local success, frame = pcall(CreateFrame, 'Frame', C.ADDON_TITLE .. 'ActionBarStance', _G.UIParent, 'SecureHandlerStateTemplate')
+    local success, frame = pcall(CreateFrame, 'Frame', C.ADDON_TITLE .. 'ActionBarStance', _G.UIParent,
+        'SecureHandlerStateTemplate')
     if not success then
         frame = CreateFrame('Frame', C.ADDON_TITLE .. 'ActionBarStance', _G.UIParent)
     end
-    
+
     if C.DB['UIAnchor']['StanceBar'] then
         C.DB['UIAnchor']['StanceBar'] = nil
     end
