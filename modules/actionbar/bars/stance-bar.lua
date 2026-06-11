@@ -22,7 +22,7 @@ function ACTIONBAR:UpdateStanceBar()
     for i = 1, num do
         local button = frame.buttons[i]
         if button then
-            button:SetSize(size, size)
+            button:SetSize(size, size*0.618)
             button:ClearAllPoints()
             if i == 1 then
                 button:SetPoint('BOTTOMLEFT', frame, padding, padding)
@@ -56,6 +56,7 @@ function ACTIONBAR:UpdateStance()
         texture, isActive, isCastable = GetShapeshiftFormInfo(i)
         if texture then
             button.icon:SetTexture(texture)
+            button.icon:SetTexCoord(0.1, 0.9, 0.13, 0.87)
             button.icon:Show()
 
             if isActive then
@@ -66,8 +67,10 @@ function ACTIONBAR:UpdateStance()
 
             if isCastable then
                 button.icon:SetVertexColor(1.0, 1.0, 1.0)
+                
             else
                 button.icon:SetVertexColor(0.4, 0.4, 0.4)
+                
             end
         else
             button.icon:Hide()

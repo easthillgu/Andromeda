@@ -1465,7 +1465,14 @@ do
                 self:UnregisterAllEvents()
                 self:SetParent(F.HiddenFrame)
             else
-                self.Show = self.Hide
+                if not self.__hideObjectHooked then
+                    local origShow = self.Show
+                    hooksecurefunc(self, 'Show', function(self)
+                        origShow(self)
+                        self:Hide()
+                    end)
+                    self.__hideObjectHooked = true
+                end
             end
 
             self:Hide()
