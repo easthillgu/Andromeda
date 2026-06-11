@@ -524,9 +524,8 @@ C.CharacterSettings = {
         KeyFeedback = true,
         Grid = true,
 
-        BarPreset = 2,
         ButtonMargin = 3,
-        BarPadding = 1,
+        BarPadding = 3,
 
         Bar1 = true,
         Bar1FontSize = 11,
@@ -590,9 +589,9 @@ C.CharacterSettings = {
         BarPetButtonPerRow = 10,
 
         BarStance = true,
-        BarStanceButtonSize = 26,
+        BarStanceButtonSize = 30,
         BarStanceFontSize = 12,
-        BarStanceButtonPerRow = 7,
+        BarStanceButtonPerRow = 10,
 
         BarVehicle = true,
         BarVehicleButtonSize = 30,

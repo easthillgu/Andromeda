@@ -47,7 +47,6 @@ function ACTIONBAR:UpdateSize(name)
     local fontSize = C.DB['Actionbar'][name .. 'FontSize']
     local margin = C.DB['Actionbar']['ButtonMargin']
     local padding = C.DB['Actionbar']['BarPadding']
-    local isSpecialBar = name == 'BarPet'
 
     if num == 0 then
         local column = 3
@@ -55,11 +54,6 @@ function ACTIONBAR:UpdateSize(name)
         frame:SetWidth(3 * size + (column - 1) * margin + 2 * padding)
         frame:SetHeight(size * rows + (rows - 1) * margin + 2 * padding)
         frame.mover:SetSize(frame:GetSize())
-        if frame.child then
-            frame.child:SetSize(frame:GetSize())
-            frame.child.mover:SetSize(frame:GetSize())
-            frame.child.mover.isDisable = false
-        end
 
         for i = 1, 12 do
             local button = frame.buttons[i]
@@ -67,8 +61,6 @@ function ACTIONBAR:UpdateSize(name)
             button:ClearAllPoints()
             if i == 1 then
                 button:SetPoint('TOPLEFT', frame, padding, -padding)
-            elseif i == 7 then
-                button:SetPoint('TOPLEFT', frame.child or frame, padding, -padding)
             elseif mod(i - 1, 3) == 0 then
                 button:SetPoint('TOP', frame.buttons[i - 3], 'BOTTOM', 0, -margin)
             else
@@ -85,17 +77,9 @@ function ACTIONBAR:UpdateSize(name)
             button:ClearAllPoints()
 
             if i == 1 then
-                if isSpecialBar then
-                    button:SetPoint('BOTTOMLEFT', frame, padding, padding)
-                else
-                    button:SetPoint('TOPLEFT', frame, padding, -padding)
-                end
+                button:SetPoint('TOPLEFT', frame, padding, -padding)
             elseif mod(i - 1, perRow) == 0 then
-                if isSpecialBar then
-                    button:SetPoint('BOTTOM', frame.buttons[i - perRow], 'TOP', 0, margin)
-                else
-                    button:SetPoint('TOP', frame.buttons[i - perRow], 'BOTTOM', 0, -margin)
-                end
+                button:SetPoint('TOP', frame.buttons[i - perRow], 'BOTTOM', 0, -margin)
             else
                 button:SetPoint('LEFT', frame.buttons[i - 1], 'RIGHT', margin, 0)
             end
@@ -117,9 +101,6 @@ function ACTIONBAR:UpdateSize(name)
         frame:SetWidth(column * size + (column - 1) * margin + 2 * padding)
         frame:SetHeight(size * rows + (rows - 1) * margin + 2 * padding)
         frame.mover:SetSize(frame:GetSize())
-        if frame.child then
-            frame.child.mover.isDisable = true
-        end
     end
 end
 
@@ -136,14 +117,13 @@ function ACTIONBAR:UpdateButtonConfig(i)
         }
     end
     self.buttonConfig.clickOnDown = true
-    self.buttonConfig.showGrid = true -- always show empty slots
+    self.buttonConfig.showGrid = C.DB['Actionbar']['Grid']
     self.buttonConfig.flyoutDirection = directions[C.DB['Actionbar']['Bar' .. i .. 'Flyout']]
 
     local hotkey = self.buttonConfig.text.hotkey
     hotkey.font.font = C.Assets.Fonts.Condensed
     hotkey.font.size = C.DB['Actionbar']['Bar' .. i .. 'FontSize']
-    hotkey.font.flags = 'OUTLINE,Monochrome'
-    --hotkey.font.flags = 'Monochrome'
+    hotkey.font.flags = 'OUTLINE'
     hotkey.position.anchor = 'TOPLEFT'
     hotkey.position.relAnchor = false
     hotkey.position.offsetX = 2
@@ -234,10 +214,8 @@ function ACTIONBAR:ReassignBindings()
     for index = 1, 8 do
         local frame = ACTIONBAR.headers[index]
         for _, button in next, frame.buttons do
-            local keyName = button.keyBoundTarget
-            if keyName then
-                local ok, key = pcall(GetBindingKey, keyName)
-                if ok and key and key ~= '' then
+            for _, key in next, { GetBindingKey(button.keyBoundTarget) } do
+                if key and key ~= '' then
                     SetOverrideBindingClick(frame, false, key, button:GetName(), 'Keybind')
                 end
             end
@@ -260,28 +238,21 @@ function ACTIONBAR:CreateBars()
     ACTIONBAR.headers = {}
 
     for index = 1, 8 do
-        local success, frame = pcall(CreateFrame, 'Frame', C.ADDON_TITLE .. 'ActionBar' .. index, _G.UIParent,
-            'SecureHandlerStateTemplate')
-        if success then
-            ACTIONBAR.headers[index] = frame
-        else
-            ACTIONBAR.headers[index] = CreateFrame('Frame', C.ADDON_TITLE .. 'ActionBar' .. index, _G.UIParent)
-        end
+        ACTIONBAR.headers[index] = CreateFrame('Frame', C.ADDON_TITLE .. 'ActionBar' .. index, _G.UIParent, 'SecureHandlerStateTemplate')
     end
 
     local margin = C.DB['Actionbar']['ButtonMargin']
     local padding = C.DB['Actionbar']['BarPadding']
 
     local barData = {
-        [1] = { page = 1, bindName = 'ACTIONBUTTON', anchor = { 'BOTTOM', _G.UIParent, 'BOTTOM', 0, 24 } },
-        [2] = { page = 6, bindName = 'MULTIACTIONBAR1BUTTON', anchor = { 'BOTTOM', _G[C.ADDON_TITLE .. 'ActionBar1'], 'TOP', 0, 0 } },
-        [3] = { page = 5, bindName = 'MULTIACTIONBAR2BUTTON', anchor = { 'BOTTOM', _G[C.ADDON_TITLE .. 'ActionBar2'], 'TOP', 0, 0 } },
-        [4] = { page = 3, bindName = 'MULTIACTIONBAR3BUTTON', anchor = { 'BOTTOM', _G[C.ADDON_TITLE .. 'ActionBar3'], 'TOP', 0, 0 } },
-        [5] = { page = 4, bindName = 'MULTIACTIONBAR4BUTTON', anchor = { 'BOTTOM', _G[C.ADDON_TITLE .. 'ActionBar4'], 'TOP', 0, 0 } },
-        [6] = { page = 13, bindName = 'MULTIACTIONBAR5BUTTON', anchor = { 'BOTTOM', _G[C.ADDON_TITLE .. 'ActionBar5'], 'TOP', 0, 0 } },
-        [7] = { page = 14, bindName = 'MULTIACTIONBAR6BUTTON', anchor = { 'BOTTOM', _G[C.ADDON_TITLE .. 'ActionBar6'], 'TOP', 0, 0 } },
-        [8] = { page = 15, bindName = 'MULTIACTIONBAR7BUTTON', anchor = { 'BOTTOM', _G[C.ADDON_TITLE .. 'ActionBar7'], 'TOP', 0, 0 } },
-
+        [1] = { page = 1, bindName = 'ACTIONBUTTON', anchor = { 'BOTTOM', _G.UIParent, 'BOTTOM', 0, 33 } },
+        [2] = { page = 6, bindName = 'MULTIACTIONBAR1BUTTON', anchor = { 'BOTTOM', _G[C.ADDON_TITLE .. 'ActionBar1'], 'TOP', 0, -margin } },
+        [3] = { page = 5, bindName = 'MULTIACTIONBAR2BUTTON', anchor = { 'BOTTOM', _G[C.ADDON_TITLE .. 'ActionBar2'], 'TOP', 0, -margin } },
+        [4] = { page = 3, bindName = 'MULTIACTIONBAR3BUTTON', anchor = { 'RIGHT', _G.UIParent, 'RIGHT', -1, 0 } },
+        [5] = { page = 4, bindName = 'MULTIACTIONBAR4BUTTON', anchor = { 'RIGHT', _G[C.ADDON_TITLE .. 'ActionBar4'], 'LEFT', margin, 0 } },
+        [6] = { page = 13, bindName = 'MULTIACTIONBAR5BUTTON', anchor = { 'CENTER', _G.UIParent, 'CENTER', 0, 0 } },
+        [7] = { page = 14, bindName = 'MULTIACTIONBAR6BUTTON', anchor = { 'CENTER', _G.UIParent, 'CENTER', 0, 40 } },
+        [8] = { page = 15, bindName = 'MULTIACTIONBAR7BUTTON', anchor = { 'CENTER', _G.UIParent, 'CENTER', 0, 80 } },
     }
 
     local mIndex = 1
@@ -324,7 +295,7 @@ function ACTIONBAR:CreateBars()
             tinsert(ACTIONBAR.buttons, button)
         end
 
-        frame.visibility = '[petbattle] hide; show'
+        frame.visibility = index == 1 and '[petbattle] hide; show' or '[petbattle][overridebar][vehicleui][possessbar,@vehicle,exists][shapeshift] hide; show'
 
         frame:SetAttribute(
             '_onstate-page',

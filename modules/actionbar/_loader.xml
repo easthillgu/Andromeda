@@ -9,7 +9,6 @@
     <Script file="bars\extra-button.lua"/>
     <Script file="bars\leave-vehicle-button.lua"/>
     <Script file="bars\remove-blizz-stuff.lua"/>
-    <Script file="bars\bar-preset.lua"/>
 
     <Script file="bar-fader.lua"/>
     <Script file="button-style.lua"/>

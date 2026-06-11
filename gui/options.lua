@@ -1204,18 +1204,6 @@ GUI.OptionsList = {
             UpdateBarConfig,
         },
         {
-            4,
-            'Actionbar',
-            'BarPreset',
-            L['Bar Preset'],
-            true,
-            {
-                '6 + 24 + 6',
-                '3 * 12',
-                '12 + 24 + 12',
-            },
-        },
-        {
             1,
             'Actionbar',
             'ShowHotkey',

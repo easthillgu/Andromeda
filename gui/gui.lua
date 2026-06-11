@@ -313,10 +313,6 @@ local function updateDropdownClick(self)
     if dd.__callback then
         dd:__callback()
     end
-
-    if dd.__value == 'BarPreset' then
-        updateBarLayout(self)
-    end
 end
 
 local function CreateOptions(i)

@@ -10,21 +10,19 @@ function ACTIONBAR:OnLogin()
 
     ACTIONBAR.movers = {}
 
-    -- Hide Blizzard bars FIRST (must happen before bar creation or they stay visible)
-    ACTIONBAR:RemoveBlizzStuff()
-
     ACTIONBAR:CreateBars()
     ACTIONBAR:CreateExtraBar()
     ACTIONBAR:CreateVehicleBar()
     ACTIONBAR:CreatePetBar()
     ACTIONBAR:CreateStanceBar()
     ACTIONBAR:RestyleButtons()
-    ACTIONBAR:RestyleOnPageChanged()
     ACTIONBAR:UpdateBarConfig()
     ACTIONBAR:UpdateVisibility()
     ACTIONBAR:UpdateAllSize()
+    ACTIONBAR:RemoveBlizzStuff()
     ACTIONBAR:CooldownNotify()
     ACTIONBAR:BarFader()
+    ACTIONBAR:CreateKeyFeedback()
 
     if C_PetBattles and C_PetBattles.IsInBattle and C_PetBattles.IsInBattle() then
         ACTIONBAR:ClearBindings()
