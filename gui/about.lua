@@ -2,11 +2,11 @@ local F, C, L = unpack(select(2, ...))
 local GUI = F:GetModule('GUI')
 
 GUI.urlsList = {
-
+github = 'https://github.com/easthillgu/Andromeda',
 }
 
 GUI.lablesList = {
-
+github = 'Github',
 }
 
 local function ResetUrlBox(self)

@@ -2979,14 +2979,12 @@ GUI.OptionsList = {
             'ACCOUNT',
             'ReskinMeetingHorn',
             L['Reskin MeetingHorn'],
-            true,
         },
         {
             1,
             'ACCOUNT',
             'ReskinPallyPower',
             L['Reskin PallyPower'],
-            true,
         },
         {
             1,

@@ -21,7 +21,7 @@ local function SetupCVars()
     SetCVar('findYourselfMode', 2)
 
     -- control
-    SetCVar('autoDismountFlying', 0)
+    SetCVar('autoDismountFlying', 1)
     SetCVar('autoDismount', 1)
     SetCVar('autoClearAFK', 1)
     SetCVar('autoLootDefault', 1)
@@ -29,7 +29,7 @@ local function SetupCVars()
     SetCVar('interactOnLeftClick', 1)
     SetCVar('autoOpenLootHistory', 0)
     SetCVar('UberTooltips', 1)
-    SetCVar('alwaysCompareItems', 0)
+    SetCVar('alwaysCompareItems', 1)
 
     -- social
     SetCVar('profanityFilter', 0)
@@ -81,7 +81,7 @@ local function SetupCVars()
     SetCVar('enableFloatingCombatText', 0)
 
     -- nameplates
-    SetCVar('nameplateShowAll', 1)
+    SetCVar('nameplateShowAll', 0)
     SetCVar('nameplateShowEnemies', 1)
     SetCVar('nameplateShowEnemyGuardians', 1)
     SetCVar('nameplateShowEnemyMinions', 1)
