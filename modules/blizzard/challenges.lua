@@ -250,6 +250,8 @@ function ECF:KeystoneInfo_UpdateBag()
 end
 
 function ECF:KeystoneInfo_Update()
+    -- 3.80.1: KeystoneInfo table may be nil (M+ not available)
+    if not _G.ANDROMEDA_ADB['KeystoneInfo'] then return end
     local mapID, keystoneLevel = ECF:KeystoneInfo_UpdateBag()
     if mapID then
         _G.ANDROMEDA_ADB['KeystoneInfo'][C.MY_FULL_NAME] = mapID .. ':' .. keystoneLevel .. ':' .. C.MY_CLASS .. ':' .. C.MY_FACTION
