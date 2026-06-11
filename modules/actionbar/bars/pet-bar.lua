@@ -30,6 +30,7 @@ function ACTIONBAR:UpdatePetBar()
             petActionIcon:SetTexture(_G[texture])
             petActionButton.tooltipName = _G[name]
         end
+        petActionIcon:SetTexCoord(0.1, 0.9, 0.13, 0.87)
         petActionButton.isToken = isToken
         if spellID then
             local spell = Spell:CreateFromSpellID(spellID)
