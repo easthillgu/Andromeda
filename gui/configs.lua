@@ -12,17 +12,17 @@ C.CharacterSettings = {
 
         SimplifyErrors = true,
 
-        OrderHallIcon = false,  -- 3.80.1: not available
+        --      OrderHallIcon = false,  -- 3.80.1: not available
         TradeTabs = true,
         PetFilter = true,
         NakedButton = true,
         MissingStats = true,
         ItemLevel = true,
         GemEnchant = true,
-        AzeriteTrait = false,  -- 3.80.1: not available
+        --      AzeriteTrait = false,  -- 3.80.1: not available
         AutoScreenshot = true,
         EarnedNewAchievement = true,
-        ChallengeModeCompleted = false,  -- 3.80.1: not available
+        --      ChallengeModeCompleted = false,  -- 3.80.1: not available
         PlayerLevelUp = false,
         PlayerDead = false,
         FasterZooming = true,
@@ -59,7 +59,7 @@ C.CharacterSettings = {
         Countdown = '10',
 
         MuteAnnoyingSounds = true,
-        WeeklyLottery = false,  -- 3.80.1: Great Vault not available
+        --      WeeklyLottery = false,  -- 3.80.1: Great Vault not available
 
         BlockStrangerInvite = false,
         BlockStrangerRequest = false,
@@ -160,8 +160,8 @@ C.CharacterSettings = {
         FilterConsumable = true,
         FilterLegendary = true,
         FilterCollection = true,
-        FilterAnima = false,  -- 3.80.1: not available
-        FilterRelic = false,  -- 3.80.1: not available
+        --FilterAnima = false,  -- 3.80.1: not available
+        --FilterRelic = false,  -- 3.80.1: not available
         FilterStone = true,
         AutoSellJunk = true,
         AutoRepair = true,
@@ -323,14 +323,14 @@ C.CharacterSettings = {
         ClickCast = false,
 
 
-        Boss = false,
+        Boss = true,
         BossWidth = 100,
         BossHealthHeight = 18,
         BossPowerHeight = 2,
         BossGap = 60,
         BossAuraPerRow = 4,
 
-        Arena = false,
+        Arena = true,
         ArenaWidth = 100,
         ArenaHealthHeight = 18,
         ArenaPowerHeight = 2,
@@ -373,7 +373,7 @@ C.CharacterSettings = {
         TransColor = { r = 1, g = 1, b = 0.5 },
         InsecureColor = { r = 0.95, g = 0.03, b = 0.31 },
         OffTankColor = { r = 0.17, g = 0.79, b = 0.67 },
-        ColoredTarget = false,
+        ColoredTarget = true,
         TargetColor = { r = 0, g = 0.6, b = 1 },
         ColoredFocus = true,
         FocusColor = { r = 1, g = 1, b = 1 },
@@ -624,7 +624,7 @@ C.CharacterSettings = {
     },
     Cooldown = {
         Enable = true,
-        IgnoreWA = false,
+        IgnoreWA = true,
         MmssTH = 60,
         TenthTH = 3,
         OnlyNumbers = true,
@@ -712,12 +712,12 @@ C.AccountSettings = {
 
     CooldownPulseIgnoredSpellsList = {},
 
-    KeystoneInfo = {},  -- 3.80.1: M+ not available
+    --KeystoneInfo = {},  -- 3.80.1: M+ not available
     ProfileIndex = {},
     ProfileNames = {},
     UseCustomClassColor = true,
     CustomClassColors = {
-        HUNTER = { r = 0, g = 0.65, b = 0.21},
+        HUNTER = { r = 0, g = 0.65, b = 0.21 },
         WARRIOR = { r = 0.6, g = 0.53, b = 0.46 },
         SHAMAN = { r = 0.26, g = 0.37, b = 0.85, },
         MAGE = { r = 0.2, g = 0.59, b = 0.86 },
@@ -732,7 +732,7 @@ C.AccountSettings = {
         EVOKER = { r = 0.3, g = 0.64, b = 0.67 },
     },
     ContactList = {},
-    RenownLevels = {},  -- 3.80.1: not available
+    RenownLevels = {}, -- 3.80.1: not available
     SmoothAmount = 0.25,
     MinimapAddOnCollector = true,
     IgnoredAddOns = '',
