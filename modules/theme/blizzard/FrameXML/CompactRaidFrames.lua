@@ -11,7 +11,6 @@ tinsert(C.BlizzThemes, function()
 
     _G.CompactRaidFrameManagerToggleButton:SetNormalTexture('Interface\\Buttons\\UI-ColorPicker-Buttons')
     _G.CompactRaidFrameManagerToggleButton:GetNormalTexture():SetTexCoord(0.15, 0.39, 0, 1)
-    _G.CompactRaidFrameManagerToggleButton:SetSize(15, 15)
     hooksecurefunc('CompactRaidFrameManager_Collapse', function()
         _G.CompactRaidFrameManagerToggleButton:GetNormalTexture():SetTexCoord(0.15, 0.39, 0, 1)
     end)
