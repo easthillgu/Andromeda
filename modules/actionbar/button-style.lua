@@ -98,20 +98,22 @@ function ACTIONBAR:HandleButton(btn)
     local petShine = _G[btnName .. 'Shine']
     local autoCastable = btn.AutoCastable
 
+    local LibCustomGlow = LibStub('LibCustomGlow-1.0', true)
+    
     -- Hide Blizzard proc highlight (replaced by pixel glow)
-    if spellHighlight then
+    if LibCustomGlow and spellHighlight then
         spellHighlight:SetAlpha(0)
         spellHighlight:Hide()
         hooksecurefunc(spellHighlight, 'Show', function(f) f:SetAlpha(0); f:Hide() end)
     end
     -- Hide Blizzard auto-cast shine/overlay (replaced by pixel glow)
-    if autoCastShine then
+    if LibCustomGlow and autoCastShine then
         autoCastShine:SetAlpha(0)
         autoCastShine:Hide()
         hooksecurefunc(autoCastShine, 'Show', function(f) f:SetAlpha(0); f:Hide() end)
     end
     -- 3.80.1: AutoCastOverlay is a separate Blizzard frame on pet buttons
-    if btn.AutoCastOverlay then
+    if LibCustomGlow and btn.AutoCastOverlay then
         btn.AutoCastOverlay:SetAlpha(0)
         btn.AutoCastOverlay:Hide()
         hooksecurefunc(btn.AutoCastOverlay, 'Show', function(f) f:SetAlpha(0); f:Hide() end)
