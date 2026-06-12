@@ -14,7 +14,7 @@ function UNITFRAME.ConfigureRaidTargetIndicator(frame)
 end
 
 function UNITFRAME:CreateRaidTargetIndicator(self)
-    local icon = self:CreateTexture(nil, 'BACKGROUND')
+    local icon = self:CreateTexture(nil, 'OVERLAY')
     icon:SetTexture(C.Assets.Textures.RaidTargetingIcons)
 
     self.RaidTargetIndicator = icon
