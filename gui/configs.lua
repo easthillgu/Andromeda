@@ -170,7 +170,7 @@ C.CharacterSettings = {
     },
     Unitframe = {
         Enable = true,
-        HealthColorStyle = 2,
+        HealthColorStyle = 1,
         InvertedColorMode = true,
         Smooth = true,
         Portrait = false,
@@ -630,14 +630,14 @@ C.CharacterSettings = {
         OnlyNumbers = true,
     },
     Quest = {
-        QuickQuest = false,
+        QuickQuest = true,
         CompletedSound = true,
         AutoCollapseTracker = true,
         WowheadLink = false,
         IgnoreQuestNPC = {},
     },
     Misc = {
-        FastLoot = false,
+        FastLoot = true,
         StatExpand = true,
         StatOrder = '12345',
     },
@@ -646,16 +646,16 @@ C.CharacterSettings = {
 C.AccountSettings = {
     DetectVersion = C.ADDON_VERSION,
     VersionCheck = true,
-    UIScale = 1,
+    UIScale = 1.2,
     HelpTips = {},
     GoldStatistic = {},
 
     ShadowOutline = true,
     ShadowColor = { r = 0, g = 0, b = 0 },
-    ShadowAlpha = 0.25,
+    ShadowAlpha = 0.35,
 
     BackdropColor = { r = 0, g = 0, b = 0 },
-    BackdropAlpha = 0.55,
+    BackdropAlpha = 0.75,
 
     BorderColor = { r = 0, g = 0, b = 0 },
     BorderAlpha = 1,
@@ -732,7 +732,7 @@ C.AccountSettings = {
         EVOKER = { r = 0.3, g = 0.64, b = 0.67 },
     },
     ContactList = {},
-    RenownLevels = {}, -- 3.80.1: not available
+    --RenownLevels = {}, -- 3.80.1: not available
     SmoothAmount = 0.25,
     MinimapAddOnCollector = true,
     IgnoredAddOns = '',
