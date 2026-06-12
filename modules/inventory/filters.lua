@@ -64,8 +64,8 @@ end
 
 local iLvlClassIDs = {
     [Enum.ItemClass.Gem] = Enum.ItemGemSubclass.Artifactrelic,
-    [Enum.ItemClass.Armor] = 0,
-    [Enum.ItemClass.Weapon] = 0,
+    [Enum.ItemClass.Armor] = true,
+    [Enum.ItemClass.Weapon] = true,
 }
 
 function INVENTORY:IsItemHasLevel(item)
@@ -208,7 +208,7 @@ local function isItemBOE(item)
     return item.bindOn and item.bindOn == 'equip' and INVENTORY:IsItemHasLevel(item)
 end
 
-local function isAnimaItem(item)
+--[[local function isAnimaItem(item)
     if not C.DB.Inventory.ItemFilter then
         return
     end
@@ -264,7 +264,7 @@ local function isPrimordialStone(item)
     end
 
     return item.id and primordialStones[item.id]
-end
+end]]
 
 function INVENTORY:GetFilters()
     local filters = {}
@@ -273,9 +273,9 @@ function INVENTORY:GetFilters()
         return isItemInBag(item) and not isEmptySlot(item)
     end
 
-    filters.bagAzeriteItem = function(item)
-        return isItemInBag(item) and isAzeriteArmor(item)
-    end
+    --filters.bagAzeriteItem = function(item)
+        --return isItemInBag(item) and isAzeriteArmor(item)
+    --end
 
     filters.bagEquipment = function(item)
         return isItemInBag(item) and isItemEquipment(item)
@@ -297,9 +297,9 @@ function INVENTORY:GetFilters()
         return isItemInBank(item) and not isEmptySlot(item)
     end
 
-    filters.bankAzeriteItem = function(item)
-        return isItemInBank(item) and isAzeriteArmor(item)
-    end
+    --filters.bankAzeriteItem = function(item)
+        --return isItemInBank(item) and isAzeriteArmor(item)
+    --end
 
     filters.bankLegendary = function(item)
         return isItemInBank(item) and isItemLegendary(item)
