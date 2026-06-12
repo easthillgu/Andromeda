@@ -6,18 +6,21 @@ function UNITFRAME.ConfigureRaidTargetIndicator(frame)
     local icon = frame.RaidTargetIndicator
     local enable = C.DB.Unitframe.RaidTargetIndicator
 
-    icon:SetPoint('CENTER', frame, 'TOP')
     icon:SetAlpha(1)
-    icon:SetSize(16, 16)
     icon:SetScale(1)
     icon:SetShown(enable)
 end
 
 function UNITFRAME:CreateRaidTargetIndicator(self)
-    local icon = self:CreateTexture(nil, 'OVERLAY')
+    local frame = CreateFrame('Frame', nil, self)
+    frame:SetSize(18, 18)
+    frame:SetPoint('CENTER', self, 'TOP')
+    frame:SetFrameLevel(self:GetFrameLevel() + 10)
+    local icon = frame:CreateTexture(nil, 'OVERLAY')
+    icon:SetAllPoints()
     icon:SetTexture(C.Assets.Textures.RaidTargetingIcons)
 
-    self.RaidTargetIndicator = icon
+    self.RaidTargetIndicator = frame
 
     UNITFRAME.ConfigureRaidTargetIndicator(self)
 end
