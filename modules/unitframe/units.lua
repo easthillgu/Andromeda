@@ -37,7 +37,7 @@ local function GetRaidVisibility()
 
     if C.DB.Unitframe.PartyFrame then
         if C.DB.Unitframe.SmartRaid then
-            visibility = '[group:raid] show;hide'
+            visibility = '[@raid6,exists] show;hide'
         else
             visibility = '[group:raid] show;hide'
         end
