@@ -42,7 +42,7 @@ local function Update(self, event)
 
 	local index = GetRaidTargetIndex(self.unit)
 	if(index) then
-		SetRaidTargetIconTexture(element, index)
+		pcall(SetRaidTargetIconTexture, element, index)
 		element:Show()
 	else
 		element:Hide()
