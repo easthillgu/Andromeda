@@ -37,7 +37,7 @@ local function GetRaidVisibility()
 
     if C.DB.Unitframe.PartyFrame then
         if C.DB.Unitframe.SmartRaid then
-            visibility = '[group:raid] show;hide'
+            visibility = '[@raid6,exists] show;hide'
         else
             visibility = '[group:raid] show;hide'
         end
@@ -129,19 +129,18 @@ local descRole = 'NONE,DAMAGER,HEALER,TANK'
 
 local function CreatePartyHeader(name, width, height)
     -- stylua: ignore start
-    local group = oUF:SpawnHeader(name, nil, nil,
-        'showPlayer', true,
-        'showSolo', true,
-        'showParty', true,
-        'showRaid', true,
-        'sortMethod', 'NAME',
-        'columnAnchorPoint', 'LEFT',
-        'oUF-initialConfigFunction',
-        ([[
+    local group = oUF:SpawnHeader(name, nil, {
+        showPlayer = true,
+        showSolo = true,
+        showParty = true,
+        showRaid = true,
+        sortMethod = 'NAME',
+        columnAnchorPoint = 'LEFT',
+        ['oUF-initialConfigFunction'] = ([[
             self:SetWidth(%d)
             self:SetHeight(%d)
         ]]):format(width, height)
-    )
+    })
     -- stylua: ignore end
 
     return group
@@ -343,22 +342,21 @@ function UNITFRAME:SpawnSimpleRaid()
 
     local function CreateGroup(name)
         -- stylua: ignore start
-        simpleRaid = oUF:SpawnHeader(name, nil, nil,
-            'showPlayer', true,
-            'showSolo', true,
-            'showParty', true,
-            'showRaid', true,
-            'point', sortData.point,
-            'xOffset', sortData.xOffset,
-            'yOffset', sortData.yOffset,
-            'columnSpacing', 5,
-            'columnAnchorPoint', sortData.columnAnchorPoint,
-            'oUF-initialConfigFunction',
-            ([[
+        simpleRaid = oUF:SpawnHeader(name, nil, {
+            showPlayer = true,
+            showSolo = true,
+            showParty = true,
+            showRaid = true,
+            point = sortData.point,
+            xOffset = sortData.xOffset,
+            yOffset = sortData.yOffset,
+            columnSpacing = 5,
+            columnAnchorPoint = sortData.columnAnchorPoint,
+            ['oUF-initialConfigFunction'] = ([[
                 self:SetWidth(%d)
                 self:SetHeight(%d)
             ]]):format(100 * scale, 20 * scale)
-        )
+        })
         -- stylua: ignore end
 
         return simpleRaid
@@ -446,25 +444,24 @@ end
 
 local function CreateRaid(name, i, width, height)
     -- stylua: ignore start
-    local group = oUF:SpawnHeader(name, nil, nil,
-        'showPlayer', true,
-        'showSolo', true,
-        'showParty', true,
-        'showRaid', true,
-        'groupFilter', tostring(i),
-        'groupingOrder', '1,2,3,4,5,6,7,8',
-        'groupBy', 'GROUP',
-        'sortMethod', 'INDEX',
-        'maxColumns', 1,
-        'unitsPerColumn', 5,
-        'columnSpacing', 5,
-        'columnAnchorPoint', 'LEFT',
-        'oUF-initialConfigFunction',
-        ([[
+    local group = oUF:SpawnHeader(name, nil, {
+        showPlayer = true,
+        showSolo = true,
+        showParty = true,
+        showRaid = true,
+        groupFilter = tostring(i),
+        groupingOrder = '1,2,3,4,5,6,7,8',
+        groupBy = 'GROUP',
+        sortMethod = 'INDEX',
+        maxColumns = 1,
+        unitsPerColumn = 5,
+        columnSpacing = 5,
+        columnAnchorPoint = 'LEFT',
+        ['oUF-initialConfigFunction'] = ([[
             self:SetWidth(%d)
             self:SetHeight(%d)
         ]]):format(width, height)
-    )
+    })
     -- stylua: ignore end
 
     return group

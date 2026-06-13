@@ -122,7 +122,8 @@ function UNITFRAME:CreateHealthBar(self)
     F:SetSmoothing(health, C.DB.Unitframe.Smooth)
 
     local bg = health:CreateTexture(nil, 'BACKGROUND')
-    bg:SetTexture(UNITFRAME.StatusBarTex)
+    local isGroup = self.unitStyle == 'party' or self.unitStyle == 'raid'
+    bg:SetTexture(isGroup and C.Assets.Textures.BackdropStripes or UNITFRAME.StatusBarTex, isGroup and true or nil, isGroup and true or nil)
     bg:SetPoint('TOPLEFT', health:GetStatusBarTexture(), 'TOPRIGHT')
     bg:SetPoint('BOTTOMRIGHT', health)
     bg:SetVertexColor(bgColor[1], bgColor[2], bgColor[3], bgColor[4])
