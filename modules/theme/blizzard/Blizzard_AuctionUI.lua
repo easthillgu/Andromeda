@@ -145,7 +145,7 @@ C.Themes["Blizzard_AuctionUI"] = function()  -- 3.80.1: fired via ADDON_LOADED
 			B.StripTextures(bu)
 
 			local bg = B.CreateBDFrame(bu, .25)
-			bg:SetPoint("TOPLEFT", ic, "TOPRIGHT", 0, C.MULT)
+					bg:SetPoint("TOPLEFT", ic, "TOPRIGHT", 0, C.MULT or 1)
 			bg:SetPoint("BOTTOMRIGHT", 0, 4)
 
 			bu:SetHighlightTexture(DB.bdTex)
@@ -203,10 +203,20 @@ C.Themes["Blizzard_AuctionUI"] = function()  -- 3.80.1: fired via ADDON_LOADED
 		B.ReskinInput(_G[inputs[i]])
 	end
 
-	B:UpdateMoneyDisplay(BrowseBidPriceGold, BrowseBidPriceSilver, BrowseBidPriceCopper)
-	B:UpdateMoneyDisplay(BidBidPriceGold, BidBidPriceSilver, BidBidPriceCopper)
-	B:UpdateMoneyDisplay(StartPriceGold, StartPriceSilver, StartPriceCopper)
-	B:UpdateMoneyDisplay(BuyoutPriceGold, BuyoutPriceSilver, BuyoutPriceCopper)
+	-- 3.80.1: inline UpdateMoneyDisplay (Andromeda compat — no B:UpdateMoneyDisplay)
+	local function ReskinMoneyDisplay(gold, silver, copper)
+		B.ReskinInput(gold)
+		B.ReskinInput(silver)
+		B.ReskinInput(copper)
+		silver.__bg:SetPoint("BOTTOMRIGHT", -10, 0)
+		copper.__bg:SetPoint("BOTTOMRIGHT", -10, 0)
+		silver:SetPoint("LEFT", gold, "RIGHT", 18, 0)
+		copper:SetPoint("LEFT", silver, "RIGHT", 8, 0)
+	end
+	ReskinMoneyDisplay(BrowseBidPriceGold, BrowseBidPriceSilver, BrowseBidPriceCopper)
+	ReskinMoneyDisplay(BidBidPriceGold, BidBidPriceSilver, BidBidPriceCopper)
+	ReskinMoneyDisplay(StartPriceGold, StartPriceSilver, StartPriceCopper)
+	ReskinMoneyDisplay(BuyoutPriceGold, BuyoutPriceSilver, BuyoutPriceCopper)
 
 	-- [[ WoW token ]] (3.80.1: Retail only, nil-guarded)
 
@@ -247,7 +257,7 @@ C.Themes["Blizzard_AuctionUI"] = function()  -- 3.80.1: fired via ADDON_LOADED
 
 	B.StripTextures(BrowsePriceOptionsFrame)
 	B.SetBD(BrowsePriceOptionsFrame)
-	for _, child in next, {BrowsePriceOptionsFrame:GetChildren()} do
+		for _, child in pairs({BrowsePriceOptionsFrame:GetChildren()}) do
 		if child:IsObjectType("Button") then
 			B.Reskin(child)
 		elseif child:IsObjectType("CheckButton") then
