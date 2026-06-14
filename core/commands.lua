@@ -148,7 +148,7 @@ do
     end
 
     F:RegisterSlashCommand('/way', function(msg)
-        if IsAddOnLoaded('TomTom') then
+        if C_AddOns.IsAddOnLoaded('TomTom') then
             return
         end
         msg = gsub(msg, '(%d)[%.,] (%d)', '%1 %2')
@@ -289,7 +289,7 @@ end)
 
 -- DBM test
 F:RegisterSlashCommand('/dbmtest', function()
-    if IsAddOnLoaded('DBM-Core') then
+    if C_AddOns.IsAddOnLoaded('DBM-Core') then
         _G.DBM:DemoMode()
     else
         F:Print(C.RED_COLOR .. 'DBM is not loaded.')

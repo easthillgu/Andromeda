@@ -408,7 +408,7 @@ function GT:RaidTool_BuffChecker(parent)
         end
     end
 
-    local potionCheck = IsAddOnLoaded('MRT')
+    local potionCheck = C_AddOns.IsAddOnLoaded('MRT')
 
     frame:HookScript('OnEnter', function(self)
         _G.GameTooltip:SetOwner(self, 'ANCHOR_BOTTOM', 0, -3)
@@ -449,14 +449,14 @@ function GT:RaidTool_BuffChecker(parent)
             end
         else
             if IsInGroup() and (UnitIsGroupLeader('player') or (UnitIsGroupAssistant('player') and IsInRaid())) then
-                if IsAddOnLoaded('DBM-Core') then
+                if C_AddOns.IsAddOnLoaded('DBM-Core') then
                     if reset then
                         _G.SlashCmdList['DEADLYBOSSMODS']('pull ' .. C.DB.General.Countdown)
                     else
                         _G.SlashCmdList['DEADLYBOSSMODS']('pull 0')
                     end
                     reset = not reset
-                elseif IsAddOnLoaded('BigWigs') then
+                elseif C_AddOns.IsAddOnLoaded('BigWigs') then
                     if not _G.SlashCmdList['BIGWIGSPULL'] then
                         LoadAddOn('BigWigs_Plugins')
                     end

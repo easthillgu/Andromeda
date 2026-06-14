@@ -55,7 +55,7 @@ end
 
 function NOTIFICATION:CheckIncompatible()
     for addon in pairs(IncompatibleAddOns) do
-        if IsAddOnLoaded(addon) then
+        if C_AddOns.IsAddOnLoaded(addon) then
             tinsert(IncompatibleList, addon)
         end
     end

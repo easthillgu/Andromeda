@@ -463,7 +463,7 @@ function M:OnLogin()
     if not C.DB.General.EnhancedMailBox then
         return
     end
-    if IsAddOnLoaded('Postal') then
+    if C_AddOns.IsAddOnLoaded('Postal') then
         return
     end
 

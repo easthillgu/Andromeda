@@ -95,7 +95,7 @@ MAP.MenuList = {
         text = _G.ENCOUNTER_JOURNAL,
         notCheckable = true,
         func = function()
-            if not IsAddOnLoaded('Blizzard_EncounterJournal') then
+            if not C_AddOns.IsAddOnLoaded('Blizzard_EncounterJournal') then
                 UIParentLoadAddOn('Blizzard_EncounterJournal')
             end
             if _G.EncounterJournal then ToggleFrame(_G.EncounterJournal) end

@@ -590,8 +590,8 @@ function INVENTORY:OnLogin()
 
     local iconSize = C.DB.Inventory.SlotSize
     local showNewItem = C.DB.Inventory.NewItemFlash
-    local hasCanIMogIt = IsAddOnLoaded('CanIMogIt')
-    local hasPawn = IsAddOnLoaded('Pawn')
+    local hasCanIMogIt = C_AddOns.IsAddOnLoaded('CanIMogIt')
+    local hasPawn = C_AddOns.IsAddOnLoaded('Pawn')
 
     local Backpack = cargBags:NewImplementation(C.ADDON_TITLE .. 'Backpack')
     Backpack:RegisterBlizzard()

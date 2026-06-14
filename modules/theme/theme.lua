@@ -15,7 +15,7 @@ function THEME:LoadSkins(list)
     end
 
     for addonName, func in pairs(list) do
-        local isLoaded, isFinished = C_AddOns.IsAddOnLoaded(addonName)
+        local isLoaded, isFinished = C_AddOns.C_AddOns.IsAddOnLoaded(addonName)
         if isLoaded and isFinished then
             xpcall(func, geterrorhandler())
             list[addonName] = nil
@@ -24,7 +24,7 @@ function THEME:LoadSkins(list)
 end
 
 function THEME:LoadAddOnSkins()
-    if C_AddOns.IsAddOnLoaded("AuroraClassic") or C_AddOns.IsAddOnLoaded("Aurora") then return end
+    if C_AddOns.C_AddOns.IsAddOnLoaded("AuroraClassic") or C_AddOns.C_AddOns.IsAddOnLoaded("Aurora") then return end
 
     if not _G.ANDROMEDA_ADB.ReskinBlizz then
         wipe(C.BlizzThemes)

@@ -57,7 +57,7 @@ local function UpdateMemory()
 
     local total = 0
     for _, data in ipairs(infoTable) do
-        if IsAddOnLoaded(data[1]) then
+        if C_AddOns.IsAddOnLoaded(data[1]) then
             local mem = GetAddOnMemoryUsage(data[1])
             data[3] = mem
             total = total + mem
@@ -73,7 +73,7 @@ local function UpdateCPU()
 
     local total = 0
     for _, data in ipairs(infoTable) do
-        if IsAddOnLoaded(data[1]) then
+        if C_AddOns.IsAddOnLoaded(data[1]) then
             local addonCPU = GetAddOnCPUUsage(data[1])
             data[4] = addonCPU
             total = total + addonCPU
@@ -134,7 +134,7 @@ local function Block_OnEnter(self)
 
     local numEnabled = 0
     for _, data in ipairs(infoTable) do
-        if IsAddOnLoaded(data[1]) then
+        if C_AddOns.IsAddOnLoaded(data[1]) then
             numEnabled = numEnabled + 1
             if numEnabled <= maxShown then
                 local usageValue = self.showMemory or not scriptProfileStatus and data[3] or data[4]

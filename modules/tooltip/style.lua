@@ -268,7 +268,7 @@ TOOLTIP:RegisterTooltips(C.ADDON_NAME, function()
         end
     end)
 
-    if IsAddOnLoaded('BattlePetBreedID') then
+    if C_AddOns.IsAddOnLoaded('BattlePetBreedID') then
         hooksecurefunc('BPBID_SetBreedTooltip', function(parent)
             if parent == _G.FloatingBattlePetTooltip then
                 TOOLTIP.ReskinTooltip(_G.BPBID_BreedTooltip2)

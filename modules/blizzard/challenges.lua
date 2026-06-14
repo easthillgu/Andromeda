@@ -261,7 +261,7 @@ function ECF:KeystoneInfo_Update()
 end
 
 function ECF:OnLogin()
-    hasAngryKeystones = IsAddOnLoaded('AngryKeystones')
+    hasAngryKeystones = C_AddOns.IsAddOnLoaded('AngryKeystones')
     F:RegisterEvent('ADDON_LOADED', ECF.GuildBest_OnLoad)
 
     ECF:KeystoneInfo_Update()

@@ -8,15 +8,7 @@ if not _G.nop then _G.nop = function() end end
 _G.Enum.ItemQuality.Common = _G.Enum.ItemQuality.Common or _G.Enum.ItemQuality.Standard or 1
 _G.Enum.ItemQuality.Uncommon = _G.Enum.ItemQuality.Uncommon or _G.Enum.ItemQuality.Good or 2
 
--- IsAddOnLoaded (3.80.1 moved to C_AddOns namespace)
-if not _G.IsAddOnLoaded then
-    _G.IsAddOnLoaded = function(name)
-        if _G.C_AddOns and _G.C_AddOns.IsAddOnLoaded then
-            return _G.C_AddOns.IsAddOnLoaded(name)
-        end
-        return _G[name] ~= nil
-    end
-end
+-- IsAddOnLoaded (3.80.1 native in C_AddOns namespace, all references migrated)
 
 -- C_ChallengeMode (minimap.lua)
 if not _G.C_ChallengeMode then _G.C_ChallengeMode = {} end
