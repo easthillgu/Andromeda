@@ -273,6 +273,7 @@ C.Themes["Blizzard_AuctionUI"] = function()  -- 3.80.1: fired via ADDON_LOADED
 		elseif child:IsObjectType("CheckButton") then
 			B.ReskinRadio(child)
 		end
+	end  -- closes for BrowsePriceOptionsFrame:GetChildren()
 	end  -- closes if BrowsePriceOptions
 	end  -- 3.80.1: closes doSkin()
 
