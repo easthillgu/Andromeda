@@ -48,12 +48,12 @@ local DB = {
     ClassColors = RAID_CLASS_COLORS,
     QualityColors = ITEM_QUALITY_COLORS,
 }
-tinsert(C.BlizzThemes, function()  -- 3.80.1: AuctionFrame lazily created after ADDON_LOADED
-	local r, g, b = DB.r, DB.g, DB.b
-
-	-- Wait one tick for AuctionFrame to materialize after addon loads
+C.Themes["Blizzard_AuctionUI"] = function()  -- 3.80.1: fired via ADDON_LOADED
+	-- AuctionFrame may not exist yet (created after ADDON_LOADED)
+	-- Wait one tick for the addon's OnLoad to create the frame
 	C_Timer.After(0, function()
 	if not AuctionFrame then return end
+	local r, g, b = DB.r, DB.g, DB.b
 
 	B.SetBD(AuctionFrame, nil, 2, -10, 0, 10)
 	B.StripTextures(AuctionProgressFrame)
@@ -278,4 +278,4 @@ tinsert(C.BlizzThemes, function()  -- 3.80.1: AuctionFrame lazily created after 
 	end
 	end
 	end)  -- 3.80.1: closes C_Timer.After
-end)  -- 3.80.1: closes tinsert(C.BlizzThemes, ...)
+end  -- 3.80.1: closes C.Themes["Blizzard_AuctionUI"]
