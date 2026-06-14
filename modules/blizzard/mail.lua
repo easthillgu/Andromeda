@@ -5,8 +5,13 @@ local mailIndex, timeToWait, totalCash, inboxItems = 0, 0.15, 0, {}
 local isGoldCollecting
 
 -- 3.80.1: local cache for performance (NDui pattern)
-local C_Mail_HasInboxMoney = C_Mail.HasInboxMoney
-local C_Mail_IsCommandPending = C_Mail.IsCommandPending
+-- C_Mail functions loaded lazily — may not be ready at file scope in 3.80.1
+local function Mail_HasInboxMoney(index)
+    return C_Mail.HasInboxMoney(index)
+end
+local function Mail_IsCommandPending()
+    return C_Mail.IsCommandPending()
+end
 local InboxItemCanDelete, DeleteInboxItem = InboxItemCanDelete, DeleteInboxItem
 local GetInboxNumItems, GetInboxHeaderInfo, GetInboxItem = GetInboxNumItems, GetInboxHeaderInfo, GetInboxItem
 local GetItemInfo, GetItemQualityColor = GetItemInfo, GetItemQualityColor
@@ -273,8 +278,8 @@ end
 
 function M:MailBox_CollectGold()
     if mailIndex > 0 then
-        if not C_Mail_IsCommandPending() then
-            if C_Mail_HasInboxMoney(mailIndex) then
+        if not Mail_IsCommandPending() then
+            if Mail_HasInboxMoney(mailIndex) then
                 TakeInboxMoney(mailIndex)
             end
             mailIndex = mailIndex - 1
@@ -374,7 +379,7 @@ function M:MailBox_CollectCurrent()
     end
 
     local currentID = _G.InboxFrame.openMailID
-    if C_Mail_HasInboxMoney(currentID) then
+    if Mail_HasInboxMoney(currentID) then
         TakeInboxMoney(currentID)
     end
     M:MailBox_CollectAttachment()
@@ -489,7 +494,7 @@ function _G.OpenAllMail:AdvanceToNextItem()
         local itemID = select(2, GetInboxItem(self.mailIndex, self.attachmentIndex))
         local hasBlacklistedItem = self:IsItemBlacklisted(itemID)
         local hasCOD = CODAmount and CODAmount > 0
-        local hasMoneyOrItem = C_Mail_HasInboxMoney(self.mailIndex) or HasInboxItem(self.mailIndex, self.attachmentIndex)
+        local hasMoneyOrItem = Mail_HasInboxMoney(self.mailIndex) or HasInboxItem(self.mailIndex, self.attachmentIndex)
         if not hasBlacklistedItem and not isGM and not hasCOD and hasMoneyOrItem then
             foundAttachment = true
         else
