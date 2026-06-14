@@ -81,4 +81,11 @@ tinsert(C.BlizzThemes, function()
     if _G.CompactRaidFrameManagerDisplayFrameEveryoneIsAssistButton then
         F.ReskinCheckbox(_G.CompactRaidFrameManagerDisplayFrameEveryoneIsAssistButton)
     end
+
+    -- 隐藏 CompactRaidFrameManager（使用 pcall 避免受保护框架错误）
+    if C.DB.Unitframe.HideCompactRaidFrameManager then
+        pcall(function()
+            F:HideObject(_G.CompactRaidFrameManager)
+        end)
+    end
 end)

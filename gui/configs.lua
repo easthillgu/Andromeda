@@ -186,6 +186,7 @@ C.CharacterSettings = {
         DesaturateIcon = true,
         DebuffTypeColor = true,
         StealableBuffs = true,
+        HideCompactRaidFrameManager = true,
 
         Fader = false,
         MinAlpha = 0,

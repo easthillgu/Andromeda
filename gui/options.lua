@@ -1982,6 +1982,18 @@ GUI.OptionsList = {
             nil,
             L['Desaturate debuff icons cast by others.'],
         },
+
+        {
+            1,
+            'Unitframe',
+            'HideCompactRaidFrameManager',
+            L['Hide Compact Raid Frame Manager'],
+            true,
+            nil,
+            nil,
+            L['Hide the system compact raid frame manager.'],
+        },
+
         {
             1,
             'Unitframe',
