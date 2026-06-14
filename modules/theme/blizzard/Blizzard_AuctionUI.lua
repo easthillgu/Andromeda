@@ -1,26 +1,6 @@
 local F, C = unpack(select(2, ...))
 
 -- NDui → Andromeda compat shim
--- 3.80.1 Texture:SetColorTexture polyfill (handles both (r,g,b,a) and (color,a) signatures)
-do
-    local tex = UIParent:CreateTexture(nil, "ARTWORK")
-    local mt = tex and getmetatable(tex)
-    if mt and mt.__index and mt.__index.SetColorTexture and not mt.__index.__SetColorTexture_patched then
-        mt.__index.__SetColorTexture_patched = true
-        local orig = mt.__index.SetColorTexture
-        mt.__index.SetColorTexture = function(self, r, g, b, a)
-            if type(r) == "number" and type(g) == "number" and type(b) == "number" then
-                -- 3.80.1: old-style SetColorTexture(r,g,b,a) → must convert to ColorMixin
-                orig(self, CreateColor(r, g, b, a or 1))
-            elseif g ~= nil then
-                orig(self, r, g)
-            else
-                orig(self, r)
-            end
-        end
-    end
-end
-
 local B = {}
 setmetatable(B, {__index = F})
 -- Name mismatches
@@ -87,7 +67,7 @@ C.Themes["Blizzard_AuctionUI"] = function()  -- 3.80.1: fired via ADDON_LOADED
 	}
 	for _, tab in pairs(auctionSorts) do
 		tab:DisableDrawLayer("BACKGROUND")
-		tab:GetHighlightTexture():SetColorTexture(r, g, b, .25)
+		tab:GetHighlightTexture():SetColorTexture(CreateColor(r, g, b, .25))
 	end
 
 	B.StripTextures(BrowseCloseButton)
@@ -158,7 +138,7 @@ C.Themes["Blizzard_AuctionUI"] = function()  -- 3.80.1: fired via ADDON_LOADED
 			it:SetPushedTexture(0)
 			local itemHL = it:GetHighlightTexture()
 			if itemHL then
-				itemHL:SetColorTexture(1, 1, 1, .25)
+				itemHL:SetColorTexture(CreateColor(1, 1, 1, .25))
 			end
 			B.ReskinIcon(ic)
 			it.IconBorder:SetAlpha(0)
@@ -200,7 +180,7 @@ C.Themes["Blizzard_AuctionUI"] = function()  -- 3.80.1: fired via ADDON_LOADED
 	local _, AuctionsItemButtonNameFrame = AuctionsItemButton:GetRegions()
 	AuctionsItemButtonNameFrame:Hide()
 	local hl = AuctionsItemButton:GetHighlightTexture()
-	hl:SetColorTexture(1, 1, 1, .25)
+	hl:SetColorTexture(CreateColor(1, 1, 1, .25))
 	hl:SetInside()
 
 	B.ReskinClose(AuctionFrameCloseButton, AuctionFrame, -4, -14)
