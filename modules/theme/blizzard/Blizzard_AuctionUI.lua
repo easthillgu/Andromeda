@@ -226,17 +226,20 @@ C.Themes["Blizzard_AuctionUI"] = function()
 	B:UpdateMoneyDisplay(StartPriceGold, StartPriceSilver, StartPriceCopper)
 	B:UpdateMoneyDisplay(BuyoutPriceGold, BuyoutPriceSilver, BuyoutPriceCopper)
 
-	-- [[ WoW token ]]
+	-- [[ WoW token ]] (3.80.1: Retail only, nil-guarded)
 
+	if BrowseWowTokenResults then
 	local BrowseWowTokenResults = BrowseWowTokenResults
 
 	B.Reskin(BrowseWowTokenResults.Buyout)
 	B.ReskinPortraitFrame(WowTokenGameTimeTutorial)
 	B.Reskin(StoreButton)
+	if WowTokenGameTimeTutorial then
 	WowTokenGameTimeTutorial.LeftDisplay.Label:SetTextColor(1, 1, 1)
 	WowTokenGameTimeTutorial.LeftDisplay.Tutorial1:SetTextColor(1, .8, 0)
 	WowTokenGameTimeTutorial.RightDisplay.Label:SetTextColor(1, 1, 1)
 	WowTokenGameTimeTutorial.RightDisplay.Tutorial1:SetTextColor(1, .8, 0)
+	end
 
 	-- Token
 
@@ -251,9 +254,12 @@ C.Themes["Blizzard_AuctionUI"] = function()
 		iconBorder:SetOutside(icon)
 		icon:SetTexCoord(.08, .92, .08, .92)
 	end
+	end  -- 3.80.1: closes if BrowseWowTokenResults
 
 	AuctionFrameBot:Hide()
 
+	-- 3.80.1: Retail-only price options, nil-guarded
+	if BrowsePriceOptionsButtonFrame and BrowsePriceOptionsFrame then
 	B.Reskin(BrowsePriceOptionsButtonFrame.Button)
 	BrowsePriceOptionsButtonFrame.Button.__bg:SetInside(nil, 4, 4)
 
@@ -266,4 +272,5 @@ C.Themes["Blizzard_AuctionUI"] = function()
 			B.ReskinRadio(child)
 		end
 	end
+	end  -- 3.80.1: closes if BrowsePriceOptions
 end
