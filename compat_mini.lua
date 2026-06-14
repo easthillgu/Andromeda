@@ -8,7 +8,11 @@ if not _G.nop then _G.nop = function() end end
 _G.Enum.ItemQuality.Common = _G.Enum.ItemQuality.Common or _G.Enum.ItemQuality.Standard or 1
 _G.Enum.ItemQuality.Uncommon = _G.Enum.ItemQuality.Uncommon or _G.Enum.ItemQuality.Good or 2
 
--- IsAddOnLoaded (3.80.1 native in C_AddOns namespace, all references migrated)
+-- GetSpecialization (3.80.1 timing issue — not available at file load)
+_G.GetSpecialization = _G.GetSpecialization or function() return nil end
+
+-- SpellIsPriorityAura (Retail API, not in 3.80.1)
+_G.SpellIsPriorityAura = _G.SpellIsPriorityAura or function() return false end
 
 -- C_ChallengeMode (minimap.lua)
 if not _G.C_ChallengeMode then _G.C_ChallengeMode = {} end
