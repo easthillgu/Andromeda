@@ -4,30 +4,15 @@ local M = F:RegisterModule('EnhancedMailBox')
 local mailIndex, timeToWait, totalCash, inboxItems = 0, 0.15, 0, {}
 local isGoldCollecting
 
-function M:GetMoneyString(money, full)
-    if money >= 1e6 and not full then
-        return format(' %.0f%s', money / 1e4, _G.GOLD_AMOUNT_SYMBOL)
-    else
-        if money > 0 then
-            local moneyString = ''
-            local gold = floor(money / 1e4)
-            if gold > 0 then
-                moneyString = ' ' .. gold .. _G.GOLD_AMOUNT_SYMBOL
-            end
-            local silver = floor((money - (gold * 1e4)) / 100)
-            if silver > 0 then
-                moneyString = moneyString .. ' ' .. silver .. _G.SILVER_AMOUNT_SYMBOL
-            end
-            local copper = mod(money, 100)
-            if copper > 0 then
-                moneyString = moneyString .. ' ' .. copper .. _G.COPPER_AMOUNT_SYMBOL
-            end
-            return moneyString
-        else
-            return ' 0' .. _G.COPPER_AMOUNT_SYMBOL
-        end
-    end
-end
+-- 3.80.1: local cache for performance (NDui pattern)
+local C_Mail_HasInboxMoney = C_Mail.HasInboxMoney
+local C_Mail_IsCommandPending = C_Mail.IsCommandPending
+local InboxItemCanDelete, DeleteInboxItem = InboxItemCanDelete, DeleteInboxItem
+local GetInboxNumItems, GetInboxHeaderInfo, GetInboxItem = GetInboxNumItems, GetInboxHeaderInfo, GetInboxItem
+local GetItemInfo, GetItemQualityColor = GetItemInfo, GetItemQualityColor
+local TakeInboxMoney, TakeInboxItem = TakeInboxMoney, TakeInboxItem
+local GetSendMailPrice, GetMoney = GetSendMailPrice, GetMoney
+local ATTACHMENTS_MAX_RECEIVE = ATTACHMENTS_MAX_RECEIVE
 
 function M:MailBox_DelectClick()
     local selectedID = self.id + (_G.InboxFrame.pageNum - 1) * 7
@@ -288,8 +273,8 @@ end
 
 function M:MailBox_CollectGold()
     if mailIndex > 0 then
-        if not C_Mail.IsCommandPending() then
-            if C_Mail.HasInboxMoney(mailIndex) then
+        if not C_Mail_IsCommandPending() then
+            if C_Mail_HasInboxMoney(mailIndex) then
                 TakeInboxMoney(mailIndex)
             end
             mailIndex = mailIndex - 1
@@ -327,7 +312,7 @@ function M:TotalCash_OnEnter()
 
     if totalCash > 0 then
         _G.GameTooltip:SetOwner(self, 'ANCHOR_RIGHT')
-        _G.GameTooltip:AddLine(M:GetMoneyString(totalCash, true), 1, 1, 1)
+        _G.GameTooltip:AddLine(GetMoneyString(totalCash, true), 1, 1, 1)
         _G.GameTooltip:Show()
     end
 end
@@ -389,7 +374,7 @@ function M:MailBox_CollectCurrent()
     end
 
     local currentID = _G.InboxFrame.openMailID
-    if C_Mail.HasInboxMoney(currentID) then
+    if C_Mail_HasInboxMoney(currentID) then
         TakeInboxMoney(currentID)
     end
     M:MailBox_CollectAttachment()
@@ -463,7 +448,7 @@ function M:ArrangeDefaultElements()
         if sendPrice > GetMoney() then
             colorStr = '|cffff0000'
         end
-        _G.GameTooltip:AddLine(_G.SEND_MAIL_COST .. colorStr .. M:GetMoneyString(sendPrice, true))
+        _G.GameTooltip:AddLine(_G.SEND_MAIL_COST .. colorStr .. GetMoneyString(sendPrice, true))
         _G.GameTooltip:Show()
     end)
     _G.SendMailMailButton:HookScript('OnLeave', F.HideTooltip)
@@ -504,7 +489,7 @@ function _G.OpenAllMail:AdvanceToNextItem()
         local itemID = select(2, GetInboxItem(self.mailIndex, self.attachmentIndex))
         local hasBlacklistedItem = self:IsItemBlacklisted(itemID)
         local hasCOD = CODAmount and CODAmount > 0
-        local hasMoneyOrItem = C_Mail.HasInboxMoney(self.mailIndex) or HasInboxItem(self.mailIndex, self.attachmentIndex)
+        local hasMoneyOrItem = C_Mail_HasInboxMoney(self.mailIndex) or HasInboxItem(self.mailIndex, self.attachmentIndex)
         if not hasBlacklistedItem and not isGM and not hasCOD and hasMoneyOrItem then
             foundAttachment = true
         else
