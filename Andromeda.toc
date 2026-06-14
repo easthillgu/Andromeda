@@ -13,7 +13,7 @@
 ## X-License: GPL-3.0
 
 libraries\taintless.xml
-compat.lua
+compat_mini.lua
 libraries\_loader.xml
 core\init.lua
 locales\_loader.xml

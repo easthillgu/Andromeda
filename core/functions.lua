@@ -65,7 +65,7 @@ do
             if name == addonName then
                 callback()
                 return true
-            elseif name == C.ADDON_NAME and IsAddOnLoaded(addonName) then
+            elseif name == C.ADDON_NAME and C_AddOns.IsAddOnLoaded(addonName) then
                 callback()
                 return true
             end

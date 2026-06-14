@@ -268,38 +268,9 @@ if not _G.CooldownFrame_Set then
     end
 end
 
----------------------------------------------------------------------------
--- GetPhysicalScreenSize (3.80.1 中被移除，UIScale/constants 依赖)
----------------------------------------------------------------------------
-if not _G.GetPhysicalScreenSize then
-    _G.GetPhysicalScreenSize = function()
-        local uiScale = _G.UIParent:GetEffectiveScale()
-        return _G.UIParent:GetWidth() * uiScale, _G.UIParent:GetHeight() * uiScale
-    end
-end
+-- 3.80.1: GetPhysicalScreenSize — native in 3.80.1 (NDui verified). Removed.
 
----------------------------------------------------------------------------
--- SOUNDKIT stub（正式服音效枚举）
--- 对应的数字 ID 在正式服才存在，经典版中这些音效路径不同
--- 如果不播放则直接跳过
----------------------------------------------------------------------------
-if not _G.SOUNDKIT then
-    _G.SOUNDKIT = {
-        IG_MAINMENU_OPTION = 0,
-        IG_MAINMENU_OPTION_CHECKBOX_ON = 0,
-        IG_BACKPACK_CLOSE = 0,
-        IG_BACKPACK_OPEN = 0,
-        UI_BUTTON_CLICK = 0,
-        GS_TITLE_DROP = 0,
-        GS_TITLE_OPTION_OK = 0,
-        UI_BONUS_EVENT_SYSTEM_VIGNETTES = 0,
-        -- unitframe target selection sounds
-        IG_CREATURE_AGGRO_SELECT = 0,
-        IG_CHARACTER_NPC_SELECT = 0,
-        IG_CREATURE_NEUTRAL_SELECT = 0,
-        INTERFACE_SOUND_LOST_TARGET_UNIT = 0,
-    }
-end
+-- 3.80.1: SOUNDKIT is NATIVE in 3.80.1 (NDui verified). Stub removed to prevent taint.
 
 ---------------------------------------------------------------------------
 -- C_AddOns fallback
@@ -370,39 +341,7 @@ if not _G.C_ChallengeMode.GetActiveKeystoneInfo then
     _G.C_ChallengeMode.GetActiveKeystoneInfo = function() return nil, {} end
 end
 
----------------------------------------------------------------------------
--- C_CVar stub (nameplate 用到)
----------------------------------------------------------------------------
-if not _G.C_CVar then
-    _G.C_CVar = {}
-end
-if not _G.C_CVar.RegisterCVar then
-    _G.C_CVar.RegisterCVar = function(name) end
-end
-
----------------------------------------------------------------------------
--- LibActionButton retail API stubs
----------------------------------------------------------------------------
-if not _G.IsCurrentAction then
-    _G.IsCurrentAction = function(slot) return false end
-end
-if not _G.IsAttackAction then
-    _G.IsAttackAction = function(slot) return false end
-end
-if not _G.IsEquippedAction then
-    _G.IsEquippedAction = function(slot) return false end
-end
-if not _G.IsAutoRepeatAction then
-    _G.IsAutoRepeatAction = function(slot) return false end
-end
-if not _G.IsUsableAction then
-    _G.IsUsableAction = function(slot) return false end
-end
-if not _G.IsConsumableAction then
-    _G.IsConsumableAction = function(slot) return false end
-end
-
-
+-- 3.80.1: C_CVar / Action stubs — dead code, native exists in 3.80.1. Removed for taint.
 
 ---------------------------------------------------------------------------
 -- C_QuestLog stubs (Retail quest API, 3.80.1 uses global equivalents)
@@ -456,19 +395,4 @@ if not _G.C_QuestLog.IsComplete then
     _G.C_QuestLog.IsComplete = function(questID) return IsQuestComplete(questID) end
 end
 
-----------------------------------------------------------------------------
--- LE_QUEST_TAG_TYPE / LE_QUEST_FREQUENCY stubs (Retail-only constants)
-----------------------------------------------------------------------------
-if not _G.LE_QUEST_TAG_TYPE_PROFESSION then
-    _G.LE_QUEST_TAG_TYPE_PROFESSION = 0
-end
-if not _G.LE_QUEST_FREQUENCY_DAILY then
-    _G.LE_QUEST_FREQUENCY_DAILY = 1
-end
-
----------------------------------------------------------------------------
--- GetSpecialization (3.80.1 missing, Cataclysm native API)
----------------------------------------------------------------------------
-if not _G.GetSpecialization then
-    _G.GetSpecialization = function() return nil end
-end
+-- 3.80.1: GetSpecialization / Enum stubs — dead code, native in 3.80.1. Removed.
