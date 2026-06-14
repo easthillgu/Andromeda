@@ -48,8 +48,11 @@ local DB = {
     ClassColors = RAID_CLASS_COLORS,
     QualityColors = ITEM_QUALITY_COLORS,
 }
-C.Themes["Blizzard_AuctionUI"] = function()
+tinsert(C.BlizzThemes, function()  -- 3.80.1: AuctionFrame lazily created after ADDON_LOADED
 	local r, g, b = DB.r, DB.g, DB.b
+
+	AuctionFrame:HookScript('OnShow', function(self)
+		self:SetScript('OnShow', nil)  -- one-shot
 
 	B.SetBD(AuctionFrame, nil, 2, -10, 0, 10)
 	B.StripTextures(AuctionProgressFrame)
@@ -273,4 +276,5 @@ C.Themes["Blizzard_AuctionUI"] = function()
 		end
 	end
 	end  -- 3.80.1: closes if BrowsePriceOptions
-end
+	end)  -- 3.80.1: closes OnShow hook
+end)  -- 3.80.1: closes tinsert(C.BlizzThemes, ...)
