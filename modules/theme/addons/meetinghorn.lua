@@ -114,6 +114,174 @@ local function getValue(pathStr, tbl)
     return value
 end
 
+-- 3.80.1: MeetingHorn v4.0.5 (HeroicMainFrame) 皮肤
+function THEME:ReskinMeetingHornV4(mainFrame)
+    -- Clear Blizzard backdrop, apply Andromeda background
+    mainFrame:SetBackdrop(nil)
+    F.SetBD(mainFrame)
+
+    -- Title bar: clear dark ColorTexture, keep title text
+    local titleBar = mainFrame.titleBar
+    if titleBar then
+        for i = 1, titleBar:GetNumRegions() do
+            local region = select(i, titleBar:GetRegions())
+            if region and region.IsObjectType and region:IsObjectType('Texture') then
+                region:SetTexture(nil)
+            end
+        end
+        F.CreateBDFrame(titleBar, 0.35)
+    end
+
+    -- Close button (UIPanelCloseButton template, child of titleBar)
+    if titleBar then
+        for _, child in pairs({titleBar:GetChildren()}) do
+            if child:GetObjectType() == 'Button' then
+                F.ReskinClose(child)
+                break
+            end
+        end
+    end
+
+    -- Tab buttons (CharacterFrameTabButtonTemplate)
+    local tabButtons = mainFrame.tabButtons
+    if tabButtons then
+        for _, tab in ipairs(tabButtons) do
+            F.ReskinTab(tab)
+        end
+    end
+
+    -- BrowserFrame (default tab, already created)
+    local browser = mainFrame.browserFrame
+    if browser then
+        THEME:ReskinBrowserFrameV4(browser)
+    end
+
+    -- Hook other tabs for lazy skinning
+    local origEnsureTab = mainFrame.EnsureTab
+    if origEnsureTab then
+        mainFrame.EnsureTab = function(self, tabIndex)
+            local frame = origEnsureTab(self, tabIndex)
+            if frame and not frame._andmStyled then
+                frame._andmStyled = true
+                THEME:ReskinTabContentV4(frame, tabIndex)
+            end
+            return frame
+        end
+    end
+end
+
+-- 3.80.1: BrowserFrame (活动列表 Tab) 内部皮肤
+function THEME:ReskinBrowserFrameV4(browser)
+    if browser._andmStyled then return end
+    browser._andmStyled = true
+
+    -- Filter area backdrop (BackdropTemplate Frame)
+    for _, child in pairs({browser:GetChildren()}) do
+        if child:GetObjectType() == 'Frame' and child.SetBackdrop and not child._andmStyled then
+            child:SetBackdrop(nil)
+            F.CreateBDFrame(child, 0.25)
+            child._andmStyled = true
+
+            -- Skin EditBox inside filter frame (searchBox)
+            for _, gc in pairs({child:GetChildren()}) do
+                local gt = gc:GetObjectType()
+                if gt == 'EditBox' and not gc._andmStyled then
+                    F.ReskinEditbox(gc)
+                    gc._andmStyled = true
+                elseif gt == 'Frame' and gc.UIDropDownMenu_Initialize and not gc._andmStyled then
+                    -- UIDropDownMenuTemplate dropdowns
+                    F.ReskinDropdown(gc)
+                    gc._andmStyled = true
+                end
+            end
+        end
+    end
+
+    -- ScrollFrame scrollbar (UIPanelScrollFrameTemplate)
+    local scrollFrame = browser.scrollFrame
+    if scrollFrame then
+        for _, child in pairs({scrollFrame:GetChildren()}) do
+            if child:GetObjectType() == 'Slider' and not child._andmStyled then
+                F.ReskinScroll(child)
+                child._andmStyled = true
+            end
+        end
+    end
+
+    -- Refresh button
+    local refreshButton = browser.refreshButton
+    if refreshButton and not refreshButton._andmStyled then
+        F.ReskinButton(refreshButton)
+        refreshButton._andmStyled = true
+    end
+
+    -- Auto-refresh checkbox
+    local autoRefreshCheck = browser.autoRefreshCheck
+    if autoRefreshCheck and not autoRefreshCheck._andmStyled then
+        F.ReskinCheckbox(autoRefreshCheck)
+        autoRefreshCheck._andmStyled = true
+    end
+
+    -- Periodic scan for unskinned whisper buttons (recreated on each refresh)
+    -- MeetingHorn auto-refresh is event-driven with ~1s debounce; scan every 2s
+    if not browser._whisperScanner then
+        browser._whisperScanner = C_Timer.NewTicker(2, function()
+            if not browser._activityButtonsById then return end
+            for _, row in pairs(browser._activityButtonsById) do
+                if row.whisperButton and not row.whisperButton._andmStyled then
+                    F.ReskinButton(row.whisperButton)
+                    row.whisperButton._andmStyled = true
+                end
+            end
+        end)
+    end
+end
+
+-- 3.80.1: 其他 Tab 内容皮肤 — 通用类型扫描器
+function THEME:ReskinTabContentV4(frame, tabIndex)
+    if frame._andmStyled then return end
+    frame._andmStyled = true
+
+    -- Recursive DFS: find and skin all recognizable UI elements
+    local function scan(parent, depth)
+        if depth > 3 then return end
+        if not parent.GetChildren then return end
+
+        for _, child in pairs({parent:GetChildren()}) do
+            if not child._andmStyled then
+                local ot = child:GetObjectType()
+
+                if ot == 'Frame' and child.SetBackdrop then
+                    child:SetBackdrop(nil)
+                    F.CreateBDFrame(child, 0.25)
+                    child._andmStyled = true
+                elseif ot == 'Button' then
+                    F.ReskinButton(child)
+                    child._andmStyled = true
+                elseif ot == 'CheckButton' then
+                    F.ReskinCheckbox(child)
+                    child._andmStyled = true
+                elseif ot == 'EditBox' then
+                    F.ReskinEditbox(child)
+                    child._andmStyled = true
+                elseif ot == 'Frame' and child.UIDropDownMenu_Initialize then
+                    F.ReskinDropdown(child)
+                    child._andmStyled = true
+                elseif ot == 'Slider' then
+                    F.ReskinScroll(child)
+                    child._andmStyled = true
+                end
+
+                if ot == 'Frame' or ot == 'Button' then
+                    scan(child, depth + 1)
+                end
+            end
+        end
+    end
+
+    scan(frame, 0)
+end
+
 function THEME:ReskinMeetingHorn()
     if not _G.ANDROMEDA_ADB.ReskinMeetingHorn then return end
 
@@ -121,8 +289,27 @@ function THEME:ReskinMeetingHorn()
     if not MeetingHorn then return end
 
     local mainFrame = MeetingHorn.MainPanel
-    if not mainFrame then return end
 
+    -- 3.80.1: MeetingHorn v4.0.5 懒加载主框架 — 用 OnUpdate 监听器等待创建
+    if not mainFrame then
+        local watcher = CreateFrame('Frame')
+        watcher:SetScript('OnUpdate', function(self)
+            local f = _G.MeetingHornHeroicMainFrame
+            if f then
+                THEME:ReskinMeetingHornV4(f)
+                self:SetScript('OnUpdate', nil)
+            end
+        end)
+        return
+    end
+
+    -- 3.80.1: v4.0.5 新架构皮肤
+    if mainFrame.contentFrame then
+        THEME:ReskinMeetingHornV4(mainFrame)
+        return
+    end
+
+    -- 旧版皮肤代码
     F.ReskinPortraitFrame(mainFrame)
     mainFrame.PortraitFrame:SetAlpha(0)
 
@@ -247,6 +434,7 @@ function THEME:ReskinMeetingHorn()
     end
 
     local ListView = MeetingHorn:GetClass('UI.ListView')
+    if ListView then
     hooksecurefunc(ListView, 'GetButton', function(self, index)
         local button = self._buttons[index]
         if button and not button.styled then
@@ -286,6 +474,8 @@ function THEME:ReskinMeetingHorn()
             button.styled = true
         end
     end)
+
+    end  -- 3.80.1: closes if ListView
 
     -- Browser
     local Browser = mainFrame.Browser
@@ -367,20 +557,24 @@ function THEME:ReskinMeetingHorn()
     end
 
     local EncounterInfo = MeetingHorn:GetClass('UI.EncounterInfo')
+    if EncounterInfo then
     local origEncounterInfoCreate = EncounterInfo.Create
     EncounterInfo.Create = function(self, parent)
         local header = origEncounterInfoCreate(self, parent)
         reskinHeader(header)
         return header
     end
+    end  -- 3.80.1: closes if EncounterInfo
 
     local EncounterInfoSummary = MeetingHorn:GetClass('UI.EncounterInfoSummary')
+    if EncounterInfoSummary then
     local origEncounterInfoSummaryCreate = EncounterInfoSummary.Create
     EncounterInfoSummary.Create = function(self, parent)
         local summary = origEncounterInfoSummaryCreate(self, parent)
         reskinSummary(summary)
         return summary
     end
+    end  -- 3.80.1: closes if EncounterInfoSummary
 
     -- Challenge
     local Challenge = mainFrame.Challenge
