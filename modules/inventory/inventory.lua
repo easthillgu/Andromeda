@@ -992,7 +992,8 @@ function INVENTORY:OnLogin()
             buttons[3] = INVENTORY.CreateBagToggle(self)
             buttons[4] = INVENTORY.CreateRepairButton(self)
             buttons[5] = INVENTORY.CreateSellButton(self)
-            buttons[6] = INVENTORY.CreateSearchButton(self)
+            -- 3.80.1: search disabled, use category filter mode instead
+            -- buttons[6] = INVENTORY.CreateSearchButton(self)
         elseif name == 'Bank' then
             INVENTORY.CreateBagBar(self, settings, 7)
             buttons[3] = INVENTORY.CreateBagToggle(self)
@@ -1103,6 +1104,7 @@ function INVENTORY:OnLogin()
     F:RegisterEvent('BANKFRAME_OPENED', INVENTORY.AutoDeposit)
 
     -- Fixes
+    _G.BankFrame:SetParent(F.HiddenFrame)
     _G.BankFrame.GetRight = function()
         return f.bank:GetRight()
     end
