@@ -3,6 +3,7 @@
     <Script file="Blizzard_ArenaRegistrar.lua"/>
     <!-- 3.80.1: Retail-only (ArchaeologyFrame) -->
     <!--<Script file="Blizzard_ArchaeologyUI.lua"/>-->
+    <Script file="Blizzard_AuctionUI.lua"/>
     <Script file="Blizzard_AuctionHouseUI.lua"/>
     <Script file="Blizzard_BarbershopUI.lua"/>
     <Script file="Blizzard_BattlefieldMap.lua"/>
