@@ -150,7 +150,7 @@ C.Themes["Blizzard_AuctionUI"] = function()  -- 3.80.1: fired via ADDON_LOADED
 
 			bu:SetHighlightTexture(DB.bdTex)
 			local hl = bu:GetHighlightTexture()
-			hl:SetVertexColor(r, g, b, .2)
+			hl:SetVertexColor(CreateColor(r, g, b, .2))
 			hl:SetInside(bg)
 		end
 	end
