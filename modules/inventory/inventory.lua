@@ -21,6 +21,32 @@ local bagTypeColor = {
 
 local anchorCache = {}
 
+-- 3.80.1: lightweight gap compression — fills empty slots without reordering
+function INVENTORY:CompactBag(bagID)
+    local numSlots = C_Container.GetContainerNumSlots(bagID)
+    local firstEmpty = nil
+    for slot = 1, numSlots do
+        local id = C_Container.GetContainerItemID(bagID, slot)
+        if id then
+            if firstEmpty then
+                -- Move item backward to fill first empty slot
+                C_Container.PickupContainerItem(bagID, slot)
+                C_Container.PickupContainerItem(bagID, firstEmpty)
+                firstEmpty = firstEmpty + 1
+            end
+        elseif not firstEmpty then
+            firstEmpty = slot
+        end
+    end
+end
+
+function INVENTORY:CompactAllBags()
+    if InCombatLockdown() then return end
+    for bag = 0, 4 do
+        INVENTORY:CompactBag(bag)
+    end
+end
+
 local function CheckForBagReagent(name)
     local pass = true
     if name == 'BagReagent' and C_Container.GetContainerNumSlots(5) == 0 then
@@ -556,6 +582,7 @@ function INVENTORY:OnLogin()
     end)
     Backpack:HookScript('OnHide', function()
         PlaySound(_G.SOUNDKIT.IG_BACKPACK_CLOSE)
+        INVENTORY:CompactAllBags()
     end)
 
     INVENTORY.Bags = Backpack
