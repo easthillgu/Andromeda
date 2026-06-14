@@ -1129,6 +1129,12 @@ function INVENTORY:OnLogin()
     F:RegisterEvent('TRADE_SHOW', INVENTORY.OpenBags)
     F:RegisterEvent('TRADE_CLOSED', INVENTORY.CloseBags)
     F:RegisterEvent('BANKFRAME_OPENED', INVENTORY.AutoDeposit)
+    -- 3.80.1: auto-compact bags after items move (delayed for inventory settle)
+    F:RegisterEvent('BAG_UPDATE_DELAYED', function()
+        if not InCombatLockdown() then
+            C_Timer.After(0.1, function() INVENTORY:CompactAllBags() end)
+        end
+    end)
 
     -- Fixes
     _G.BankFrame:SetParent(F.HiddenFrame)
