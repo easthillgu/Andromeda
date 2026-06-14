@@ -51,8 +51,9 @@ local DB = {
 tinsert(C.BlizzThemes, function()  -- 3.80.1: AuctionFrame lazily created after ADDON_LOADED
 	local r, g, b = DB.r, DB.g, DB.b
 
-	AuctionFrame:HookScript('OnShow', function(self)
-		self:SetScript('OnShow', nil)  -- one-shot
+	-- Wait one tick for AuctionFrame to materialize after addon loads
+	C_Timer.After(0, function()
+	if not AuctionFrame then return end
 
 	B.SetBD(AuctionFrame, nil, 2, -10, 0, 10)
 	B.StripTextures(AuctionProgressFrame)
@@ -275,6 +276,6 @@ tinsert(C.BlizzThemes, function()  -- 3.80.1: AuctionFrame lazily created after 
 			B.ReskinRadio(child)
 		end
 	end
-	end  -- 3.80.1: closes if BrowsePriceOptions
-	end)  -- 3.80.1: closes OnShow hook
+	end
+	end)  -- 3.80.1: closes C_Timer.After
 end)  -- 3.80.1: closes tinsert(C.BlizzThemes, ...)
