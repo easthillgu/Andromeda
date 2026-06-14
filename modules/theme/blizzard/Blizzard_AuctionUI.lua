@@ -10,10 +10,8 @@ do
         local orig = mt.__index.SetColorTexture
         mt.__index.SetColorTexture = function(self, r, g, b, a)
             if type(r) == "number" and type(g) == "number" and type(b) == "number" then
-                local ok = pcall(orig, self, r, g, b, a)
-                if not ok then
-                    orig(self, CreateColor(r, g, b, a or 1))
-                end
+                -- 3.80.1: SetColorTexture(color [, a]) — must pass ColorMixin, not raw r,g,b
+                orig(self, CreateColor(r, g, b, a or 1))
             else
                 orig(self, r, g)
             end
