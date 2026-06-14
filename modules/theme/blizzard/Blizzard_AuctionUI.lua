@@ -67,7 +67,7 @@ C.Themes["Blizzard_AuctionUI"] = function()  -- 3.80.1: fired via ADDON_LOADED
 	}
 	for _, tab in pairs(auctionSorts) do
 		tab:DisableDrawLayer("BACKGROUND")
-		tab:GetHighlightTexture():SetColorTexture(CreateColor(r, g, b, .25))
+		tab:GetHighlightTexture():SetColorTexture(r, g, b, .25)
 	end
 
 	B.StripTextures(BrowseCloseButton)
@@ -138,7 +138,7 @@ C.Themes["Blizzard_AuctionUI"] = function()  -- 3.80.1: fired via ADDON_LOADED
 			it:SetPushedTexture(0)
 			local itemHL = it:GetHighlightTexture()
 			if itemHL then
-				itemHL:SetColorTexture(CreateColor(1, 1, 1, .25))
+				itemHL:SetColorTexture(1, 1, 1, .25)
 			end
 			B.ReskinIcon(ic)
 			it.IconBorder:SetAlpha(0)
@@ -150,7 +150,7 @@ C.Themes["Blizzard_AuctionUI"] = function()  -- 3.80.1: fired via ADDON_LOADED
 
 			bu:SetHighlightTexture(DB.bdTex)
 			local hl = bu:GetHighlightTexture()
-			hl:SetVertexColor(CreateColor(r, g, b, .2))
+			hl:SetVertexColor(r, g, b, .2)
 			hl:SetInside(bg)
 		end
 	end
@@ -180,7 +180,7 @@ C.Themes["Blizzard_AuctionUI"] = function()  -- 3.80.1: fired via ADDON_LOADED
 	local _, AuctionsItemButtonNameFrame = AuctionsItemButton:GetRegions()
 	AuctionsItemButtonNameFrame:Hide()
 	local hl = AuctionsItemButton:GetHighlightTexture()
-	hl:SetColorTexture(CreateColor(1, 1, 1, .25))
+	hl:SetColorTexture(1, 1, 1, .25)
 	hl:SetInside()
 
 	B.ReskinClose(AuctionFrameCloseButton, AuctionFrame, -4, -14)
