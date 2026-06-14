@@ -10,10 +10,12 @@ do
         local orig = mt.__index.SetColorTexture
         mt.__index.SetColorTexture = function(self, r, g, b, a)
             if type(r) == "number" and type(g) == "number" and type(b) == "number" then
-                -- 3.80.1: SetColorTexture(color [, a]) — must pass ColorMixin, not raw r,g,b
+                -- 3.80.1: old-style SetColorTexture(r,g,b,a) → must convert to ColorMixin
                 orig(self, CreateColor(r, g, b, a or 1))
-            else
+            elseif g ~= nil then
                 orig(self, r, g)
+            else
+                orig(self, r)
             end
         end
     end
