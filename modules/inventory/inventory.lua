@@ -17,27 +17,6 @@ local bagTypeColor = {
     [9] = { 0.4, 0.6, 1, 0.25 }, -- 工具箱
     [10] = { 0.8, 0, 0, 0.25 }, -- 烹饪包
     [11] = { 0.2, 0.8, 0.2, 0.25 }, -- 材料包
-}
-
-local sortCache = {}
-function INVENTORY:ReverseSort()
-    for bag = 0, 4 do
-        local numSlots = C_Container.GetContainerNumSlots(bag)
-        for slot = 1, numSlots do
-            local info = C_Container.GetContainerItemInfo(bag, slot)
-            local texture = info and info.iconFileID
-            local locked = info and info.isLocked
-
-            if (slot <= numSlots / 2) and texture and not locked and not sortCache['b' .. bag .. 's' .. slot] then
-                C_Container.PickupContainerItem(bag, slot)
-                C_Container.PickupContainerItem(bag, numSlots + 1 - slot)
-                sortCache['b' .. bag .. 's' .. slot] = true
-            end
-        end
-    end
-
-    INVENTORY.Bags.isSorting = false
-    INVENTORY:UpdateAllBags()
 end
 
 local anchorCache = {}
@@ -340,34 +319,11 @@ function INVENTORY:CreateSortButton(name)
     local bu = F.CreateButton(self, 16, 16, true, iconsList.BagSort)
     bu.Icon:SetVertexColor(unpack(iconColor))
     bu:SetScript('OnClick', function()
-        if C.DB.Inventory.SortMode == 3 then
-            _G.UIErrorsFrame:AddMessage(C.INFO_COLOR .. L['Inventory sort disabled!'])
-            return
-        end
-
-        if name == 'Bank' then
-            INVENTORY:SortBankBags()
-        elseif name == 'Reagent' then
-            pcall(C_Container.SortReagentBankBags)
-        else
-            if C.DB.Inventory.SortMode == 1 then
-                INVENTORY:SortBags()
-            elseif C.DB.Inventory.SortMode == 2 then
-                if InCombatLockdown() then
-                    _G.UIErrorsFrame:AddMessage(C.INFO_COLOR .. _G.ERR_NOT_IN_COMBAT)
-                else
-                    INVENTORY:SortBags()
-                    wipe(sortCache)
-                    INVENTORY.Bags.isSorting = true
-                    F:Delay(0.5, INVENTORY.ReverseSort)
-                end
-            end
-        end
+        _G.UIErrorsFrame:AddMessage(C.INFO_COLOR .. L['Items are now categorized visually only. No physical sorting needed.'])
     end)
 
-    bu.tipHeader = L['Inventory Sort']
-    F.AddTooltip(bu, 'ANCHOR_TOP')
-
+    bu.tipHeader = L['Item Categories']
+    F.AddTooltip(bu, 'ANCHOR_TOP', L['Items stay in place. Use search bar to filter by category (boe, quest, etc).'], 'BLUE')
     return bu
 end
 
