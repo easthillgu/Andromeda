@@ -18,7 +18,6 @@ C.db.Bags = {Enable = false}
 C.db.Nameplate = {Enable = false}
 
 local DB = {
-    r = C.r, g = C.g, b = C.b,
     bdTex = C.Assets.Textures.Backdrop,
     TexCoord = C.TEX_COORD,
     isDeveloper = false,
@@ -31,7 +30,7 @@ local DB = {
 C.Themes["Blizzard_AuctionUI"] = function()  -- 3.80.1: fired via ADDON_LOADED
 	-- AuctionFrame may not exist yet (created after ADDON_LOADED)
 	local function doSkin()
-	local r, g, b = DB.r, DB.g, DB.b
+	local r, g, b = C.r, C.g, C.b
 
 	B.SetBD(AuctionFrame, nil, 2, -10, 0, 10)
 	B.StripTextures(AuctionProgressFrame)
