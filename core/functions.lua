@@ -1,5 +1,13 @@
 local F, C, L = unpack(select(2, ...))
 
+-- 3.80.1: C_AddOns not ready at file load → lazy wrapper (no global taint)
+local function IsAddOnLoaded_Compat(name)
+    if C_AddOns and C_AddOns.IsAddOnLoaded then
+        return C_AddOns.IsAddOnLoaded(name)
+    end
+    return false
+end
+
 C.ThemeWidgets = {
     frame = {},
     button = {},
@@ -65,7 +73,7 @@ do
             if name == addonName then
                 callback()
                 return true
-            elseif name == C.ADDON_NAME and C_AddOns.C_AddOns.IsAddOnLoaded(addonName) then
+            elseif name == C.ADDON_NAME and IsAddOnLoaded_Compat(addonName) then
                 callback()
                 return true
             end

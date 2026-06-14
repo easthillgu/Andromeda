@@ -268,12 +268,8 @@ if not _G.CooldownFrame_Set then
     end
 end
 
--- 3.80.1: GetPhysicalScreenSize — native in 3.80.1 (NDui verified). Removed.
 
--- 3.80.1: SOUNDKIT is NATIVE in 3.80.1 (NDui verified). Stub removed to prevent taint.
 
----------------------------------------------------------------------------
--- C_AddOns fallback
 ---------------------------------------------------------------------------
 if not _G.C_AddOns then
     _G.C_AddOns = {}
@@ -282,8 +278,7 @@ if not _G.C_AddOns.GetAddOnMetadata then
     _G.C_AddOns.GetAddOnMetadata = _G.GetAddOnMetadata
 end
 
----------------------------------------------------------------------------
--- IsAddOnLoaded (3.80.1 中被移除，ADDON_LOADED handler 依赖)
+
 ---------------------------------------------------------------------------
 if not _G.IsAddOnLoaded then
     _G.IsAddOnLoaded = function(name)
@@ -329,9 +324,7 @@ if not _G.C_BattleNet.GetFriendAccountInfo then
     end
 end
 
--- 3.80.1: CreateFromMixins/ObjectPoolMixin/CreateTexturePool/CreateFramePool
--- are NATIVE APIs in 3.80.1 (verified via NDui). Stubs cause Lua Taint.
--- Removed to fix Internal Auction Error.
+
 
 ---------------------------------------------------------------------------
 -- C_ChallengeMode stub (nameplate 用到)
