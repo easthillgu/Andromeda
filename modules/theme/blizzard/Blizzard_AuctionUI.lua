@@ -50,9 +50,7 @@ local DB = {
 }
 C.Themes["Blizzard_AuctionUI"] = function()  -- 3.80.1: fired via ADDON_LOADED
 	-- AuctionFrame may not exist yet (created after ADDON_LOADED)
-	-- Wait one tick for the addon's OnLoad to create the frame
-	C_Timer.After(0, function()
-	if not AuctionFrame then return end
+	local function doSkin()
 	local r, g, b = DB.r, DB.g, DB.b
 
 	B.SetBD(AuctionFrame, nil, 2, -10, 0, 10)
@@ -275,7 +273,18 @@ C.Themes["Blizzard_AuctionUI"] = function()  -- 3.80.1: fired via ADDON_LOADED
 		elseif child:IsObjectType("CheckButton") then
 			B.ReskinRadio(child)
 		end
+	end  -- closes if BrowsePriceOptions
+	end  -- 3.80.1: closes doSkin()
+
+	if AuctionFrame then
+		doSkin()
+	else
+		local watcher = CreateFrame('Frame')
+		watcher:SetScript('OnUpdate', function(self)
+			if AuctionFrame then
+				doSkin()
+				self:SetScript('OnUpdate', nil)
+			end
+		end)
 	end
-	end
-	end)  -- 3.80.1: closes C_Timer.After
 end  -- 3.80.1: closes C.Themes["Blizzard_AuctionUI"]
