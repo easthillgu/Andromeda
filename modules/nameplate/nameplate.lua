@@ -711,29 +711,30 @@ function NAMEPLATE:PostUpdatePlates(event, unit)
                 self.softTargetFrame:SetParent(self)
             end
 
-            -- NDui-style: disable Blizzard elements on first visit
+            -- NDui-style: disable Blizzard elements, ensure they stay hidden on plate reuse
             if not blizzPlate._andmCleaned then
                 blizzPlate._andmCleaned = true
-
-                local health = blizzPlate.healthBar or blizzPlate.healthbar
-                if health then
-                    health:UnregisterAllEvents()
-                    health:Hide()
-                end
-
-                local spell = blizzPlate.castBar or blizzPlate.spellbar
-                if spell then
-                    spell:UnregisterAllEvents()
-                    spell:Hide()
-                end
-
-                if blizzPlate.BuffFrame then
-                    blizzPlate.BuffFrame:UnregisterAllEvents()
-                    blizzPlate.BuffFrame:Hide()
-                end
-
                 blizzPlate:HookScript('OnShow', function(f) f:Hide() end)
             end
+
+            local health = blizzPlate.healthBar or blizzPlate.healthbar
+            if health then
+                health:UnregisterAllEvents()
+                health:Hide()
+            end
+
+            local spell = blizzPlate.castBar or blizzPlate.spellbar
+            if spell then
+                spell:UnregisterAllEvents()
+                spell:Hide()
+            end
+
+            if blizzPlate.BuffFrame then
+                blizzPlate.BuffFrame:UnregisterAllEvents()
+                blizzPlate.BuffFrame:Hide()
+            end
+
+            blizzPlate:Hide()
         end
 
         NAMEPLATE.RefreshPlateType(self, unit)

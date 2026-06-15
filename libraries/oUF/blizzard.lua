@@ -117,6 +117,7 @@ local function handleFrame(baseName, doNotReparent, isNamePlate)
 		local health = frame.healthBar or frame.healthbar or frame.HealthBar or (frame.HealthBarsContainer and frame.HealthBarsContainer.healthBar)
 		if(health) then
 			health:UnregisterAllEvents()
+			health:Hide()
 		end
 
 		local power = frame.manabar or frame.ManaBar
