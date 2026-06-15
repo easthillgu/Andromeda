@@ -635,35 +635,31 @@ local function OnMouseUp(self, btn)
         return
     end
 
-    if btn == 'RightButton' then
+    if btn == 'MiddleButton' then
         if InCombatLockdown() then
             _G.UIErrorsFrame:AddMessage(C.RED_COLOR .. _G.ERR_NOT_IN_COMBAT)
             return
         end
         EasyMenu(MAP.MenuList, F.EasyMenu, 'cursor', 0, 0, 'MENU', 3)
-    elseif btn == 'MiddleButton' then
-        ToggleDropDownMenu(1, nil, MAP.MinimapTracking, 'cursor', 0, 0)
-    else
-        -- 3.80.1: pass left-click to original Blizzard handler for ping
-        if MAP._origMinimapOnMouseDown then
-            MAP._origMinimapOnMouseDown(self, btn)
+    elseif btn == 'RightButton' then
+        if _G.MiniMapTrackingButton then
+            _G.MiniMapTrackingButton:Click()
         end
+    else
+        Minimap_OnClick(self)
     end
 end
 
 function MAP:MouseFunc()
     _G.Minimap:EnableMouseWheel(true)
-    _G.Minimap:EnableMouse(true)
     _G.Minimap:SetScript('OnMouseWheel', OnMouseWheel)
-    -- Save original for left-click ping passthrough
-    MAP._origMinimapOnMouseDown = _G.Minimap:GetScript('OnMouseDown')
-    _G.Minimap:SetScript('OnMouseDown', OnMouseUp)
+    _G.Minimap:SetScript('OnMouseUp', OnMouseUp)
 end
 
 -- Help Tip
 
 local minimapInfo = {
-    text = L['Mouse scroll to zoom, right click for micromenu, middle click for tracking, left click to ping.'],
+    text = L['Mouse scroll to zoom in or out, hold down the alt key and mouse scroll to adjust game volume, middle click to toggle game menu, right click to toggle track menu.'],
     buttonStyle = _G.HelpTip.ButtonStyle.GotIt,
     targetPoint = _G.HelpTip.Point.LeftEdgeCenter,
     onAcknowledgeCallback = F.HelpInfoAcknowledge,
@@ -691,21 +687,33 @@ function MAP:ReskinTrackingButton()
     tracking:SetPoint('BOTTOMRIGHT', Minimap, 2, Minimap.halfDiff - 4)
     tracking:SetFrameLevel(999)
 
+    -- Hide default Blizzard textures
     if _G.MiniMapTrackingBackground then
         _G.MiniMapTrackingBackground:Hide()
     end
     if _G.MiniMapTrackingButtonBorder then
         _G.MiniMapTrackingButtonBorder:Hide()
     end
+    if _G.MiniMapTrackingIconOverlay then
+        _G.MiniMapTrackingIconOverlay:SetAlpha(0)
+    end
+    if _G.MiniMapTrackingButtonShine then
+        _G.MiniMapTrackingButtonShine:SetAlpha(0)
+    end
+
+    -- Clear button default textures
+    _G.MiniMapTrackingButton:SetNormalTexture('')
+    _G.MiniMapTrackingButton:SetPushedTexture('')
+    _G.MiniMapTrackingButton:SetDisabledTexture('')
+
+    -- Reskin icon
     if _G.MiniMapTrackingIcon then
         local icon = _G.MiniMapTrackingIcon
         F.ReskinIcon(icon)
         icon:SetSize(20, 15)
     end
-    if _G.MiniMapTrackingIconOverlay then
-        _G.MiniMapTrackingIconOverlay:SetAlpha(0)
-    end
 
+    -- Custom highlight
     local hl = _G.MiniMapTrackingButton:GetHighlightTexture()
     if hl then
         hl:SetColorTexture(1, 1, 1, 0.25)
