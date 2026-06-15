@@ -146,9 +146,7 @@ C.Assets = {
         Header     = C.ASSET_PATH .. 'fonts\\header.ttf',
         Pixel      = C.ASSET_PATH .. 'fonts\\Pingfangpixel.ttf',
         HalfHeight = C.ASSET_PATH .. 'fonts\\roadway.ttf',
-        cd         = C.ASSET_PATH .. 'fonts\\super-effective.ttf',
         Small      = C.ASSET_PATH .. 'fonts\\super-effective.ttf',
-        PingFang   = C.ASSET_PATH .. 'fonts\\Pingfangpixel.ttf',
     },
 }
 

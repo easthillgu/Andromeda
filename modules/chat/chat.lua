@@ -166,7 +166,7 @@ local function setupChatFrame(frame)
     local name = frame:GetName()
     local maxLines = 1024
 
-    local font = C.Assets.Fonts.PingFang
+    local font = C.Assets.Fonts.Pixel
     local fontSize = select(2, frame:GetFont())
     frame:SetFont(font, fontSize, 'OUTLINE')
     frame:SetShadowColor(0, 0, 0, outline and 0 or 1)
