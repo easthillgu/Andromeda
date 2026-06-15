@@ -20,8 +20,6 @@ function MAP:RemoveBlizzStuff()
     pcall(Minimap.SetArchBlobRingScalar, Minimap, 0)
     pcall(Minimap.SetQuestBlobRingScalar, Minimap, 0)
 
-    F.HideObject(Minimap.ZoomIn)
-    F.HideObject(Minimap.ZoomOut)
     F.HideObject(MinimapCompassTexture)
 
     -- ClockFrame
@@ -383,7 +381,7 @@ function MAP:CreateExpansionLandingPageButton()
                 HideUIPanel(_G.ExpansionLandingPage)
             end
 
-            EasyMenu(MAP.ExpansionMenuList, F.EasyMenu, self, -80, 0, 'MENU', 1)
+            F.ShowEasyMenu(MAP.ExpansionMenuList, F.EasyMenu, self, -80, 0, 'MENU', 1)
         end
     end)
 
@@ -640,13 +638,13 @@ local function OnMouseUp(self, btn)
             _G.UIErrorsFrame:AddMessage(C.RED_COLOR .. _G.ERR_NOT_IN_COMBAT)
             return
         end
-        EasyMenu(MAP.MenuList, F.EasyMenu, 'cursor', 0, 0, 'MENU', 3)
+        F.ShowEasyMenu(MAP.MenuList, F.EasyMenu, 'cursor', 0, 0, 'MENU', 3)
     elseif btn == 'RightButton' then
         if _G.MiniMapTrackingButton then
             _G.MiniMapTrackingButton:Click()
         end
     else
-        Minimap_OnClick(self)
+        _G.Minimap_OnClick(self)
     end
 end
 
