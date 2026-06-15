@@ -599,19 +599,24 @@ do
         ToggleDropDownMenu(1, nil, menuFrame, anchor, x, y, menuList, nil, autoHideDelay)
     end
 
-    -- Named color resolution (precomputed to avoid repeated HexToRgb calls)
+    -- Named color resolution (lazy precomputed to avoid repeated HexToRgb calls)
 
-    local NAMED_COLORS = {
-        CLASS  = { F:HexToRgb(C.MY_CLASS_COLOR) },
-        INFO   = { F:HexToRgb(C.INFO_COLOR) },
-        YELLOW = { F:HexToRgb(C.YELLOW_COLOR) },
-        RED    = { F:HexToRgb(C.RED_COLOR) },
-        GREEN  = { F:HexToRgb(C.GREEN_COLOR) },
-        BLUE   = { F:HexToRgb(C.BLUE_COLOR) },
-        GREY   = { F:HexToRgb(C.GREY_COLOR) },
-    }
+    local NAMED_COLORS
+    local function ensureNamedColors()
+        if NAMED_COLORS then return end
+        NAMED_COLORS = {
+            CLASS  = { F:HexToRgb(C.MY_CLASS_COLOR) },
+            INFO   = { F:HexToRgb(C.INFO_COLOR) },
+            YELLOW = { F:HexToRgb(C.YELLOW_COLOR) },
+            RED    = { F:HexToRgb(C.RED_COLOR) },
+            GREEN  = { F:HexToRgb(C.GREEN_COLOR) },
+            BLUE   = { F:HexToRgb(C.BLUE_COLOR) },
+            GREY   = { F:HexToRgb(C.GREY_COLOR) },
+        }
+    end
 
     local function ResolveColor(colour)
+        ensureNamedColors()
         local cached = NAMED_COLORS[colour]
         if cached then
             return unpack(cached)
