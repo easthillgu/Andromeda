@@ -714,7 +714,6 @@ function NAMEPLATE:PostUpdatePlates(event, unit)
             -- NDui-style: disable Blizzard elements, ensure they stay hidden on plate reuse
             if not blizzPlate._andmCleaned then
                 blizzPlate._andmCleaned = true
-                blizzPlate:HookScript('OnShow', function(f) f:Hide() end)
             end
 
             local health = blizzPlate.healthBar or blizzPlate.healthbar
@@ -823,7 +822,27 @@ function NAMEPLATE:OnLogin()
     NAMEPLATE:RefreshSpecialUnitsList()
     NAMEPLATE:RefreshPowerUnitsList()
 
+    -- 默认关闭姓名板，只在战斗时显示
+    SetCVar('nameplateShowEnemies', 0)
+    SetCVar('nameplateShowFriends', 0)
+
+    -- 注册战斗状态事件
+    F:RegisterEvent('PLAYER_REGEN_DISABLED', NAMEPLATE.OnEnterCombat)
+    F:RegisterEvent('PLAYER_REGEN_ENABLED', NAMEPLATE.OnLeaveCombat)
+
     oUF:RegisterStyle('Nameplate', NAMEPLATE.CreateNameplateStyle)
     oUF:SetActiveStyle('Nameplate')
     oUF:SpawnNamePlates('oUF_Nameplate', NAMEPLATE.PostUpdatePlates)
+end
+
+function NAMEPLATE:OnEnterCombat()
+    -- 进入战斗时显示姓名板
+    SetCVar('nameplateShowEnemies', 1)
+    SetCVar('nameplateShowFriends', 0)
+end
+
+function NAMEPLATE:OnLeaveCombat()
+    -- 退出战斗时隐藏姓名板
+    SetCVar('nameplateShowEnemies', 0)
+    SetCVar('nameplateShowFriends', 0)
 end
