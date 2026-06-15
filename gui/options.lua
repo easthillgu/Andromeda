@@ -2384,6 +2384,16 @@ GUI.OptionsList = {
         {
             1,
             'Nameplate',
+            'OnlyShowInCombat',
+            L['Only Show In Combat'],
+            nil,
+            nil,
+            UpdateOnlyShowInCombat,
+            L['Only show nameplates when you are in combat.'],
+        },
+        {
+            1,
+            'Nameplate',
             'NameOnlyMode',
             L['Name Only Mode'],
             true,

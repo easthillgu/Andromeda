@@ -823,16 +823,23 @@ function NAMEPLATE:OnLogin()
     NAMEPLATE:RefreshPowerUnitsList()
 
     -- 只在战斗中显示姓名板（需要启用配置选项）
+    NAMEPLATE:UpdateOnlyShowInCombat()
+
+    oUF:RegisterStyle('Nameplate', NAMEPLATE.CreateNameplateStyle)
+    oUF:SetActiveStyle('Nameplate')
+    oUF:SpawnNamePlates('oUF_Nameplate', NAMEPLATE.PostUpdatePlates)
+end
+
+function NAMEPLATE:UpdateOnlyShowInCombat()
     if C.DB.Nameplate.OnlyShowInCombat then
         SetCVar('nameplateShowEnemies', 0)
         SetCVar('nameplateShowFriends', 0)
         F:RegisterEvent('PLAYER_REGEN_DISABLED', NAMEPLATE.OnEnterCombat)
         F:RegisterEvent('PLAYER_REGEN_ENABLED', NAMEPLATE.OnLeaveCombat)
+    else
+        F:UnregisterEvent('PLAYER_REGEN_DISABLED', NAMEPLATE.OnEnterCombat)
+        F:UnregisterEvent('PLAYER_REGEN_ENABLED', NAMEPLATE.OnLeaveCombat)
     end
-
-    oUF:RegisterStyle('Nameplate', NAMEPLATE.CreateNameplateStyle)
-    oUF:SetActiveStyle('Nameplate')
-    oUF:SpawnNamePlates('oUF_Nameplate', NAMEPLATE.PostUpdatePlates)
 end
 
 function NAMEPLATE:OnEnterCombat()
