@@ -163,7 +163,7 @@ local function Block_OnMouseUp(self, btn)
         _G.ToggleTalentFrame(2)
     else
         BuildSpecMenu()
-        EasyMenu(newMenu, F.EasyMenu, self, -80, 100, 'MENU', 1)
+        F.ShowEasyMenu(newMenu, F.EasyMenu, self, -80, 100, 'MENU', 1)
         _G.GameTooltip:Hide()
     end
 end

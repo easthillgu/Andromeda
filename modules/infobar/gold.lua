@@ -123,7 +123,7 @@ local function Button_OnMouseUp(self, btn)
             RebuildCharList()
             menuList[1].created = true
         end
-        EasyMenu(menuList, F.EasyMenu, self, -80, 100, 'MENU', 1)
+        F.ShowEasyMenu(menuList, F.EasyMenu, self, -80, 100, 'MENU', 1)
     end
 end
 

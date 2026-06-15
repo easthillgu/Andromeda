@@ -541,6 +541,64 @@ do
         end
     end
 
+    -- C_QuestLog compatibility (3.80.1: wrap Classic API in Retail-style table)
+
+    _G.C_QuestLog = _G.C_QuestLog or {}
+    _G.C_QuestLog.GetNumQuestLogEntries = _G.C_QuestLog.GetNumQuestLogEntries or function() return GetNumQuestLogEntries() or 0 end
+    _G.C_QuestLog.GetQuestIDForLogIndex = _G.C_QuestLog.GetQuestIDForLogIndex or function(index)
+        local _, _, _, _, _, _, _, questID = GetQuestLogTitle(index)
+        return questID
+    end
+    _G.C_QuestLog.GetInfo = _G.C_QuestLog.GetInfo or function(index)
+        local title, level, _, _, _, isComplete, _, questID = GetQuestLogTitle(index)
+        return { title = title, level = level, isComplete = isComplete, questID = questID, frequency = 0 }
+    end
+    _G.C_QuestLog.IsComplete = _G.C_QuestLog.IsComplete or function(questID) return IsQuestComplete(questID) end
+    _G.C_QuestLog.IsWorldQuest = _G.C_QuestLog.IsWorldQuest or function() return false end
+    _G.C_QuestLog.GetQuestTagInfo = _G.C_QuestLog.GetQuestTagInfo or function() return nil end
+    _G.C_QuestLog.GetTitleForQuestID = _G.C_QuestLog.GetTitleForQuestID or function(questID)
+        for i = 1, GetNumQuestLogEntries() do
+            local title, _, _, _, _, _, _, id = GetQuestLogTitle(i)
+            if id == questID then return title end
+        end
+    end
+    _G.C_QuestLog.GetLogIndexForQuestID = _G.C_QuestLog.GetLogIndexForQuestID or function(questID)
+        for i = 1, GetNumQuestLogEntries() do
+            local _, _, _, _, _, _, _, id = GetQuestLogTitle(i)
+            if id == questID then return i end
+        end
+    end
+    _G.C_QuestLog.IsQuestFlaggedCompleted = _G.C_QuestLog.IsQuestFlaggedCompleted or function(questID)
+        return IsQuestFlaggedCompleted(questID)
+    end
+    _G.C_QuestLog.GetSelectedQuest = _G.C_QuestLog.GetSelectedQuest or function()
+        local index = GetQuestLogSelection()
+        if index and index > 0 then
+            return select(8, GetQuestLogTitle(index))
+        end
+    end
+
+    -- GetSpecialization (3.80.1: may not be available at file-load, nil-safe fallback)
+    _G.GetSpecialization = _G.GetSpecialization or function() return nil end
+
+    -- EasyMenu (3.80.1: removed from global scope, reimplemented here)
+
+    local function EasyMenu_Initialize(frame, level, menuList)
+        for index = 1, #menuList do
+            local value = menuList[index]
+            if value.text then
+                value.index = index
+                UIDropDownMenu_AddButton(value, level)
+            end
+        end
+    end
+
+    function F.ShowEasyMenu(menuList, menuFrame, anchor, x, y, displayMode, autoHideDelay)
+        if displayMode == 'MENU' then menuFrame.displayMode = displayMode end
+        UIDropDownMenu_Initialize(menuFrame, EasyMenu_Initialize, displayMode, nil, menuList)
+        ToggleDropDownMenu(1, nil, menuFrame, anchor, x, y, menuList, nil, autoHideDelay)
+    end
+
     -- Font string
 
     do
@@ -1607,8 +1665,8 @@ do
             ['error'] = 99,
             ['uncollected'] = Enum.ItemQuality.Poor,
             ['gray'] = Enum.ItemQuality.Poor,
-            ['white'] = Enum.ItemQuality.Common,
-            ['green'] = Enum.ItemQuality.Uncommon,
+            ['white'] = Enum.ItemQuality.Standard,
+            ['green'] = Enum.ItemQuality.Good,
             ['blue'] = Enum.ItemQuality.Rare,
             ['purple'] = Enum.ItemQuality.Epic,
             ['orange'] = Enum.ItemQuality.Legendary,

@@ -72,7 +72,7 @@ local function onWorldFrameClick(_, btn)
     for i = 1, 8 do
         menuList[i + 1].checked = ricon == i
     end
-    EasyMenu(menuList, F.EasyMenu, 'cursor', 0, 0, 'MENU', 1)
+    F.ShowEasyMenu(menuList, F.EasyMenu, 'cursor', 0, 0, 'MENU', 1)
 end
 
 function COMBAT:EasyMark()

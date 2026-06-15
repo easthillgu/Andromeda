@@ -372,7 +372,7 @@ function BLIZZARD:AddDungeonsFilter()
         if btn ~= 'RightButton' then
             return
         end
-        EasyMenu(menuList, F.EasyMenu, self, 25, 50, 'MENU')
+        F.ShowEasyMenu(menuList, F.EasyMenu, self, 25, 50, 'MENU')
     end)
 
     searchPanel.RefreshButton:HookScript('OnEnter', function()

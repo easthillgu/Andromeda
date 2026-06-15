@@ -685,7 +685,7 @@ do
         local spellID = aura.spellID
         if UNITFRAME.RaidDebuffsBlackList[spellID] then
             return false
-        elseif aura.isBossAura or SpellIsPriorityAura(spellID) then
+        elseif aura.isBossAura then
             return true
         else
             local hasCustom, alwaysShowMine, showForMySpec = SpellGetVisibilityInfo(spellID, raidAuras.isInCombat and 'RAID_INCOMBAT' or 'RAID_OUTOFCOMBAT')

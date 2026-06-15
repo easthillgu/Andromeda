@@ -292,7 +292,7 @@ local function buttonOnClick(self, btn)
                     return
                 end
 
-                EasyMenu(menuList, F.EasyMenu, self, 0, 0, 'MENU', 1)
+                F.ShowEasyMenu(menuList, F.EasyMenu, self, 0, 0, 'MENU', 1)
             else
                 InviteUnit(self.data[1])
             end

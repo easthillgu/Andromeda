@@ -12,8 +12,9 @@
 ## X-Website: https://github.com/fafaraway/andromeda
 ## X-License: GPL-3.0
 
-libraries\taintless.xml
-compat_mini.lua
+libraries\\taintless.xml
+## 3.80.1: compat_mini removed — stubs migrated to core/functions.lua
+#compat_mini.lua
 libraries\_loader.xml
 core\init.lua
 locales\_loader.xml
