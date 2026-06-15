@@ -67,12 +67,25 @@ setmetatable(dmgcolor, {
 })
 
 local environmentalTypeText = {
-    Drowning = _G.ACTION_ENVIRONMENTAL_DAMAGE_DROWNING,
-    Falling = _G.ACTION_ENVIRONMENTAL_DAMAGE_FALLING,
-    Fatigue = _G.ACTION_ENVIRONMENTAL_DAMAGE_FATIGUE,
-    Fire = _G.ACTION_ENVIRONMENTAL_DAMAGE_FIRE,
-    Lava = _G.ACTION_ENVIRONMENTAL_DAMAGE_LAVA,
-    Slime = _G.ACTION_ENVIRONMENTAL_DAMAGE_SLIME,
+    Drowning = 'Drowning',
+    Falling = 'Falling',
+    Fatigue = 'Fatigue',
+    Fire = 'Fire',
+    Lava = 'Lava',
+    Slime = 'Slime',
+}
+
+local missTypeText = {
+    ABSORB = 'ABSORB',
+    BLOCK = 'BLOCK',
+    DEFLECT = 'DEFLECT',
+    DODGE = 'DODGE',
+    EVASION = 'EVASION',
+    MISS = 'MISS',
+    PARRY = 'PARRY',
+    RESIST = 'RESIST',
+    REFLECT = 'REFLECT',
+    IMMUNE = 'IMMUNE',
 }
 
 local dmgFunc
@@ -151,6 +164,7 @@ end
 
 local function missString(isIn, spellID, missType, amountMissed)
     local frame = isIn and inFrame or outFrame
+    local missText = missTypeText[missType] or missType
 
     if isIn then
         if missType == 'ABSORB' then
@@ -158,25 +172,25 @@ local function missString(isIn, spellID, missType, amountMissed)
                 format(
                     '|T%s:0:0:0:-5|t %s(%s)',
                     GetSpellTexture(spellID) or '',
-                    _G[missType],
+                    missText,
                     F:Numb(amountMissed)
                 )
             )
         else
-            frame:AddMessage(format('|T%s:0:0:0:-5|t %s', GetSpellTexture(spellID) or '', _G[missType]))
+            frame:AddMessage(format('|T%s:0:0:0:-5|t %s', GetSpellTexture(spellID) or '', missText))
         end
     else
         if missType == 'ABSORB' then
             frame:AddMessage(
                 format(
                     '%s(%s) |T%s:0:0:0:-5|t',
-                    _G[missType],
+                    missText,
                     F:Numb(amountMissed),
                     GetSpellTexture(spellID) or ''
                 )
             )
         else
-            frame:AddMessage(format('%s |T%s:0:0:0:-5|t', _G[missType], GetSpellTexture(spellID) or ''))
+            frame:AddMessage(format('%s |T%s:0:0:0:-5|t', missText, GetSpellTexture(spellID) or ''))
         end
     end
 end
