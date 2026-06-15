@@ -830,8 +830,13 @@ function NAMEPLATE:OnLogin()
     oUF:SpawnNamePlates('oUF_Nameplate', NAMEPLATE.PostUpdatePlates)
 end
 
+-- 只在战斗中显示姓名板相关变量
+local originalShowFriends = nil
+
 function NAMEPLATE:UpdateOnlyShowInCombat()
     if C.DB.Nameplate.OnlyShowInCombat then
+        -- 保存用户原始设置
+        originalShowFriends = GetCVar('nameplateShowFriends')
         SetCVar('nameplateShowEnemies', 0)
         SetCVar('nameplateShowFriends', 0)
         F:RegisterEvent('PLAYER_REGEN_DISABLED', NAMEPLATE.OnEnterCombat)
@@ -846,7 +851,7 @@ function NAMEPLATE:OnEnterCombat()
     -- 进入战斗时显示姓名板
     if C.DB.Nameplate.OnlyShowInCombat then
         SetCVar('nameplateShowEnemies', 1)
-        SetCVar('nameplateShowFriends', 0)
+        SetCVar('nameplateShowFriends', originalShowFriends or '0')
     end
 end
 
