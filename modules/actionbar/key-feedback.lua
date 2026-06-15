@@ -301,8 +301,9 @@ function ACTIONBAR:CreateFeedbackButton(keyFeedback, autoKeyup)
 
     mirror.cooldown:SetEdgeTexture('Interface\\Cooldown\\edge')
     mirror.cooldown:SetSwipeColor(0, 0, 0)
-    mirror.cooldown:SetHideCountdownNumbers(false)
+    mirror.cooldown:SetHideCountdownNumbers(true)
     mirror.cooldown:SetAllPoints(mirror)
+    mirror.cooldown:Hide()
 
     mirror:Show()
     mirror._elapsed = 0
@@ -571,6 +572,11 @@ function ACTIONBAR:CreateLastSpellIconLine(keyFeedback, parent)
 
         if f.SetNormalTexture then
             f:SetNormalTexture(0)
+        end
+
+        if f.cooldown then
+            f.cooldown:SetHideCountdownNumbers(true)
+            f.cooldown:Hide()
         end
 
         local bg = F.CreateBDFrame(f)
