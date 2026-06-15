@@ -178,4 +178,8 @@ function THEME:OnLogin()
     THEME:ReskinMRT()
     THEME:ReskinMeetingHorn()
     THEME:ReskinPallyPower()
+    THEME:ReskinAtlasLoot()
+    THEME:ReskinBuyEmAll()
+    THEME:ReskinWowLua()
+    THEME:ReskinWhisperPop()
 end

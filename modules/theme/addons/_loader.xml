@@ -1,5 +1,7 @@
 <Ui xmlns="http://www.blizzard.com/wow/ui/">
+    <Script file="atlasloot.lua"/>
     <Script file="bw.lua"/>
+    <Script file="buyemall.lua"/>
     <Script file="dbm.lua"/>
     <Script file="details.lua"/>
     <Script file="immersion.lua"/>
@@ -9,5 +11,7 @@
     <Script file="pallypower.lua"/>
     <Script file="pgf.lua"/>
     <Script file="rehack.lua"/>
+    <Script file="wowlua.lua"/>
     <Script file="wa.lua"/>
+    <Script file="whisperpop.lua"/>
 </Ui>

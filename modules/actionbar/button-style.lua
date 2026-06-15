@@ -218,7 +218,14 @@ function ACTIONBAR:RestyleButtons()
     end
 
     -- leave vehicle
-    ACTIONBAR:HandleButton(_G[C.ADDON_TITLE .. 'LeaveVehicleButton'])
+    local leaveVehicleBtn = _G[C.ADDON_TITLE .. 'LeaveVehicleButton']
+    if leaveVehicleBtn then
+        ACTIONBAR:HandleButton(leaveVehicleBtn)
+        F.StripTextures(leaveVehicleBtn)
+        leaveVehicleBtn.icon:SetTexture('INTERFACE\\VEHICLES\\UI-Vehicles-Button-Exit-Up')
+        leaveVehicleBtn.icon:SetTexCoord(0.216, 0.784, 0.216, 0.784)
+        leaveVehicleBtn.icon:SetDrawLayer('ARTWORK')
+    end
 
     -- extra action button
     ACTIONBAR:HandleButton(_G.ExtraActionButton1)
