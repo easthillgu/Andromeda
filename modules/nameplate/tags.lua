@@ -200,7 +200,7 @@ function NAMEPLATE.ConfigureHealthTag(frame)
 end
 
 function NAMEPLATE:CreateHealthTag(self)
-    local font = C.Assets.Fonts.Small
+    local font = C.Assets.Fonts.Pixel
     local outline = _G.ANDROMEDA_ADB.FontOutline
 
     local text = F.CreateFS(self.Health, font, 11, outline or nil, nil, nil, outline and 'OUTLINEMONOCHROME' or 'THICK')
