@@ -72,8 +72,9 @@ tinsert(C.BlizzThemes, function()
 
     -- Text on QuestFrame
     _G.QuestFrameGreetingPanel:HookScript('OnShow', function(self)
-        for button in self.titleButtonPool:EnumerateActive() do
-            if not button.styled then
+        -- 3.80.1: no titleButtonPool, iterate children
+        for _, button in ipairs({self:GetChildren()}) do
+            if button:IsObjectType('Button') and not button.styled then
                 replaceGossipText(button, button:GetText())
                 hooksecurefunc(button, 'SetFormattedText', replaceGossipFormat)
 
