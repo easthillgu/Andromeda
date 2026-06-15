@@ -14,11 +14,12 @@ _G.GetSpecialization = _G.GetSpecialization or function() return nil end
 -- SpellIsPriorityAura (Retail API, not in 3.80.1)
 _G.SpellIsPriorityAura = _G.SpellIsPriorityAura or function() return false end
 
--- C_ChallengeMode (minimap.lua)
+--[=[ 3.80.1: C_ChallengeMode stub removed (Retail-only; modules using it commented out)
 if not _G.C_ChallengeMode then _G.C_ChallengeMode = {} end
 if not _G.C_ChallengeMode.GetActiveKeystoneInfo then
     _G.C_ChallengeMode.GetActiveKeystoneInfo = function() return nil, {} end
 end
+--]=]
 
 -- C_QuestLog (quest.lua, others)
 _G.C_QuestLog = _G.C_QuestLog or {}

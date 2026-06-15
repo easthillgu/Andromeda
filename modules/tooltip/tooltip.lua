@@ -369,7 +369,7 @@ function TOOLTIP:MountSource()
     hooksecurefunc(_G.GameTooltip, 'SetUnitDebuff', TOOLTIP.SetUnitAura)
 end
 
--- Add mythic plus score
+--[=[ 3.80.1: Mythic+ score removed (Retail feature)
 function TOOLTIP.GetDungeonScore(score)
     local color = C_ChallengeMode.GetDungeonScoreRarityColor(score) or _G.HIGHLIGHT_FONT_COLOR
     return color:WrapTextInColorCode(score)
@@ -390,6 +390,7 @@ function TOOLTIP:AddMythicPlusScore(unit)
         _G.GameTooltip:AddLine(format('%s:|r %s', C.INFO_COLOR .. _G.DUNGEON_SCORE, TOOLTIP.GetDungeonScore(score)))
     end
 end
+--]=]
 
 -- Fix
 function TOOLTIP:FixStoneSoupError()

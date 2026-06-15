@@ -224,7 +224,8 @@ local function UpdateDifficultyFlag()
     local inInstance, instanceType = IsInInstance()
     local difficulty = select(3, GetInstanceInfo())
     local numplayers = select(9, GetInstanceInfo())
-    local mplusdiff = select(1, C_ChallengeMode.GetActiveKeystoneInfo()) or ''
+    -- 3.80.1: C_ChallengeMode.GetActiveKeystoneInfo not available (Retail Mythic+)
+    local mplusdiff = ''
 
     local norm = format('|cff74a1ff%s|r', 'N') -- 蓝色
     local hero = format('|cffff66ff%s|r', 'H') -- 紫色
