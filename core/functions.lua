@@ -18,6 +18,433 @@ C.ThemeWidgets = {
     colorswatch = {},
 }
 
+-- Smart Pixel Scaling System
+do
+    local GetPhysicalScreenSize = GetPhysicalScreenSize
+    local UIParent = _G.UIParent
+    local min, max, floor = math.min, math.max, math.floor
+
+    F.Mult = 1
+    F.Border = 1
+    F.PixelMode = false
+    F.UIScale = 1
+    _, F.ScreenHeight = GetPhysicalScreenSize()
+
+    function F:GetPixelScale()
+        F.ScreenHeight = select(2, GetPhysicalScreenSize())
+        F.Mult = max(0.4, min(1.15, 768 / F.ScreenHeight)) / UIParent:GetEffectiveScale()
+        F.Border = F.Mult
+        F.UIScale = UIParent:GetEffectiveScale()
+    end
+
+    function F:Scale(number)
+        return F.Mult * floor(number / F.Mult + 0.5)
+    end
+
+    function F:Size(frame, width, height, ...)
+        local w = F:Scale(width)
+        frame:SetSize(w, (height and F:Scale(height)) or w, ...)
+    end
+
+    function F:Width(frame, width, ...)
+        frame:SetWidth(F:Scale(width), ...)
+    end
+
+    function F:Height(frame, height, ...)
+        frame:SetHeight(F:Scale(height), ...)
+    end
+
+    function F:Point(obj, arg1, arg2, arg3, arg4, arg5, ...)
+        if not arg2 then arg2 = obj:GetParent() end
+
+        if type(arg2) == 'number' then arg2 = F:Scale(arg2) end
+        if type(arg3) == 'number' then arg3 = F:Scale(arg3) end
+        if type(arg4) == 'number' then arg4 = F:Scale(arg4) end
+        if type(arg5) == 'number' then arg5 = F:Scale(arg5) end
+
+        obj:SetPoint(arg1, arg2, arg3, arg4, arg5, ...)
+    end
+
+    function F:SetInside(obj, anchor, xOffset, yOffset, anchor2, noScale)
+        local x = (noScale and xOffset) or F:Scale(xOffset or F.Border)
+        local y = (noScale and yOffset) or F:Scale(yOffset or F.Border)
+        anchor = anchor or obj:GetParent()
+
+        obj:SetPoint('TOPLEFT', anchor, 'TOPLEFT', x, -y)
+        obj:SetPoint('BOTTOMRIGHT', anchor2 or anchor, 'BOTTOMRIGHT', -x, y)
+    end
+
+    function F:SetOutside(obj, anchor, xOffset, yOffset, anchor2, noScale)
+        local x = (noScale and xOffset) or F:Scale(xOffset or F.Border)
+        local y = (noScale and yOffset) or F:Scale(yOffset or F.Border)
+        anchor = anchor or obj:GetParent()
+
+        obj:SetPoint('TOPLEFT', anchor, 'TOPLEFT', -x, y)
+        obj:SetPoint('BOTTOMRIGHT', anchor2 or anchor, 'BOTTOMRIGHT', x, -y)
+    end
+end
+
+-- Enhanced Event System - Additional features for skin registration
+-- This extends the base event system from init.lua with priority support
+do
+    local priorityEvents = {}
+    local priorityFrame = CreateFrame('Frame')
+
+    local function onPriorityEvent(_, event, ...)
+        if not priorityEvents[event] then return end
+
+        local handlers = priorityEvents[event]
+        for priority = 1, #handlers do
+            for _, func in ipairs(handlers[priority]) do
+                xpcall(func, geterrorhandler(), event, ...)
+            end
+        end
+    end
+
+    priorityFrame:SetScript('OnEvent', onPriorityEvent)
+
+    -- Register event with priority support (priority 1-5, lower = earlier)
+    function F:RegisterPriorityEvent(event, func, priority)
+        priority = priority or 3 -- Default to middle priority
+
+        if not priorityEvents[event] then
+            priorityEvents[event] = {}
+            for i = 1, 5 do
+                priorityEvents[event][i] = {}
+            end
+            priorityFrame:RegisterEvent(event)
+        end
+
+        if not tContains(priorityEvents[event][priority], func) then
+            tinsert(priorityEvents[event][priority], func)
+        end
+    end
+
+    -- Unregister priority event
+    function F:UnregisterPriorityEvent(event, func)
+        if not priorityEvents[event] then return end
+
+        for p = 1, 5 do
+            local index = tIndexOf(priorityEvents[event][p], func)
+            if index then
+                tremove(priorityEvents[event][p], index)
+                break
+            end
+        end
+
+        local hasHandlers = false
+        for p = 1, 5 do
+            if #priorityEvents[event][p] > 0 then
+                hasHandlers = true
+                break
+            end
+        end
+
+        if not hasHandlers then
+            priorityEvents[event] = nil
+            priorityFrame:UnregisterEvent(event)
+        end
+    end
+
+    -- Register skin with automatic ADDON_LOADED handling
+    function F:RegisterSkin(addonName, skinFunc, ...)
+        local priority = 3
+        local eventList = ... and { ... } or { 'ADDON_LOADED' }
+
+        for _, event in ipairs(eventList) do
+            if type(event) == 'number' then
+                priority = event
+            else
+                F:RegisterPriorityEvent(event, function(_, loadedAddon, ...)
+                    if loadedAddon == addonName then
+                        xpcall(skinFunc, geterrorhandler(), addonName, ...)
+                    end
+                end, priority)
+            end
+        end
+    end
+end
+
+-- Unified Handle Functions
+do
+    local function buttonOnEnter(self)
+        if self.__bg then
+            local classColor = _G.ANDROMEDA_ADB.WidgetHighlightClassColor
+            local newColor = _G.ANDROMEDA_ADB.WidgetHighlightColor
+            if classColor then
+                self.__bg:SetBackdropColor(C.r, C.g, C.b, 0.45)
+            else
+                self.__bg:SetBackdropColor(newColor.r, newColor.g, newColor.b, 0.45)
+            end
+        end
+    end
+
+    local function buttonOnLeave(self)
+        if self.__bg then
+            local color = _G.ANDROMEDA_ADB.ButtonBackdropColor
+            local alpha = _G.ANDROMEDA_ADB.ButtonBackdropAlpha
+            self.__bg:SetBackdropColor(color.r, color.g, color.b, alpha)
+        end
+    end
+
+    function F:HandleButton(button, strip, template, noGlow)
+        if not button or button.isSkinned then return end
+
+        if button.SetNormalTexture then button:SetNormalTexture(0) end
+        if button.SetHighlightTexture then button:SetHighlightTexture(0) end
+        if button.SetPushedTexture then button:SetPushedTexture(0) end
+        if button.SetDisabledTexture then button:SetDisabledTexture(0) end
+
+        if strip then F.StripTextures(button) end
+
+        local buttonName = button.GetName and button:GetName()
+        local blizzRegions = {
+            'Left', 'Middle', 'Right', 'Mid', 'LeftDisabled', 'MiddleDisabled', 'RightDisabled',
+            'TopLeft', 'TopRight', 'BottomLeft', 'BottomRight', 'TopMiddle', 'MiddleLeft',
+            'MiddleRight', 'BottomMiddle', 'MiddleMiddle', 'TabSpacer', 'TabSpacer1', 'TabSpacer2',
+            '_RightSeparator', '_LeftSeparator', 'RightSeparator', 'LeftSeparator', 'Delimiter',
+            'BorderBottom', 'BorderBottomLeft', 'BorderBottomRight', 'BorderLeft', 'BorderRight',
+            'Cover', 'Border', 'Background', 'TopTex', 'TopLeftTex', 'TopRightTex',
+            'LeftTex', 'BottomTex', 'BottomLeftTex', 'BottomRightTex', 'RightTex', 'MiddleTex'
+        }
+
+        for _, region in pairs(blizzRegions) do
+            local reg = buttonName and _G[buttonName .. region] or button[region]
+            if reg then
+                reg:SetAlpha(0)
+                reg:Hide()
+            end
+        end
+
+        F.CreateTex(button)
+        button.__bg = F.CreateBDFrame(button, 0, true)
+        button.__bg:SetBackdropColor(0, 0, 0, 0.25)
+        F.SetBorderColor(button.__bg)
+
+        button:HookScript('OnEnter', buttonOnEnter)
+        button:HookScript('OnLeave', buttonOnLeave)
+
+        if not noGlow then
+            local buttonAnima = _G.ANDROMEDA_ADB.ButtonHoverAnimation
+            if buttonAnima then
+                button.__shadow = F.CreateSD(button.__bg, 0.25)
+            end
+        end
+
+        button.isSkinned = true
+    end
+
+    function F:HandleFrame(frame, setBackdrop, template, x1, y1, x2, y2)
+        if not frame then return end
+
+        local name = frame.GetName and frame:GetName()
+        local insetFrame = frame.Inset or name and _G[name .. 'Inset']
+        local portraitFrame = frame.Portrait or frame.portrait or name and _G[name .. 'Portrait']
+        local portraitFrameOverlay = frame.PortraitOverlay or name and _G[name .. 'PortraitOverlay']
+        local artFrameOverlay = frame.ArtOverlayFrame or name and _G[name .. 'ArtOverlayFrame']
+        local closeButton = frame.CloseButton or name and _G[name .. 'CloseButton']
+
+        F.StripTextures(frame)
+
+        if portraitFrame then portraitFrame:SetAlpha(0) end
+        if portraitFrameOverlay then portraitFrameOverlay:SetAlpha(0) end
+        if artFrameOverlay then artFrameOverlay:SetAlpha(0) end
+
+        if insetFrame then
+            F.HandleInsetFrame(insetFrame)
+        end
+
+        if closeButton then
+            F.ReskinClose(closeButton)
+        end
+
+        if setBackdrop then
+            F.CreateBDFrame(frame, template or 'Transparent')
+        else
+            F.SetBD(frame, template or 'Transparent')
+        end
+
+        if frame.backdrop then
+            frame.backdrop:SetPoint('TOPLEFT', x1 or 0, y1 or 0)
+            frame.backdrop:SetPoint('BOTTOMRIGHT', x2 or 0, y2 or 0)
+        end
+    end
+
+    function F:HandleInsetFrame(frame)
+        if not frame then return end
+        if frame.InsetBorderTop then frame.InsetBorderTop:Hide() end
+        if frame.InsetBorderTopLeft then frame.InsetBorderTopLeft:Hide() end
+        if frame.InsetBorderTopRight then frame.InsetBorderTopRight:Hide() end
+        if frame.InsetBorderBottom then frame.InsetBorderBottom:Hide() end
+        if frame.InsetBorderBottomLeft then frame.InsetBorderBottomLeft:Hide() end
+        if frame.InsetBorderBottomRight then frame.InsetBorderBottomRight:Hide() end
+        if frame.InsetBorderLeft then frame.InsetBorderLeft:Hide() end
+        if frame.InsetBorderRight then frame.InsetBorderRight:Hide() end
+        if frame.Bg then frame.Bg:Hide() end
+    end
+
+    function F:HandleIcon(icon, backdrop, frameLevel)
+        if not icon then return end
+
+        local x1, x2, y1, y2 = unpack(C.TEX_COORD)
+        icon:SetTexCoord(x1, x2, y1, y2)
+
+        if icon:GetDrawLayer() ~= 'ARTWORK' then
+            icon:SetDrawLayer('ARTWORK')
+        end
+
+        if backdrop and not icon.backdrop then
+            local bg = F.CreateBDFrame(icon, 0.25)
+            bg:SetBackdropBorderColor(0, 0, 0)
+            icon.backdrop = bg
+        end
+    end
+
+    function F:HandleItemButton(button, setInside)
+        if not button or button.isSkinned then return end
+
+        local name = button:GetName()
+        local icon = button.icon or button.Icon or button.IconTexture or button.iconTexture or
+                     (name and (_G[name .. 'IconTexture'] or _G[name .. 'Icon']))
+
+        F.StripTextures(button)
+        F.CreateBDFrame(button, 0.25)
+        F.CreateTex(button)
+
+        if icon then
+            F.HandleIcon(icon)
+            if setInside then
+                F.SetInside(icon, button)
+            else
+                F.SetOutside(button.backdrop, icon, 1, 1)
+            end
+        end
+
+        button.isSkinned = true
+    end
+
+    function F:HandleCloseButton(button, point, x, y)
+        if not button then return end
+
+        F.StripTextures(button)
+
+        if not button.Texture then
+            button.Texture = button:CreateTexture(nil, 'OVERLAY')
+            button.Texture:SetTexture('Interface\\AddOns\\Andromeda\\Media\\Textures\\Close')
+            button.Texture:SetSize(12, 12)
+            button.Texture:SetPoint('CENTER')
+        end
+
+        if point then
+            button:SetPoint('TOPRIGHT', point, 'TOPRIGHT', x or 2, y or 2)
+        end
+    end
+
+    function F:HandleTab(tab, noBackdrop, template)
+        if not tab or (tab.backdrop and not noBackdrop) then return end
+
+        local tabs = { 'LeftDisabled', 'MiddleDisabled', 'RightDisabled', 'Left', 'Middle', 'Right' }
+        local tabName = tab:GetName()
+
+        for _, object in pairs(tabs) do
+            if tab[object] then
+                tab[object]:SetTexture('')
+            else
+                local textureName = tabName and _G[tabName .. object]
+                if textureName then
+                    textureName:SetTexture('')
+                end
+            end
+        end
+
+        local highlightTex = tab.GetHighlightTexture and tab:GetHighlightTexture()
+        if highlightTex then
+            highlightTex:SetTexture('')
+        else
+            F.StripTextures(tab)
+        end
+
+        if not noBackdrop then
+            F.CreateBDFrame(tab, template)
+            local spacing = 3
+            tab.backdrop:SetPoint('TOPLEFT', spacing, -3)
+            tab.backdrop:SetPoint('BOTTOMRIGHT', -spacing, 3)
+        end
+    end
+
+    function F:HandleEditBox(editBox, template)
+        if not editBox or editBox.backdrop then return end
+
+        F.CreateBDFrame(editBox, template)
+        editBox.backdrop:SetPoint('TOPLEFT', -2, 0)
+        editBox.backdrop:SetPoint('BOTTOMRIGHT')
+
+        local EditBoxName = editBox:GetName()
+        if EditBoxName and (strfind(EditBoxName, 'Silver') or strfind(EditBoxName, 'Copper')) then
+            editBox.backdrop:SetPoint('BOTTOMRIGHT', -12, -2)
+        end
+    end
+
+    function F:HandleScrollBar(scrollBar, thumbY, thumbX, template)
+        if not scrollBar or scrollBar.backdrop then return end
+
+        local upButton = scrollBar.ScrollUpButton or scrollBar.UpButton or scrollBar.Back
+        local downButton = scrollBar.ScrollDownButton or scrollBar.DownButton or scrollBar.Forward
+        local thumb = scrollBar.GetThumbTexture and scrollBar:GetThumbTexture() or scrollBar.ThumbTexture or scrollBar.thumb
+
+        F.StripTextures(scrollBar)
+        F.CreateBDFrame(scrollBar, template or 'Transparent')
+
+        if upButton then
+            F.ReskinCollapse(upButton)
+        end
+        if downButton then
+            F.ReskinCollapse(downButton)
+        end
+
+        if thumb and not thumb.bg then
+            thumb:SetTexture('')
+            F.CreateBDFrame(thumb)
+            thumb.bg:SetBackdropColor(C.r, C.g, C.b, 0.25)
+        end
+    end
+
+    function F:HandleCheckBox(checkBox, noBackdrop, frameLevel)
+        if not checkBox or checkBox.isSkinned then return end
+
+        F.StripTextures(checkBox)
+
+        if not noBackdrop then
+            F.CreateBDFrame(checkBox)
+            F.SetInside(checkBox.backdrop, nil, 4, 4)
+        else
+            checkBox:SetSize(16, 16)
+        end
+
+        if checkBox.SetCheckedTexture then
+            checkBox:SetCheckedTexture(C.Assets.Textures.StatusbarNormal)
+            local checkedTexture = checkBox:GetCheckedTexture()
+            checkedTexture:SetVertexColor(1, 0.82, 0, 0.8)
+            F.SetInside(checkedTexture, checkBox.backdrop)
+        end
+
+        checkBox.isSkinned = true
+    end
+
+    function F:HandleStatusBar(statusBar, color, template)
+        if not statusBar then return end
+
+        statusBar:SetFrameLevel(statusBar:GetFrameLevel() + 1)
+        F.StripTextures(statusBar)
+        F.CreateBDFrame(statusBar, template or 'Transparent')
+        statusBar:SetStatusBarTexture(C.Assets.Textures.StatusbarNormal)
+
+        if color then
+            statusBar:SetStatusBarColor(unpack(color))
+        end
+    end
+end
+
 -- Utils
 
 do

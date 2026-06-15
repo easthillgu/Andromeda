@@ -6,6 +6,16 @@ local function checkInstanceStatus()
     isInInstance = IsInInstance()
 end
 
+-- 兼容性处理：C_TooltipInfo 在某些版本中不存在
+local function GetUnitQuestInfo(unit)
+    if not C_TooltipInfo or not C_TooltipInfo.GetUnit then
+        -- 旧版本不支持，返回空数据
+        return nil
+    end
+    
+    return C_TooltipInfo.GetUnit(unit)
+end
+
 function NAMEPLATE:QuestIconCheck()
     if not C.DB.Nameplate.QuestIndicator then
         return
@@ -33,7 +43,7 @@ function NAMEPLATE:UpdateQuestUnit(_, unit)
     local questProgress
     local prevDiff = 0
 
-    local data = C_TooltipInfo.GetUnit(unit)
+    local data = GetUnitQuestInfo(unit)
     if data then
         if C.IS_NEW_PATCH_10_1 then
             for i = 1, #data.lines do

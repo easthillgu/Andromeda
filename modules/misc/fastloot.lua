@@ -5,6 +5,16 @@ local F, C, L = unpack(select(2, ...))
 
 local GetContainerNumFreeSlots = C_Container and C_Container.GetContainerNumFreeSlots or GetContainerNumFreeSlots
 
+-- 兼容性处理：GetLootMethod 在某些版本中不存在
+local function GetLootMethodCompat()
+    if GetLootMethod then
+        return GetLootMethod()
+    else
+        -- 默认返回个人拾取模式
+        return 'master'  -- 返回一个有效值，避免错误
+    end
+end
+
 local internal = {
     isLooting = false,
     isHidden = false,
@@ -37,8 +47,9 @@ local function ProcessLootItem(itemLink, itemQuantity)
 end
 
 local function LootItems(numItems)
-    local lootmethodID = GetLootMethod()
-    local lootThreshold = (lootmethodID == 0) and GetLootThreshold() or 10
+    -- 使用兼容性函数获取拾取方法
+    local lootmethod = GetLootMethodCompat()
+    local lootThreshold = (lootmethod == 'personal' or lootmethod == 0) and (GetLootThreshold and GetLootThreshold() or 10) or 10
 
     for i = numItems, 1, -1 do
         local itemLink = GetLootSlotLink(i)

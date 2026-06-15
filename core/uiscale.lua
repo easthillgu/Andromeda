@@ -35,6 +35,16 @@ function F:UpdatePixelScale(event)
 
     F:SetupUIScale(true)
     F:SetupUIScale()
+    
+    -- Update smart pixel scale
+    F:GetPixelScale()
 
     isScaling = false
+end
+
+function F:InitializePixelScale()
+    F:GetPixelScale()
+    F:RegisterEvent('UI_SCALE_CHANGED', function()
+        F:GetPixelScale()
+    end)
 end

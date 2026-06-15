@@ -84,7 +84,7 @@ do
     F.Libs.cargBags = engine.cargBags
 end
 
--- Events
+-- Events - Original implementation for backward compatibility
 local events = {}
 local host = CreateFrame('Frame')
 host:SetScript('OnEvent', function(_, event, ...)
@@ -167,6 +167,9 @@ F:RegisterEvent('PLAYER_LOGIN', function()
     else
         F:SetupUIScale(true)
     end
+    
+    -- Initialize smart pixel scaling system
+    F:InitializePixelScale()
 
     local L = engine[3]
     for _, module in next, initQueue do
