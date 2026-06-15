@@ -25,13 +25,6 @@ local function SetupInventorySize()
     GUI:SetupInventorySize(GUI.Page[8])
 end
 
-local function UpdateInventorySortOrder()
-    -- 3.80.1: C_Container.SetSortBagsRightToLeft not available
-    if C_Container and C_Container.SetSortBagsRightToLeft then
-        C_Container.SetSortBagsRightToLeft(C.DB.Inventory.SortMode == 1)
-    end
-end
-
 local function SetupMinItemLevelToShow()
     GUI:SetupMinItemLevelToShow(GUI.Page[8])
 end
@@ -338,14 +331,6 @@ local function UpdateActionCamera()
     end
 end
 
-local function UpdateCameraZooming()
-    -- 3.80.1: EnhancedCamera module not available, guard
-    local EnhancedCamera = F:GetModule('EnhancedCamera')
-    if EnhancedCamera then
-        EnhancedCamera:UpdateCameraZooming()
-    end
-end
-
 local function UpdateBossBanner()
     BLIZZARD:UpdateBossBanner()
 end
@@ -633,16 +618,6 @@ GUI.OptionsList = {
             true,
             nil,
             MuteAnnoyingSounds,
-        },
-        {
-            1,
-            'General',
-            'FasterZooming',
-            L['Smooth Camera Zooming'],
-            nil,
-            nil,
-            UpdateCameraZooming,
-            L['Faster and smoother camera zooming.'],
         },
         {
             1,
@@ -1620,16 +1595,6 @@ GUI.OptionsList = {
             nil,
             UpdateInventoryStatus,
             L['Combine spare slots to save screen space.'],
-        },
-        {
-            4,
-            'Inventory',
-            'SortMode',
-            L['Sort Mode'],
-            true,
-            { L['Forward'], L['Backward'], _G.DISABLE },
-            UpdateInventorySortOrder,
-            L['If you have empty slots after sort, please disable inventory module, and turn off all bags filter in default ui containers.'],
         },
         {
             1,

@@ -142,7 +142,6 @@ C.CharacterSettings = {
         BagsPerRow = 6,
         BankPerRow = 10,
         HideWidgets = true,
-        SortMode = 2,
         ItemLevel = true,
         MinItemLevelToShow = 1,
         NewItemFlash = true,
