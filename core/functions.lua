@@ -599,6 +599,26 @@ do
         ToggleDropDownMenu(1, nil, menuFrame, anchor, x, y, menuList, nil, autoHideDelay)
     end
 
+    -- Named color resolution (precomputed to avoid repeated HexToRgb calls)
+
+    local NAMED_COLORS = {
+        CLASS  = { F:HexToRgb(C.MY_CLASS_COLOR) },
+        INFO   = { F:HexToRgb(C.INFO_COLOR) },
+        YELLOW = { F:HexToRgb(C.YELLOW_COLOR) },
+        RED    = { F:HexToRgb(C.RED_COLOR) },
+        GREEN  = { F:HexToRgb(C.GREEN_COLOR) },
+        BLUE   = { F:HexToRgb(C.BLUE_COLOR) },
+        GREY   = { F:HexToRgb(C.GREY_COLOR) },
+    }
+
+    local function ResolveColor(colour)
+        local cached = NAMED_COLORS[colour]
+        if cached then
+            return unpack(cached)
+        end
+        return 255, 255, 255
+    end
+
     -- Font string
 
     do
@@ -616,24 +636,7 @@ do
                 fs:SetText(text)
             end
 
-            local r, g, b
-            if colour == 'CLASS' then
-                r, g, b = F:HexToRgb(C.MY_CLASS_COLOR)
-            elseif colour == 'INFO' then
-                r, g, b = F:HexToRgb(C.INFO_COLOR)
-            elseif colour == 'YELLOW' then
-                r, g, b = F:HexToRgb(C.YELLOW_COLOR)
-            elseif colour == 'RED' then
-                r, g, b = F:HexToRgb(C.RED_COLOR)
-            elseif colour == 'GREEN' then
-                r, g, b = F:HexToRgb(C.GREEN_COLOR)
-            elseif colour == 'BLUE' then
-                r, g, b = F:HexToRgb(C.BLUE_COLOR)
-            elseif colour == 'GREY' then
-                r, g, b = F:HexToRgb(C.GREY_COLOR)
-            else
-                r, g, b = 255, 255, 255
-            end
+            local r, g, b = ResolveColor(colour)
 
             if type(colour) == 'table' then
                 fs:SetTextColor(colour[1], colour[2], colour[3])
@@ -674,24 +677,7 @@ do
                 self:SetText(text)
             end
 
-            local r, g, b
-            if colour == 'CLASS' then
-                r, g, b = F:HexToRgb(C.MY_CLASS_COLOR)
-            elseif colour == 'INFO' then
-                r, g, b = F:HexToRgb(C.INFO_COLOR)
-            elseif colour == 'YELLOW' then
-                r, g, b = F:HexToRgb(C.YELLOW_COLOR)
-            elseif colour == 'RED' then
-                r, g, b = F:HexToRgb(C.RED_COLOR)
-            elseif colour == 'GREEN' then
-                r, g, b = F:HexToRgb(C.GREEN_COLOR)
-            elseif colour == 'BLUE' then
-                r, g, b = F:HexToRgb(C.BLUE_COLOR)
-            elseif colour == 'GREY' then
-                r, g, b = F:HexToRgb(C.GREY_COLOR)
-            else
-                r, g, b = 255, 255, 255
-            end
+            local r, g, b = ResolveColor(colour)
 
             if type(colour) == 'table' then
                 self:SetTextColor(colour[1], colour[2], colour[3])

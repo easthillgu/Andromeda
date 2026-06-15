@@ -247,27 +247,6 @@ function F:CooldownOnUpdate(elapsed, raw)
 end
 
 -- Timer
-F.WaitTable = {}
-F.WaitFrame = CreateFrame('Frame', C.ADDON_TITLE .. 'WaitFrame', _G.UIParent)
-F.WaitFrame:SetScript('OnUpdate', F.WaitFunc)
-
-function F:WaitFunc(elapse)
-    local i = 1
-    while i <= #F.WaitTable do
-        local data = F.WaitTable[i]
-        if data[1] > elapse then
-            data[1], i = data[1] - elapse, i + 1
-        else
-            tremove(F.WaitTable, i)
-            data[2](unpack(data[3]))
-
-            if #F.WaitTable == 0 then
-                F.WaitFrame:Hide()
-            end
-        end
-    end
-end
-
 function F:Delay(delay, func, ...)
     if type(delay) ~= 'number' or type(func) ~= 'function' then
         return false
@@ -277,11 +256,11 @@ function F:Delay(delay, func, ...)
         delay = 0.01
     end
 
-    if select('#', ...) <= 0 then
-        C_Timer.After(delay, func)
+    local args = select('#', ...) > 0 and { ... }
+    if args then
+        C_Timer.After(delay, function() func(unpack(args)) end)
     else
-        tinsert(F.WaitTable, { delay, func, { ... } })
-        F.WaitFrame:Show()
+        C_Timer.After(delay, func)
     end
 
     return true
