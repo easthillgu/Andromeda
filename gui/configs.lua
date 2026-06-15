@@ -413,6 +413,7 @@ C.CharacterSettings = {
         OccludedAlpha = 0.2,
         VerticalSpacing = 0.7,
         HorizontalSpacing = 0.3,
+        OnlyShowInCombat = false,
     },
     Tooltip = {
         Enable = true,

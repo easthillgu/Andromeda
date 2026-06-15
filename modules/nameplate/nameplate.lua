@@ -822,13 +822,13 @@ function NAMEPLATE:OnLogin()
     NAMEPLATE:RefreshSpecialUnitsList()
     NAMEPLATE:RefreshPowerUnitsList()
 
-    -- 默认关闭姓名板，只在战斗时显示
-    SetCVar('nameplateShowEnemies', 0)
-    SetCVar('nameplateShowFriends', 0)
-
-    -- 注册战斗状态事件
-    F:RegisterEvent('PLAYER_REGEN_DISABLED', NAMEPLATE.OnEnterCombat)
-    F:RegisterEvent('PLAYER_REGEN_ENABLED', NAMEPLATE.OnLeaveCombat)
+    -- 只在战斗中显示姓名板（需要启用配置选项）
+    if C.DB.Nameplate.OnlyShowInCombat then
+        SetCVar('nameplateShowEnemies', 0)
+        SetCVar('nameplateShowFriends', 0)
+        F:RegisterEvent('PLAYER_REGEN_DISABLED', NAMEPLATE.OnEnterCombat)
+        F:RegisterEvent('PLAYER_REGEN_ENABLED', NAMEPLATE.OnLeaveCombat)
+    end
 
     oUF:RegisterStyle('Nameplate', NAMEPLATE.CreateNameplateStyle)
     oUF:SetActiveStyle('Nameplate')
@@ -837,12 +837,16 @@ end
 
 function NAMEPLATE:OnEnterCombat()
     -- 进入战斗时显示姓名板
-    SetCVar('nameplateShowEnemies', 1)
-    SetCVar('nameplateShowFriends', 0)
+    if C.DB.Nameplate.OnlyShowInCombat then
+        SetCVar('nameplateShowEnemies', 1)
+        SetCVar('nameplateShowFriends', 0)
+    end
 end
 
 function NAMEPLATE:OnLeaveCombat()
     -- 退出战斗时隐藏姓名板
-    SetCVar('nameplateShowEnemies', 0)
-    SetCVar('nameplateShowFriends', 0)
+    if C.DB.Nameplate.OnlyShowInCombat then
+        SetCVar('nameplateShowEnemies', 0)
+        SetCVar('nameplateShowFriends', 0)
+    end
 end
