@@ -867,7 +867,11 @@ function NAMEPLATE:OnEnterCombat()
     if C.DB.Nameplate.OnlyShowInCombat then
         inCombat = true
         SetCVar('nameplateShowEnemies', 1)
-        SetCVar('nameplateShowFriends', originalShowFriends or '0')
+        if originalShowFriends then
+            SetCVar('nameplateShowFriends', originalShowFriends)
+        else
+            SetCVar('nameplateShowFriends', '0')
+        end
     end
 end
 
