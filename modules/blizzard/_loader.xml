@@ -2,7 +2,7 @@
     <Include file="aura.xml"/>
     <Script file="blizzard.lua"/>
     <Script file="alerts.lua"/>
-    <Script file="challenges.lua"/>
+    <!--Script file="challenges.lua"/-->
     <Script file="character.lua"/>
     <Script file="collections.lua"/>
     <Script file="colors.lua"/>
