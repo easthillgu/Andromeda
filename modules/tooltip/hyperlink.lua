@@ -13,21 +13,7 @@ local linkTypes = {
     glyph = true,
     instancelock = true,
     currency = true,
-    keystone = true,
-    azessence = true,
-    mawpower = true,
-    conduit = true,
-    mount = true,
 }
-
-function TOOLTIP:HyperLink_SetPet(link)
-    -- 3.80.1: BattlePetToolTip_Show doesn't exist; nil guard
-    if not _G.BattlePetToolTip_Show then return end
-    _G.GameTooltip:SetOwner(self, 'ANCHOR_TOPRIGHT', -3, 5)
-    _G.GameTooltip:Show()
-    local _, speciesID, level, breedQuality, maxHealth, power, speed = strsplit(':', link)
-    _G.BattlePetToolTip_Show(tonumber(speciesID), tonumber(level), tonumber(breedQuality), tonumber(maxHealth), tonumber(power), tonumber(speed))
-end
 
 function TOOLTIP:HyperLink_GetSectionInfo(id)
     local info = sectionInfo[id]
@@ -76,9 +62,7 @@ end
 function TOOLTIP:HyperLink_OnEnter(link, ...)
     local linkType = strmatch(link, '^([^:]+)')
     if linkType then
-        if linkType == 'battlepet' then
-            TOOLTIP.HyperLink_SetPet(self, link)
-        elseif linkType == 'journal' then
+        if linkType == 'journal' then
             TOOLTIP.HyperLink_SetJournal(self, link)
         elseif linkTypes[linkType] then
             TOOLTIP.HyperLink_SetTypes(self, link)
