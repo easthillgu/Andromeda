@@ -102,8 +102,6 @@ function MAP:RestyleMinimap()
     local pos = { 'BOTTOMRIGHT', _G.UIParent, 'BOTTOMRIGHT', -C.UI_GAP, C.UI_GAP }
     local mover = F.Mover(holder, _G.MINIMAP_LABEL, 'Minimap', pos)
 
-    -- 3.80.1: hooking Minimap:SetPoint causes taint
-    -- Remove hook, just set initial position via mover
     Minimap.mover = mover
 
     Minimap:SetClampedToScreen(true)
@@ -111,8 +109,17 @@ function MAP:RestyleMinimap()
     Minimap:SetSize(256, 256)
     Minimap:SetHitRectInsets(0, 0, halfDiff * C.MULT, halfDiff * C.MULT)
     Minimap:SetClampRectInsets(0, 0, 0, 0)
-    Minimap:ClearAllPoints()
-    Minimap:SetPoint('CENTER', mover)
+
+    local function syncMinimapPosition()
+        if InCombatLockdown() then return end
+        local mx, my = mover:GetCenter()
+        Minimap:ClearAllPoints()
+        Minimap:SetPoint('CENTER', _G.UIParent, 'CENTER', mx - _G.UIParent:GetWidth() / 2, my - _G.UIParent:GetHeight() / 2)
+    end
+
+    mover:HookScript('OnDragStop', syncMinimapPosition)
+
+    syncMinimapPosition()
 
     Minimap.diff = diff
     Minimap.halfDiff = halfDiff

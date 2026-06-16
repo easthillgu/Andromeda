@@ -3,6 +3,11 @@ local NAMEPLATE = F:GetModule('Nameplate')
 local UNITFRAME = F:GetModule('UnitFrame')
 local oUF = F.Libs.oUF
 
+-- 只在战斗中显示姓名板相关变量
+local inCombat = false
+local originalShowFriends = nil
+local originalShowEnemies = nil
+
 -- 3.80.1 fallback texture (gui.lua not loaded yet)
 NAMEPLATE.StatusBarTex = NAMEPLATE.StatusBarTex or C.ASSET_PATH .. 'textures\\statusbar-normal'
 
@@ -736,6 +741,9 @@ function NAMEPLATE:PostUpdatePlates(event, unit)
             blizzPlate:Hide()
         end
 
+        -- 保存 unit 信息以便后续使用
+        self.unit = unit
+
         NAMEPLATE.RefreshPlateType(self, unit)
     elseif event == 'NAME_PLATE_UNIT_REMOVED' then
         self.npcID = nil
@@ -830,34 +838,42 @@ function NAMEPLATE:OnLogin()
     oUF:SpawnNamePlates('oUF_Nameplate', NAMEPLATE.PostUpdatePlates)
 end
 
--- 只在战斗中显示姓名板相关变量
-local originalShowFriends = nil
-
 function NAMEPLATE:UpdateOnlyShowInCombat()
     if C.DB.Nameplate.OnlyShowInCombat then
-        -- 保存用户原始设置
         originalShowFriends = GetCVar('nameplateShowFriends')
-        SetCVar('nameplateShowEnemies', 0)
+        originalShowEnemies = GetCVar('nameplateShowEnemies')
         SetCVar('nameplateShowFriends', 0)
+        inCombat = InCombatLockdown()
+        if inCombat then
+            SetCVar('nameplateShowEnemies', 1)
+        else
+            SetCVar('nameplateShowEnemies', 0)
+        end
         F:RegisterEvent('PLAYER_REGEN_DISABLED', NAMEPLATE.OnEnterCombat)
         F:RegisterEvent('PLAYER_REGEN_ENABLED', NAMEPLATE.OnLeaveCombat)
     else
         F:UnregisterEvent('PLAYER_REGEN_DISABLED', NAMEPLATE.OnEnterCombat)
         F:UnregisterEvent('PLAYER_REGEN_ENABLED', NAMEPLATE.OnLeaveCombat)
+        if originalShowEnemies then
+            SetCVar('nameplateShowEnemies', originalShowEnemies)
+        end
+        if originalShowFriends then
+            SetCVar('nameplateShowFriends', originalShowFriends)
+        end
     end
 end
 
 function NAMEPLATE:OnEnterCombat()
-    -- 进入战斗时显示姓名板
     if C.DB.Nameplate.OnlyShowInCombat then
+        inCombat = true
         SetCVar('nameplateShowEnemies', 1)
         SetCVar('nameplateShowFriends', originalShowFriends or '0')
     end
 end
 
 function NAMEPLATE:OnLeaveCombat()
-    -- 退出战斗时隐藏姓名板
     if C.DB.Nameplate.OnlyShowInCombat then
+        inCombat = false
         SetCVar('nameplateShowEnemies', 0)
         SetCVar('nameplateShowFriends', 0)
     end
