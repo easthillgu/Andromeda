@@ -22,7 +22,7 @@ local function GetPartyVisibility()
     local visibility = '[group:party,nogroup:raid] show;hide'
 
     if C.DB.Unitframe.SmartRaid then
-        visibility = '[group:party] show;hide'
+        visibility = '[group:raid] hide;[group:party] show;hide'
     end
 
     if C.DB.Unitframe.ShowSolo then
