@@ -6,10 +6,7 @@ local oUF = F.Libs.oUF
 -- 只在战斗中显示姓名板相关变量
 local inCombat = false
 local originalShowFriends = nil
-<<<<<<< HEAD
 local originalShowEnemies = nil
-=======
->>>>>>> c5b2494e81f8c215bc30bac76c27cf417ad38384
 
 -- 3.80.1 fallback texture (gui.lua not loaded yet)
 NAMEPLATE.StatusBarTex = NAMEPLATE.StatusBarTex or C.ASSET_PATH .. 'textures\\statusbar-normal'
@@ -844,10 +841,7 @@ end
 function NAMEPLATE:UpdateOnlyShowInCombat()
     if C.DB.Nameplate.OnlyShowInCombat then
         originalShowFriends = GetCVar('nameplateShowFriends')
-<<<<<<< HEAD
         originalShowEnemies = GetCVar('nameplateShowEnemies')
-=======
->>>>>>> c5b2494e81f8c215bc30bac76c27cf417ad38384
         SetCVar('nameplateShowFriends', 0)
         inCombat = InCombatLockdown()
         if inCombat then
