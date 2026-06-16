@@ -138,12 +138,12 @@ C.Assets = {
         SekiroLowHealth  = C.ASSET_PATH .. 'sounds\\sekiro-lowhealth.ogg',
     },
     Fonts = {
-        Regular    = C.ASSET_PATH .. 'fonts\\regular.ttf',
-        Bold       = C.ASSET_PATH .. 'fonts\\bold.ttf',
-        Heavy      = C.ASSET_PATH .. 'fonts\\heavy.ttf',
-        Condensed  = C.ASSET_PATH .. 'fonts\\condensed.ttf',
-        Combat     = C.ASSET_PATH .. 'fonts\\combat.ttf',
-        Header     = C.ASSET_PATH .. 'fonts\\header.ttf',
+        Regular    = C.ASSET_PATH .. 'fonts\\Pingfangpixel.ttf',
+        Bold       = C.ASSET_PATH .. 'fonts\\Pingfangpixel.ttf',
+        Heavy      = C.ASSET_PATH .. 'fonts\\Pingfangpixel.ttf',
+        Condensed  = C.ASSET_PATH .. 'fonts\\Pingfangpixel.ttf',
+        Combat     = C.ASSET_PATH .. 'fonts\\Pingfangpixel.ttf',
+        Header     = C.ASSET_PATH .. 'fonts\\Pingfangpixel.ttf',
         Pixel      = C.ASSET_PATH .. 'fonts\\Pingfangpixel.ttf',
         HalfHeight = C.ASSET_PATH .. 'fonts\\roadway.ttf',
         Small      = C.ASSET_PATH .. 'fonts\\super-effective.ttf',
@@ -156,12 +156,12 @@ C.Assets = {
 do
     if C.IS_DEVELOPER then
         local path = 'Fonts\\' .. C.ADDON_TITLE .. '\\'
-        C.Assets.Fonts.Regular = path .. 'regular.ttf'
-        C.Assets.Fonts.Condensed = path .. 'condensed.ttf'
-        C.Assets.Fonts.Bold = path .. 'bold.ttf'
-        C.Assets.Fonts.Heavy = path .. 'heavy.ttf'
-        C.Assets.Fonts.Combat = path .. 'combat.ttf'
-        C.Assets.Fonts.Header = path .. 'header.ttf'
+        C.Assets.Fonts.Regular = path .. 'Pingfangpixel.ttf'
+        C.Assets.Fonts.Condensed = path .. 'Pingfangpixel.ttf'
+        C.Assets.Fonts.Bold = path .. 'Pingfangpixel.ttf'
+        C.Assets.Fonts.Heavy = path .. 'Pingfangpixel.ttf'
+        C.Assets.Fonts.Combat = path .. 'Pingfangpixel.ttf'
+        C.Assets.Fonts.Header = path .. 'Pingfangpixel.ttf'
     --elseif GetLocale() == 'zhCN' then
     --    C.Assets.Fonts.Regular = --[['Fonts\\ARKai_T.ttf']] C.ASSET_PATH .. 'fonts\\Pingfangpixel.ttf'
     --    C.Assets.Fonts.Condensed = --[['Fonts\\ARKai_T.ttf']] C.ASSET_PATH .. 'fonts\\Pingfangpixel.ttf'
