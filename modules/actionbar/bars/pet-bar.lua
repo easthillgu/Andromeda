@@ -80,13 +80,17 @@ function ACTIONBAR:UpdatePetBar()
 
         SharedActionButton_RefreshSpellHighlight(petActionButton, hasPetActionHighlightMark(i))
     end
-    self:UpdateCooldowns()
+    if self.UpdateCooldowns then
+        self:UpdateCooldowns()
+    end
     self.rangeTimer = -1
 end
 
 function ACTIONBAR.PetBarOnEvent(event)
     if event == 'PET_BAR_UPDATE_COOLDOWN' then
-        _G.PetActionBar:UpdateCooldowns()
+        if _G.PetActionBar and _G.PetActionBar.UpdateCooldowns then
+            _G.PetActionBar:UpdateCooldowns()
+        end
     else
         ACTIONBAR.UpdatePetBar(_G.PetActionBar)
     end
@@ -110,7 +114,7 @@ function ACTIONBAR:CreatePetBar()
     end
     
     frame.mover = F.Mover(frame, L['PetBar'], 'PetBar',
-        { 'BOTTOMRIGHT', _G[C.ADDON_TITLE .. 'ActionBar3'], 'TOPRIGHT', 0, padding })
+        { 'BOTTOMRIGHT', _G[C.ADDON_TITLE .. 'ActionBar3'], 'TOPRIGHT', 0, margin })
     ACTIONBAR.movers[10] = frame.mover
 
     for i = 1, _G.NUM_PET_ACTION_SLOTS do
