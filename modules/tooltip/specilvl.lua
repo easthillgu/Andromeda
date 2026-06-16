@@ -128,12 +128,12 @@ local function canInspect(unit, guid)
     if not UnitIsPlayer(unit) then return false end
     if UnitCanAttack('player', unit) then return false end
     if not UnitIsVisible(unit) then return false end
+    if InCombatLockdown() then return false end
     if CheckInteractDistance then
         local ok, result = pcall(CheckInteractDistance, unit, 1)
         if not ok or not result then return false end
     end
     if not CanInspect(unit) then return false end
-    if InCombatLockdown() then return false end
     if _G.InspectFrame and _G.InspectFrame:IsShown() then return false end
     if UnitIsDeadOrGhost('player') or UnitOnTaxi('player') then return false end
     

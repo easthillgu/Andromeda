@@ -247,15 +247,16 @@ function UNITFRAME:RemoveBlizzRaidFrame()
     HideFrame('PartyMemberFrame5PetFrame')
     HideFrame('PartyFrame')
 
-    -- 参考 NDui：使用 CompactRaidFrameManager_SetSetting 来隐藏 CompactRaidFrame
-    -- 而不是直接隐藏 RaidFrame，保留社交界面中的团队管理功能
+    for i = 1, 8 do
+        HideFrame('CompactRaidGroup' .. i)
+    end
+
     if _G.CompactRaidFrameManager_SetSetting then
         _G.CompactRaidFrameManager_SetSetting("IsShown", "0")
         _G.UIParent:UnregisterEvent("GROUP_ROSTER_UPDATE")
         CompactRaidFrameManager:UnregisterAllEvents()
         CompactRaidFrameManager:SetParent(_G.HiddenFrame or UIParent)
     elseif CompactRaidFrameManager then
-        -- 经典版兼容：直接隐藏 CompactRaidFrame
         CompactRaidFrameManager:UnregisterAllEvents()
         CompactRaidFrameManager:Hide()
         CompactRaidFrameManager.Show = function() end
