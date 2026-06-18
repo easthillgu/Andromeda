@@ -224,6 +224,10 @@ function UNITFRAME:RemoveBlizzRaidFrame()
             frame:Hide()
             frame:UnregisterAllEvents()
             frame.Show = function() end
+            frame.SetSize = function() end
+            frame.UpdateHeight = function() end
+            frame.UpdateWidth = function() end
+            frame.UpdateSize = function() end
         end
     end
 
@@ -249,6 +253,10 @@ function UNITFRAME:RemoveBlizzRaidFrame()
 
     for i = 1, 8 do
         HideFrame('CompactRaidGroup' .. i)
+    end
+
+    for i = 1, 5 do
+        HideFrame('CompactPartyFrameMember' .. i)
     end
 
     if _G.CompactRaidFrameManager_SetSetting then
