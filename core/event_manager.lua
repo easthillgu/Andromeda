@@ -90,7 +90,7 @@ function EventManager:UnregisterEvent(event, callback)
 end
 
 function EventManager:RegisterAddonLoaded(addonName, callback, once, priority)
-    priority = priority or 3
+    priority = math.max(1, math.min(5, priority or 3))
 
     local condition = function(_, loadedAddon)
         return loadedAddon == addonName
