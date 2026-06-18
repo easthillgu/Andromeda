@@ -36,22 +36,28 @@ function EventManager:DispatchEvent(event, ...)
     local handlers = self.eventHandlers[event]
     if not handlers then return end
 
-    for _, handlerInfo in ipairs(handlers) do
-        if handlerInfo.condition(...) then
-            xpcall(handlerInfo.callback, geterrorhandler(), event, ...)
+    for priority = 1, #handlers do
+        for _, handlerInfo in ipairs(handlers[priority]) do
+            if handlerInfo.condition(...) then
+                xpcall(handlerInfo.callback, geterrorhandler(), event, ...)
+            end
         end
     end
 end
 
-function EventManager:RegisterEvent(event, callback, condition)
+function EventManager:RegisterEvent(event, callback, condition, priority)
     condition = condition or function() return true end
+    priority = math.max(1, math.min(5, priority or 3))
 
     if not self.eventHandlers[event] then
         self.eventHandlers[event] = {}
+        for i = 1, 5 do
+            self.eventHandlers[event][i] = {}
+        end
         GetEventFrame(event):RegisterEvent(event)
     end
 
-    tinsert(self.eventHandlers[event], {
+    tinsert(self.eventHandlers[event][priority], {
         callback = callback,
         condition = condition
     })
@@ -61,20 +67,31 @@ function EventManager:UnregisterEvent(event, callback)
     local handlers = self.eventHandlers[event]
     if not handlers then return end
 
-    for i = #handlers, 1, -1 do
-        if handlers[i].callback == callback then
-            tremove(handlers, i)
+    for priority = 1, #handlers do
+        for i = #handlers[priority], 1, -1 do
+            if handlers[priority][i].callback == callback then
+                tremove(handlers[priority], i)
+            end
+        end
+    end
+
+    local hasHandlers = false
+    for priority = 1, #handlers do
+        if #handlers[priority] > 0 then
+            hasHandlers = true
             break
         end
     end
 
-    if #handlers == 0 then
+    if not hasHandlers then
         self.eventHandlers[event] = nil
         GetEventFrame(event):UnregisterEvent(event)
     end
 end
 
-function EventManager:RegisterAddonLoaded(addonName, callback, once)
+function EventManager:RegisterAddonLoaded(addonName, callback, once, priority)
+    priority = priority or 3
+
     local condition = function(_, loadedAddon)
         return loadedAddon == addonName
     end
@@ -87,7 +104,7 @@ function EventManager:RegisterAddonLoaded(addonName, callback, once)
         end
     end
 
-    self:RegisterEvent('ADDON_LOADED', wrappedCallback, condition)
+    self:RegisterEvent('ADDON_LOADED', wrappedCallback, condition, priority)
 end
 
 function EventManager:RegisterAddonLoadedOrAlreadyLoaded(addonName, callback)
@@ -104,7 +121,13 @@ end
 
 function EventManager:GetEventCount(event)
     local handlers = self.eventHandlers[event]
-    return handlers and #handlers or 0
+    if not handlers then return 0 end
+
+    local count = 0
+    for priority = 1, #handlers do
+        count = count + #handlers[priority]
+    end
+    return count
 end
 
 F.EventManager = EventManager

@@ -97,7 +97,7 @@ do
                 return true
             end
 
-            EventManager:RegisterEvent(event, func, priorityCondition)
+            EventManager:RegisterEvent(event, func, priorityCondition, priority)
         end
 
         function F:UnregisterPriorityEvent(event, func)
