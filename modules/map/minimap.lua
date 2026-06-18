@@ -1,6 +1,7 @@
 local F, C, L = unpack(select(2, ...))
 local MAP = F:GetModule('Map')
 local oUF = F.Libs.oUF
+local EventManager = F.EventManager
 
 -- Cleanup Cluster
 
@@ -71,13 +72,16 @@ end
 
 function MAP:ReskinLFGMinimap()
     UpdateLFGMinimapFrame()
-    -- Hook to update when addon loads
     if not _G.LFGMinimapFrame then
-        F:RegisterEvent('ADDON_LOADED', function(_, name)
-            if name == 'Blizzard_GroupFinder_VanillaStyle' then
-                UpdateLFGMinimapFrame()
-            end
-        end)
+        if EventManager then
+            EventManager:RegisterAddonLoaded('Blizzard_GroupFinder_VanillaStyle', UpdateLFGMinimapFrame, true)
+        else
+            F:RegisterEvent('ADDON_LOADED', function(_, name)
+                if name == 'Blizzard_GroupFinder_VanillaStyle' then
+                    UpdateLFGMinimapFrame()
+                end
+            end)
+        end
     end
 end
 

@@ -1,5 +1,6 @@
 local F, C = unpack(select(2, ...))
 local LSM = F.Libs.LibSharedMedia
+local EventManager = F.EventManager
 
 C.Assets = {
     Textures = {
@@ -239,10 +240,18 @@ do
         addMedia('statusbar', true, C.Assets.Textures.StatusbarGradient)
         addMedia('statusbar', true, C.Assets.Textures.StatusbarFlat)
 
-        F:UnregisterEvent('ADDON_LOADED', registerToSharedMedia)
+        if EventManager then
+            EventManager:UnregisterEvent('ADDON_LOADED', registerToSharedMedia)
+        else
+            F:UnregisterEvent('ADDON_LOADED', registerToSharedMedia)
+        end
     end
 
-    F:RegisterEvent('ADDON_LOADED', registerToSharedMedia)
+    if EventManager then
+        EventManager:RegisterAddonLoaded(C.ADDON_NAME, registerToSharedMedia, true)
+    else
+        F:RegisterEvent('ADDON_LOADED', registerToSharedMedia)
+    end
 end
 
 -- Preload LSM fonts

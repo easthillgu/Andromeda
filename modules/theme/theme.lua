@@ -1,5 +1,6 @@
 local F, C = unpack(select(2, ...))
 local THEME = F:GetModule('Theme')
+local EventManager = F.EventManager
 
 C.Themes = {}
 C.BlizzThemes = {}
@@ -41,19 +42,35 @@ function THEME:LoadAddOnSkins()
     THEME:LoadSkins(C.Themes) -- blizzard ui
     THEME:LoadSkins(C.AddonThemes) -- other addons
 
-    F:RegisterEvent('ADDON_LOADED', function(_, addonName)
-        local blizzFunc = C.Themes[addonName]
-        if blizzFunc then
-            xpcall(blizzFunc, geterrorhandler())
-            C.Themes[addonName] = nil
-        end
+    if EventManager then
+        EventManager:RegisterEvent('ADDON_LOADED', function(_, addonName)
+            local blizzFunc = C.Themes[addonName]
+            if blizzFunc then
+                xpcall(blizzFunc, geterrorhandler())
+                C.Themes[addonName] = nil
+            end
 
-        local addonFunc = C.AddonThemes[addonName]
-        if addonFunc then
-            xpcall(addonFunc, geterrorhandler())
-            C.AddonThemes[addonName] = nil
-        end
-    end)
+            local addonFunc = C.AddonThemes[addonName]
+            if addonFunc then
+                xpcall(addonFunc, geterrorhandler())
+                C.AddonThemes[addonName] = nil
+            end
+        end)
+    else
+        F:RegisterEvent('ADDON_LOADED', function(_, addonName)
+            local blizzFunc = C.Themes[addonName]
+            if blizzFunc then
+                xpcall(blizzFunc, geterrorhandler())
+                C.Themes[addonName] = nil
+            end
+
+            local addonFunc = C.AddonThemes[addonName]
+            if addonFunc then
+                xpcall(addonFunc, geterrorhandler())
+                C.AddonThemes[addonName] = nil
+            end
+        end)
+    end
 
     hooksecurefunc("SetItemButtonQuality", function(button, quality, itemID)
         if quality then

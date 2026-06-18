@@ -1,5 +1,7 @@
 local F, C, L = unpack(select(2, ...))
 
+local EventManager = F.EventManager
+
 -- 3.80.1: C_AddOns not ready at file load → lazy wrapper (no global taint)
 local function IsAddOnLoaded_Compat(name)
     if C_AddOns and C_AddOns.IsAddOnLoaded then
@@ -87,62 +89,76 @@ end
 -- Enhanced Event System - Additional features for skin registration
 -- This extends the base event system from init.lua with priority support
 do
-    local priorityEvents = {}
-    local priorityFrame = CreateFrame('Frame')
+    if EventManager then
+        function F:RegisterPriorityEvent(event, func, priority)
+            priority = priority or 3
 
-    local function onPriorityEvent(_, event, ...)
-        if not priorityEvents[event] then return end
-
-        local handlers = priorityEvents[event]
-        for priority = 1, #handlers do
-            for _, func in ipairs(handlers[priority]) do
-                xpcall(func, geterrorhandler(), event, ...)
+            local priorityCondition = function()
+                return true
             end
-        end
-    end
 
-    priorityFrame:SetScript('OnEvent', onPriorityEvent)
-
-    -- Register event with priority support (priority 1-5, lower = earlier)
-    function F:RegisterPriorityEvent(event, func, priority)
-        priority = priority or 3 -- Default to middle priority
-
-        if not priorityEvents[event] then
-            priorityEvents[event] = {}
-            for i = 1, 5 do
-                priorityEvents[event][i] = {}
-            end
-            priorityFrame:RegisterEvent(event)
+            EventManager:RegisterEvent(event, func, priorityCondition)
         end
 
-        if not tContains(priorityEvents[event][priority], func) then
-            tinsert(priorityEvents[event][priority], func)
+        function F:UnregisterPriorityEvent(event, func)
+            EventManager:UnregisterEvent(event, func)
         end
-    end
+    else
+        local priorityEvents = {}
+        local priorityFrame = CreateFrame('Frame')
 
-    -- Unregister priority event
-    function F:UnregisterPriorityEvent(event, func)
-        if not priorityEvents[event] then return end
+        local function onPriorityEvent(_, event, ...)
+            if not priorityEvents[event] then return end
 
-        for p = 1, 5 do
-            local index = tIndexOf(priorityEvents[event][p], func)
-            if index then
-                tremove(priorityEvents[event][p], index)
-                break
+            local handlers = priorityEvents[event]
+            for priority = 1, #handlers do
+                for _, func in ipairs(handlers[priority]) do
+                    xpcall(func, geterrorhandler(), event, ...)
+                end
             end
         end
 
-        local hasHandlers = false
-        for p = 1, 5 do
-            if #priorityEvents[event][p] > 0 then
-                hasHandlers = true
-                break
+        priorityFrame:SetScript('OnEvent', onPriorityEvent)
+
+        function F:RegisterPriorityEvent(event, func, priority)
+            priority = priority or 3
+
+            if not priorityEvents[event] then
+                priorityEvents[event] = {}
+                for i = 1, 5 do
+                    priorityEvents[event][i] = {}
+                end
+                priorityFrame:RegisterEvent(event)
+            end
+
+            if not tContains(priorityEvents[event][priority], func) then
+                tinsert(priorityEvents[event][priority], func)
             end
         end
 
-        if not hasHandlers then
-            priorityEvents[event] = nil
-            priorityFrame:UnregisterEvent(event)
+        function F:UnregisterPriorityEvent(event, func)
+            if not priorityEvents[event] then return end
+
+            for p = 1, 5 do
+                local index = tIndexOf(priorityEvents[event][p], func)
+                if index then
+                    tremove(priorityEvents[event][p], index)
+                    break
+                end
+            end
+
+            local hasHandlers = false
+            for p = 1, 5 do
+                if #priorityEvents[event][p] > 0 then
+                    hasHandlers = true
+                    break
+                end
+            end
+
+            if not hasHandlers then
+                priorityEvents[event] = nil
+                priorityFrame:UnregisterEvent(event)
+            end
         end
     end
 
@@ -496,15 +512,19 @@ do
     --
 
     function F:HookAddOn(addonName, callback)
-        self:RegisterEvent('ADDON_LOADED', function(_, name)
-            if name == addonName then
-                callback()
-                return true
-            elseif name == C.ADDON_NAME and IsAddOnLoaded_Compat(addonName) then
-                callback()
-                return true
-            end
-        end)
+        if EventManager then
+            EventManager:RegisterAddonLoadedOrAlreadyLoaded(addonName, callback)
+        else
+            self:RegisterEvent('ADDON_LOADED', function(_, name)
+                if name == addonName then
+                    callback()
+                    return true
+                elseif name == C.ADDON_NAME and IsAddOnLoaded_Compat(addonName) then
+                    callback()
+                    return true
+                end
+            end)
+        end
     end
 
     --
