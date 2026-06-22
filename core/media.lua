@@ -228,12 +228,12 @@ do
     end
 
     local function registerToSharedMedia()
-        for _, v in pairs(C.Assets.Fonts) do
-            addMedia('font', true, v, LOCALE_MASK)
+        for k, v in pairs(C.Assets.Fonts) do
+            addMedia('font', k, v, LOCALE_MASK)
         end
 
-        for _, v in pairs(C.Assets.Sounds) do
-            addMedia('sound', true, v)
+        for k, v in pairs(C.Assets.Sounds) do
+            addMedia('sound', k, v)
         end
 
         addMedia('statusbar', true, C.Assets.Textures.StatusbarNormal)
