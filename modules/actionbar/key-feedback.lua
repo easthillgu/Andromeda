@@ -71,6 +71,7 @@ local function CreateCustomFramePool(frameType, parent, frameTemplate, resetterF
     self:Init(parent)
     self.frameType = frameType
     self.frameTemplate = frameTemplate
+    self.resetterFunc = resetterFunc
     return self
 end
 

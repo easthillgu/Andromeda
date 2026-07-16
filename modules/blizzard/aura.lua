@@ -224,8 +224,10 @@ function AURA:UpdateHeader(header)
         child.count:SetFont(C.Assets.Fonts.HalfHeight, fontSize, 'OUTLINE')
         child.timer:SetFont(C.Assets.Fonts.HalfHeight, fontSize, 'OUTLINE')
 
-        -- Blizzard bug fix, icons arent being hidden when you reduce the amount of maximum buttons
-        if index > (cfg.maxWraps * cfg.wrapAfter) and child:IsShown() then
+        -- Hide auras that exceed the configured limit. Use the aura index (if available) instead
+        -- of the child creation order, since SecureAuraHeader may recycle buttons.
+        local auraIndex = child:GetAttribute('index')
+        if auraIndex and auraIndex > (cfg.maxWraps * cfg.wrapAfter) and child:IsShown() then
             child:Hide()
         end
 
@@ -289,11 +291,6 @@ end
 
 local indexToOffset = { 2, 6, 10 }
 function AURA:CreateAuraIcon(button)
-    -- 在战斗中跳过，避免受保护框架的问题
-    if InCombatLockdown() then
-        return
-    end
-    
     -- 使用 pcall 保护整个函数，防止任何错误
     pcall(function()
         -- 只处理 Andromeda 自己创建的 aura 图标

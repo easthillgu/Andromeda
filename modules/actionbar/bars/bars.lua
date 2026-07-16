@@ -208,15 +208,26 @@ end
 
 function ACTIONBAR:ReassignBindings()
     if InCombatLockdown() then
+        if not ACTIONBAR._bindingsNeedUpdate then
+            ACTIONBAR._bindingsNeedUpdate = true
+            F:RegisterEvent('PLAYER_REGEN_ENABLED', function()
+                if ACTIONBAR._bindingsNeedUpdate then
+                    ACTIONBAR._bindingsNeedUpdate = nil
+                    ACTIONBAR:ReassignBindings()
+                end
+                F:UnregisterEvent('PLAYER_REGEN_ENABLED', ACTIONBAR.ReassignBindings)
+            end)
+        end
         return
     end
 
     for index = 1, 8 do
         local frame = ACTIONBAR.headers[index]
+        ClearOverrideBindings(frame)
         for _, button in next, frame.buttons do
             for _, key in next, { GetBindingKey(button.keyBoundTarget) } do
                 if key and key ~= '' then
-                    SetOverrideBindingClick(frame, false, key, button:GetName(), 'Keybind')
+                    SetOverrideBindingClick(frame, false, strupper(key), button:GetName(), 'Keybind')
                 end
             end
         end
@@ -225,6 +236,14 @@ end
 
 function ACTIONBAR:ClearBindings()
     if InCombatLockdown() then
+        ACTIONBAR._bindingsNeedClear = true
+        F:RegisterEvent('PLAYER_REGEN_ENABLED', function()
+            if ACTIONBAR._bindingsNeedClear then
+                ACTIONBAR._bindingsNeedClear = nil
+                ACTIONBAR:ClearBindings()
+            end
+            F:UnregisterEvent('PLAYER_REGEN_ENABLED', ACTIONBAR.ClearBindings)
+        end)
         return
     end
 

@@ -406,7 +406,7 @@ function GUI:SetupAuraSize(parent)
         },
         debuff = {
             [1] = { key = 'DebuffSize', value = db.DebuffSize, text = L['Size'], min = 24, max = 50, step = 1 },
-            [2] = { key = 'DebuffPerRow', value = db.DebuffSize, text = L['Per Row'], min = 6, max = 20, step = 1 },
+            [2] = { key = 'DebuffPerRow', value = db.DebuffPerRow, text = L['Per Row'], min = 6, max = 20, step = 1 },
         },
         private = {
             [1] = { key = 'PrivateSize', value = db.PrivateSize, text = L['Size'], min = 24, max = 50, step = 1 },
