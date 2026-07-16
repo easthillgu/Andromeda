@@ -1,4 +1,4 @@
-local F, C = unpack(select(2, ...))
+﻿local F, C = unpack(select(2, ...))
 local CT = F:RegisterModule('CursorTrail')
 
 local pollingRate, numLines = 0.05, 15

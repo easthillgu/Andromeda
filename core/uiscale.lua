@@ -1,4 +1,4 @@
-local F, C = unpack(select(2, ...))
+﻿local F, C = unpack(select(2, ...))
 
 local function GetBestScale()
     local scale = max(0.4, min(1.15, 768 / C.SCREEN_HEIGHT))

@@ -1,4 +1,4 @@
-local F, C = unpack(select(2, ...))
+﻿local F, C = unpack(select(2, ...))
 
 local function restyFont(obj)
     local font, size = C.Assets.Fonts.Condensed, 11

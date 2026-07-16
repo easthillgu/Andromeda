@@ -1,4 +1,4 @@
--- Credit: fang2hou
+﻿-- Credit: fang2hou
 -- https://github.com/fang2hou/ElvUI_WindTools/blob/development/Modules/Combat/CombatAlert.lua
 
 local F, C, L = unpack(select(2, ...))

@@ -1,4 +1,4 @@
-local F, C = unpack(select(2, ...))
+﻿local F, C = unpack(select(2, ...))
 
 -- 3.80.1: WorldMapFrame uses classic Cata structure (no BorderFrame/overlayFrames/NavBar)
 C.Themes['Blizzard_WorldMap'] = function()

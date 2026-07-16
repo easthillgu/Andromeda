@@ -1,4 +1,4 @@
-local F, C = unpack(select(2, ...))
+﻿local F, C = unpack(select(2, ...))
 
 tinsert(C.BlizzThemes, function()
     -- 3.80.1: nil guard each frame

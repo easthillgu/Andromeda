@@ -1,4 +1,4 @@
-local F, C = unpack(select(2, ...))
+﻿local F, C = unpack(select(2, ...))
 
 local function scrollOnEnter(self)
     self.thumbBG:SetBackdropColor(C.r, C.g, C.b, 0.25)

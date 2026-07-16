@@ -1,4 +1,4 @@
-local F, C = unpack(select(2, ...))
+﻿local F, C = unpack(select(2, ...))
 
 local function ResetToggleTexture(button, texture)
     if not button then return end  -- 3.80.1

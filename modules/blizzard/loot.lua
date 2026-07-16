@@ -1,4 +1,4 @@
--- Credit: Haste
+﻿-- Credit: Haste
 -- https://github.com/haste/Butsu
 
 local F, C, L = unpack(select(2, ...))

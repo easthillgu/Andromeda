@@ -1,4 +1,4 @@
-local F, C = unpack(select(2, ...))
+﻿local F, C = unpack(select(2, ...))
 local oUF = F.Libs.oUF
 local LRC = F.Libs.LibRangeCheck
 

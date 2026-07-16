@@ -1,4 +1,4 @@
-local F, C, L = unpack(select(2, ...))
+﻿local F, C, L = unpack(select(2, ...))
 local INFOBAR = F:GetModule('InfoBar')
 local oUF = F.Libs.oUF
 

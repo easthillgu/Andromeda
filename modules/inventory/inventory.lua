@@ -1,4 +1,4 @@
-local F, C, L = unpack(select(2, ...))
+﻿local F, C, L = unpack(select(2, ...))
 local INVENTORY = F:GetModule('Inventory')
 local cargBags = F.Libs.cargBags
 local iconsList = C.Assets.Textures

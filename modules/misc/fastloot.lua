@@ -1,4 +1,4 @@
-local F, C, L = unpack(select(2, ...))
+﻿local F, C, L = unpack(select(2, ...))
 
 -- Fast Loot Module
 -- 自动快速拾取战利品功能

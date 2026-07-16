@@ -1,4 +1,4 @@
-local F, C, L = unpack(select(2, ...))
+﻿local F, C, L = unpack(select(2, ...))
 local TOOLTIP = F:GetModule('Tooltip')
 
 local npcIDstring = '%s ' .. C.INFO_COLOR .. '%s'

@@ -1,4 +1,4 @@
-local F, C = unpack(select(2, ...))
+﻿local F, C = unpack(select(2, ...))
 
 -- /run LoadAddOn'Blizzard_GMChatUI' GMChatFrame:Show()
 C.Themes['Blizzard_GMChatUI'] = function()

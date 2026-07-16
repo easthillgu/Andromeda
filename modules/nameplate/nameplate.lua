@@ -1,4 +1,4 @@
-local F, C = unpack(select(2, ...))
+﻿local F, C = unpack(select(2, ...))
 local NAMEPLATE = F:GetModule('Nameplate')
 local UNITFRAME = F:GetModule('UnitFrame')
 local oUF = F.Libs.oUF
@@ -377,7 +377,6 @@ function NAMEPLATE:UpdateFocusColor()
 end
 
 
-
 -- Major spells glow
 NAMEPLATE.MajorSpellsList = {}
 function NAMEPLATE:RefreshMajorSpellsFilter()
@@ -407,7 +406,6 @@ function NAMEPLATE:RefreshMajorSpellsFilter()
         end
     end
 end
-
 
 
 -- Overlay

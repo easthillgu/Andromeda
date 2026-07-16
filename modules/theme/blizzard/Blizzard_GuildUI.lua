@@ -1,4 +1,4 @@
-local F, C = unpack(select(2, ...))
+﻿local F, C = unpack(select(2, ...))
 
 if C.IS_RETAIL and C.IS_NEW_PATCH_10_1 then
     return

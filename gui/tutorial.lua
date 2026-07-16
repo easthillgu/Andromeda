@@ -1,4 +1,4 @@
-local F, C, L = unpack(select(2, ...))
+﻿local F, C, L = unpack(select(2, ...))
 local TUTORIAL = F:GetModule('Tutorial')
 local GUI = F:GetModule('GUI')
 local CHAT = F:GetModule('Chat')

@@ -1,4 +1,4 @@
-local F, C = unpack(select(2, ...))
+﻿local F, C = unpack(select(2, ...))
 local NOTIFICATION = F:GetModule('Notification')
 
 local rareStr = '|Hworldmap:%d+:%d+:%d+|h%s (%.1f, %.1f)%s|h|r'

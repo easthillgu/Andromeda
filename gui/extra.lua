@@ -1,4 +1,4 @@
-local F, C, L = unpack(select(2, ...))
+﻿local F, C, L = unpack(select(2, ...))
 local GUI = F:GetModule('GUI')
 local UNITFRAME = F:GetModule('UnitFrame')
 local NAMEPLATE = F:GetModule('Nameplate')
@@ -2882,8 +2882,6 @@ do
 
 
 
-
-
         for spellID, value in pairs(UNITFRAME.CornerSpellsList) do
             local r, g, b = unpack(value[2])
             createBar(scrollArea.child, spellID, value[1], r, g, b, value[3])
@@ -3088,7 +3086,6 @@ function GUI:SetupVignettingVisibility(parent)
 end
 
 -- Chat
-
 
 
 -- Combat

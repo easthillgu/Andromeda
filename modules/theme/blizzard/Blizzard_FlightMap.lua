@@ -1,4 +1,4 @@
-local F, C = unpack(select(2, ...))
+﻿local F, C = unpack(select(2, ...))
 
 -- 3.80.1: Blizzard_FlightMap addon (Retail flight map). May not exist in Cata Classic,
 -- but if it does, style it without covering the actual map content.

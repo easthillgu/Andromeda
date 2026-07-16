@@ -1,4 +1,4 @@
-local _, C = unpack(select(2, ...))
+﻿local _, C = unpack(select(2, ...))
 
 C.CharacterSettings = {
     InstallationComplete = false,
@@ -69,7 +69,6 @@ C.CharacterSettings = {
         CombatAlert = true,
         CombatAlertScale = 0.4,
         CombatAlertSpeed = 1,
-
 
         Interrupt = true,
         Dispel = true,
@@ -256,7 +255,6 @@ C.CharacterSettings = {
         FocusTargetPowerHeight = 1,
         FocusTargetAuraPerRow = 0,
 
-
         ShowRaidDebuff = true,
         RaidDebuffSize = 14,
         RaidDebuffScale = 1,
@@ -266,7 +264,6 @@ C.CharacterSettings = {
         RaidBuffScale = 1,
         RaidBuffAuto = false,
 
-
         CornerSpell = false,
         CornerSpellType = 1,
         CornerSpellScale = 1,
@@ -275,7 +272,6 @@ C.CharacterSettings = {
         DebuffWatcherDispellType = 1,
         DebuffWatcherScale = 1,
         DebuffWatcherClickThru = true,
-
 
 
 
@@ -299,7 +295,6 @@ C.CharacterSettings = {
         PartyWatcherOnRight = false,
         PartyWatcherSize = 26,
 
-
         RaidFrame = true,
         RaidHealthColorStyle = 2,
         TeamIndex = false,
@@ -311,7 +306,6 @@ C.CharacterSettings = {
         RaidPowerHeight = 2,
         RaidNameLength = 2,
 
-
         RaidTargetIndicator = true,
         ThreatIndicator = true,
         GroupName = false,
@@ -321,7 +315,6 @@ C.CharacterSettings = {
         PositionBySpec = false,
 
         ClickCast = false,
-
 
         Boss = true,
         BossWidth = 100,
@@ -396,7 +389,6 @@ C.CharacterSettings = {
         DesaturateIcon = true,
         DebuffTypeColor = true,
         DispellMode = 0,
-
 
         TotemIcon = true,
 
@@ -696,7 +688,6 @@ C.AccountSettings = {
     ChatFilterWhiteList = '',
     RepairType = 1,
     -- NameplateAuraFilterList = { [1] = {}, [2] = {} },
-
 
 
 

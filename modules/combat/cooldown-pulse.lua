@@ -1,4 +1,4 @@
--- Credit: aduth
+﻿-- Credit: aduth
 -- https://github.com/aduth/Doom_CooldownPulse
 
 local F, C, L = unpack(select(2, ...))

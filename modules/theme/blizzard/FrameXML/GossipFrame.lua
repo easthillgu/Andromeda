@@ -1,4 +1,4 @@
-local F, C = unpack(select(2, ...))
+﻿local F, C = unpack(select(2, ...))
 
 local function replaceGossipFormat(button, textFormat, text)
     local newFormat, count = gsub(textFormat, '000000', 'ffffff')

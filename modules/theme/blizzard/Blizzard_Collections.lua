@@ -1,4 +1,4 @@
-local F, C = unpack(select(2, ...))
+﻿local F, C = unpack(select(2, ...))
 
 local function reskinFrameButton(self)
     for i = 1, self.ScrollTarget:GetNumChildren() do

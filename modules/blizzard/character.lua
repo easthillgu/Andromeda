@@ -1,4 +1,4 @@
-local F, C, L = unpack(select(2, ...))
+﻿local F, C, L = unpack(select(2, ...))
 local M = F:RegisterModule('EnhancedCharacterFrame')
 
 function M:MissingStats()

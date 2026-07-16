@@ -1,4 +1,4 @@
-local F, C = unpack(select(2, ...))
+﻿local F, C = unpack(select(2, ...))
 
 tinsert(C.BlizzThemes, function()
     local wssFrame = _G.WorldStateScoreFrame

@@ -1,4 +1,4 @@
-local F = unpack(select(2, ...))
+﻿local F = unpack(select(2, ...))
 local TOOLTIP = F:GetModule('Tooltip')
 
 local tips = {

@@ -1,4 +1,4 @@
-local F, C = unpack(select(2, ...))
+﻿local F, C = unpack(select(2, ...))
 local IL = F:GetModule('ItemLevel')
 local TT = F:GetModule('Tooltip')
 

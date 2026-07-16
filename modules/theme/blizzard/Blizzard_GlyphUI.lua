@@ -1,4 +1,4 @@
-local F, C = unpack(select(2, ...))
+﻿local F, C = unpack(select(2, ...))
 
 C.Themes['Blizzard_GlyphUI'] = function()
     F.StripTextures(_G.GlyphFrame)
@@ -6,4 +6,3 @@ C.Themes['Blizzard_GlyphUI'] = function()
         _G.GlyphFrameBackground:Hide()
     end
 end
-

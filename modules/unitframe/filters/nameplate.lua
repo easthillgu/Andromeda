@@ -1,4 +1,4 @@
-local F, C = unpack(select(2, ...))
+﻿local F, C = unpack(select(2, ...))
 
 -- Cataclysm Classic 3.80.1 Nameplate Aura Filters
 -- Reference: ElvUI nameplate filter structure

@@ -1,4 +1,4 @@
-local F, C, L = unpack(select(2, ...))
+﻿local F, C, L = unpack(select(2, ...))
 local TOOLTIP = F:GetModule('Tooltip')
 
 local LEARNT_STRING = '|cffff0000' .. _G.ALREADY_LEARNED .. '|r'

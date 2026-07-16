@@ -1,4 +1,4 @@
-local F, C = unpack(select(2, ...))
+﻿local F, C = unpack(select(2, ...))
 local UNITFRAME = F:GetModule('UnitFrame')
 
 UNITFRAME.PartySpellsList = {}
@@ -186,5 +186,3 @@ function UNITFRAME:CreatePartyWatcher(self)
         self.PartyWatcher.PostUpdate = UNITFRAME.PartyWatcherPostUpdate
     end
 end
-
-

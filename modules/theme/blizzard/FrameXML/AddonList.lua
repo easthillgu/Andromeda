@@ -1,4 +1,4 @@
-local F, C = unpack(select(2, ...))
+﻿local F, C = unpack(select(2, ...))
 
 function F.ReplaceIconString(frame, text)
     if not text then text = frame:GetText() end

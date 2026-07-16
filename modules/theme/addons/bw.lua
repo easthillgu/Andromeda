@@ -1,4 +1,4 @@
-local F, C = unpack(select(2, ...))
+﻿local F, C = unpack(select(2, ...))
 local THEME = F:GetModule('Theme')
 
 local function RemoveStyle(bar)

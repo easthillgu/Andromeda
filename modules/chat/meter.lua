@@ -1,4 +1,4 @@
--- Merge damage meter spam
+﻿-- Merge damage meter spam
 -- SpamageMeters by Wrug and Cybey
 
 local F, C = unpack(select(2, ...))

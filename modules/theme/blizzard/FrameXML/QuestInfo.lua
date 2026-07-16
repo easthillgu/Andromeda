@@ -1,4 +1,4 @@
-local F, C = unpack(select(2, ...))
+﻿local F, C = unpack(select(2, ...))
 
 local function clearHighlight()
     for _, button in pairs(_G.QuestInfoRewardsFrame.RewardButtons) do

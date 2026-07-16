@@ -1,4 +1,4 @@
---[[
+﻿--[[
     ## Element: PartyWatcher, by Siweia
 
     Spell watcher in party for Mythic+.

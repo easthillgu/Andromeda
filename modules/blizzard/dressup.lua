@@ -1,4 +1,4 @@
-local F, C, L = unpack(select(2, ...))
+﻿local F, C, L = unpack(select(2, ...))
 local BLIZZARD = F:GetModule('Blizzard')
 
 function BLIZZARD:CreatButton(parent, width, height, text, anchor)

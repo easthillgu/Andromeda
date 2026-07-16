@@ -1,4 +1,4 @@
--- Make Blizzard frames moveable
+﻿-- Make Blizzard frames moveable
 -- Credit: DragEmAll by emelio
 
 local F, C = unpack(select(2, ...))

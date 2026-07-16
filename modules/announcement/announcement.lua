@@ -1,4 +1,4 @@
-local F, C = unpack(select(2, ...))
+﻿local F, C = unpack(select(2, ...))
 local ANNOUNCEMENT = F:GetModule('Announcement')
 
 local arrowStr = GetLocale() == 'zhCN' and '→' or '->'

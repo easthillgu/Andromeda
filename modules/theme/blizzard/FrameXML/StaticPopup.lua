@@ -1,4 +1,4 @@
-local F, C = unpack(select(2, ...))
+﻿local F, C = unpack(select(2, ...))
 
 local STATICPOPUP_NUMDIALOGS = _G.STATICPOPUP_NUMDIALOGS or 4
 

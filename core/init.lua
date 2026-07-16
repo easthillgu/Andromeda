@@ -1,4 +1,4 @@
---[[
+﻿--[[
 
     █████╗ ███╗   ██╗██████╗ ██████╗  ██████╗ ███╗   ███╗███████╗██████╗  █████╗
     ██╔══██╗████╗  ██║██╔══██╗██╔══██╗██╔═══██╗████╗ ████║██╔════╝██╔══██╗██╔══██╗
@@ -45,7 +45,6 @@ do
 
     C.ADDON_VERSION = engine.version
     C.IS_DEVELOPER = C.ADDON_VERSION == 'development'
-
 
     -- ADDON_TITLE is the title of the addon, which is 'AndromedaUI'
     C.ADDON_NAME = tostring(addonName)

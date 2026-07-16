@@ -1,4 +1,4 @@
--- Credit: lightspark
+﻿-- Credit: lightspark
 
 local F = unpack(select(2, ...))
 

@@ -1,4 +1,4 @@
--- Credit: elvui, ndui_plus
+﻿-- Credit: elvui, ndui_plus
 
 local F, C = unpack(select(2, ...))
 local ACTIONBAR = F:GetModule('ActionBar')

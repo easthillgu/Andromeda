@@ -1,4 +1,4 @@
-local F, C = unpack(select(2, ...))
+﻿local F, C = unpack(select(2, ...))
 
 C.Themes['Blizzard_BarbershopUI'] = function()
     local frame = _G.BarberShopFrame

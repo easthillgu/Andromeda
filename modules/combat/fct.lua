@@ -1,4 +1,4 @@
---[[
+﻿--[[
     Floating combat text
     Credits: RgsCT by Rubgrsch
     https://github.com/Rubgrsch/RgsCT

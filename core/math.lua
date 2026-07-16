@@ -1,4 +1,4 @@
-local F, C = unpack(select(2, ...))
+﻿local F, C = unpack(select(2, ...))
 
 -- Numberize
 local numCap = { CHINESE = { '兆', '亿', '万' } }

@@ -1,4 +1,4 @@
-local F = unpack(select(2, ...))
+﻿local F = unpack(select(2, ...))
 local oUF = F.Libs.oUF
 
 local function Update(self)

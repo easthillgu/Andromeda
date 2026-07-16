@@ -1,4 +1,4 @@
-local F, C = unpack(select(2, ...))
+﻿local F, C = unpack(select(2, ...))
 local NOTIFICATION = F:GetModule('Notification')
 
 local hasMail = false

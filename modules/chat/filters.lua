@@ -1,4 +1,4 @@
-local F, C = unpack(select(2, ...))
+﻿local F, C = unpack(select(2, ...))
 local CHAT = F:GetModule('Chat')
 
 local BN_TOAST_TYPE_CLUB_INVITATION = _G.BN_TOAST_TYPE_CLUB_INVITATION or 6

@@ -1,4 +1,4 @@
-local F, C, L = unpack(select(2, ...))
+﻿local F, C, L = unpack(select(2, ...))
 
 -- iColor Module
 -- 为聊天列表着色：公会、好友、查询、战场计分板

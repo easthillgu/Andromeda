@@ -1,4 +1,4 @@
-local F, C, L = unpack(select(2, ...))
+﻿local F, C, L = unpack(select(2, ...))
 local ACTIONBAR = F:GetModule('ActionBar')
 
 local num = _G.NUM_STANCE_SLOTS or 10

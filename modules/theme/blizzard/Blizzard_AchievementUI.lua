@@ -1,4 +1,4 @@
-local F, C = unpack(select(2, ...))
+﻿local F, C = unpack(select(2, ...))
 
 local function SetupButtonHighlight(button, bg)
     button:SetHighlightTexture(C.Assets.Textures.Backdrop)

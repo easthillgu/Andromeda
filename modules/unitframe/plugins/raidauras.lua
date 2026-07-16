@@ -1,4 +1,4 @@
---[[
+﻿--[[
 	## Element: oUF_RaidAuras, by Siweia
 
 	One time UnitAura for all needs.

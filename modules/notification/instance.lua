@@ -1,4 +1,4 @@
-local F, _, L = unpack(select(2, ...))
+﻿local F, _, L = unpack(select(2, ...))
 local N = F:GetModule('Notification')
 
 local feasts = {

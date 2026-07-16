@@ -1,4 +1,4 @@
-local F, C, L = unpack(select(2, ...))
+﻿local F, C, L = unpack(select(2, ...))
 local INFOBAR = F:GetModule('InfoBar')
 
 -- 3.80.1: C_ClassTalents/C_Traits not available, disable spec block

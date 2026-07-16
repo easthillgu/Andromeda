@@ -1,4 +1,4 @@
-local F, C = unpack(select(2, ...))
+﻿local F, C = unpack(select(2, ...))
 
 local MAX_CONTAINER_ITEMS = 36
 local backpackTexture = 'Interface\\Buttons\\Button-Backpack-Up'

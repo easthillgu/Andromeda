@@ -1,4 +1,4 @@
-local F, C, L = unpack(select(2, ...))
+﻿local F, C, L = unpack(select(2, ...))
 local ACTIONBAR = F:GetModule('ActionBar')
 
 local function hasPetActionHighlightMark(index)

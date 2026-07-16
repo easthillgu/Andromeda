@@ -1,4 +1,4 @@
-local F = unpack(select(2, ...))
+﻿local F = unpack(select(2, ...))
 local THEME = F:GetModule('Theme')
 
 function THEME:ReskinREHack()

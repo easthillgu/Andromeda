@@ -1,4 +1,4 @@
-local F, C = unpack(select(2, ...))
+﻿local F, C = unpack(select(2, ...))
 local UNITFRAME = F:GetModule('UnitFrame')
 local LBG = F.Libs.LibButtonGlow
 

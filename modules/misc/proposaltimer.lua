@@ -1,4 +1,4 @@
-local F, C = unpack(select(2, ...))
+﻿local F, C = unpack(select(2, ...))
 local PT = F:RegisterModule('ProposalTimer')
 
 _G.LFGDungeonReadyDialog.nextUpdate = 0

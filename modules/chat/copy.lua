@@ -1,4 +1,4 @@
-local F, C, L = unpack(select(2, ...))
+﻿local F, C, L = unpack(select(2, ...))
 local CHAT = F:GetModule('Chat')
 
 local lines, frame, editBox = {}

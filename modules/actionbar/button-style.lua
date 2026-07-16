@@ -1,4 +1,4 @@
-local F, C = unpack(select(2, ...))
+﻿local F, C = unpack(select(2, ...))
 
 local ACTIONBAR = F:GetModule('ActionBar')
 local LibCustomGlow = LibStub('LibCustomGlow-1.0', true)

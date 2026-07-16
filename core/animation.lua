@@ -1,4 +1,4 @@
--- Credit: ElvUI, ElvUI_WindTool
+﻿-- Credit: ElvUI, ElvUI_WindTool
 
 local F = unpack(select(2, ...))
 

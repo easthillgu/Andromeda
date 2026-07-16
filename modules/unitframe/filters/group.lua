@@ -1,4 +1,4 @@
-local _, C = unpack(select(2, ...))
+﻿local _, C = unpack(select(2, ...))
 
 C.RaidDebuffsBlackList = {
     [23445] = true, -- 邪恶双子

@@ -1,4 +1,4 @@
-local F, C = unpack(select(2, ...))
+﻿local F, C = unpack(select(2, ...))
 local BLIZZARD = F:GetModule('Blizzard')
 
 function BLIZZARD:PetTabs_Click(button)

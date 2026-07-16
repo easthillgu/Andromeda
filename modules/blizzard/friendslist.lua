@@ -1,4 +1,4 @@
--- Credit: ElvUI_WindTools by fang2hou
+﻿-- Credit: ElvUI_WindTools by fang2hou
 -- https://github.com/fang2hou/ElvUI_WindTools/blob/development/Modules/Social/FriendList.lua
 
 local F, C, L = unpack(select(2, ...))

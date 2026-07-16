@@ -1,4 +1,4 @@
-local F, C = unpack(select(2, ...))
+﻿local F, C = unpack(select(2, ...))
 
 local NORMAL = C.Assets.Fonts.Regular
 local BOLD = C.Assets.Fonts.Bold

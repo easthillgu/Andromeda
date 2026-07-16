@@ -1,4 +1,4 @@
-local F, C = unpack(select(2, ...))
+﻿local F, C = unpack(select(2, ...))
 local UNITFRAME = F:GetModule('UnitFrame')
 local oUF = F.Libs.oUF
 
@@ -62,7 +62,6 @@ function UNITFRAME:CreateAlternativePowerBar(self)
     self.AlternativePower = altPower
     self.AlternativePower.PostUpdate = postUpdate
 end
-
 
 function UNITFRAME:UpdateAlternativePower()
     for _, frame in pairs(oUF.objects) do

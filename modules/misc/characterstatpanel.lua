@@ -1,4 +1,4 @@
-local F, C, L = unpack(select(2, ...))
+﻿local F, C, L = unpack(select(2, ...))
 
 -- Character Stats Panel Module
 -- 角色属性面板增强，显示平均物品等级和自定义属性分类
